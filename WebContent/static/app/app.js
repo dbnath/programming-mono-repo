@@ -14,11 +14,11 @@ var app = angular.module('legalrpf', [
 
     $stateProvider.state('login',{
       url : '/login',
-      templateUrl : 'app/pages/login/login.html',
+      templateUrl : 'static/app/pages/login/login.html',
       controller : 'loginCtrl as login'
     }).state('setting',{
         url : '/setting',
         controller : 'settingCtrl as uh',
-        templateUrl : 'app/pages/setting/setting.html'
+        templateUrl : 'static/app/pages/setting/setting.html'
     })
   });
