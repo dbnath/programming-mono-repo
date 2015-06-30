@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd"
+	updateCheck="false">
+	<!-- | Please see http://ehcache.sourceforge.net/documentation/configuration.html 
+		for | detailed information on how to configure caches in this file + -->
+	<!-- Location of persistent caches on disk -->
+	<diskStore path="java.io.tmpdir/EhCacheDashboard" />
+
+	<!-- Defaults, used when caches are created dynamically in Java -->
+	<defaultCache eternal="false" maxElementsInMemory="1000"
+		overflowToDisk="false" timeToIdleSeconds="0" timeToLiveSeconds="600"
+		memoryStoreEvictionPolicy="LRU" />
+		
+	<!-- Following is just en example how to define cache, we need to modify the 'name' -->
+	<cache name="getCaseList" maxElementsInMemory="100"
+		eternal="false" overflowToDisk="false" memoryStoreEvictionPolicy="LFU"
+		timeToLiveSeconds="900" />
+
+</ehcache>
