@@ -5,7 +5,7 @@
 	<!-- | Please see http://ehcache.sourceforge.net/documentation/configuration.html 
 		for | detailed information on how to configure caches in this file + -->
 	<!-- Location of persistent caches on disk -->
-	<diskStore path="java.io.tmpdir/EhCacheDashboard" />
+	<diskStore path="java.io.tmpdir/EhCacheDashboard"   />
 
 	<!-- Defaults, used when caches are created dynamically in Java -->
 	<defaultCache eternal="false" maxElementsInMemory="1000"
