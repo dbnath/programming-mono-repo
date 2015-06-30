@@ -15,7 +15,7 @@ public class DocumentWorkflowServiceImpl implements DocumentWorkflowService{
 	   private DocumentDAOImpl documentDAO;
 	
 		public Response getAllDocuments(){
-		  System.out.println("Inside getAllDocuments");
+		  System.out.println("=Inside getAllDocuments");
 	      return Response.ok().entity(new ArrayList<Document>()).build();
 	   }	
 	
