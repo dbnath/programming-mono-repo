@@ -17,7 +17,7 @@ var app = angular.module('legalrpf', [
       templateUrl : 'static/app/pages/login/login.html',
       controller : 'loginCtrl as login'
     }).state('setting',{
-        url : '/setting',
+        url : '/setting',     
         controller : 'settingCtrl as uh',
         templateUrl : 'static/app/pages/setting/setting.html'
     })
