@@ -12,7 +12,7 @@ var app = angular.module('legalrpf', [
 
    
 
-    $stateProvider.state('login',{
+    $stateProvider.state('login',{ 
       url : '/login',
       templateUrl : 'static/app/pages/login/login.html',
       controller : 'loginCtrl as login'
