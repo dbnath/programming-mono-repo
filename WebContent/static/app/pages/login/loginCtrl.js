@@ -11,20 +11,24 @@ app.controller("loginCtrl",['service',function(service){
     $("#signUp").modal("show");
   }
 
-  login.signIn = function(){
+  login.login = function(){
+	 
     var data = {
-      "email" : login.email,
-      "password" : login.password
+      "username" : login.user.username,
+      "password" : login.user.password,
+      "role" : login.user.role
     };
     service.login(data).then(function(obj){
+    	
       if(obj.status == 200){
-        if(obj.data.type === 'user'){
-          window.location.href = '#/userhome/'+obj.data._id;
+        if(login.user.role === 'System Admin'){
+        
+          window.location.href = '#/setting';
         } else {
-          window.location.href = '#/adminHome/'+obj.data._id;
+          window.location.href = '#/setting';
         }
       } else {
-        alert("Error"+data.data);
+        alert("Error"+obj.data);
       }
     });
   }
