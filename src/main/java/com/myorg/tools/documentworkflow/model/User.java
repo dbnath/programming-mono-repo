@@ -2,7 +2,7 @@ package com.myorg.tools.documentworkflow.model;
 
 import java.io.Serializable;
 
-public class User implements Serializable {
+public class User implements Serializable { 
 	
 	private String username;
 	
