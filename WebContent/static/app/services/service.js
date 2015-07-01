@@ -14,7 +14,7 @@ app.factory("service",function($http,$q){
   }
 
   function login(data){
-    return request('POST','/api/users/login',data,null);
+    return request('POST','rest/UserService/login',data,null);
   }
 
   function setting(data){
