@@ -1,89 +1,120 @@
 package com.myorg.tools.documentworkflow.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Document implements java.io.Serializable{
+public class Document implements Serializable {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1518388687498835566L;
-	
+	private static final long serialVersionUID = 1518388687498835567L;
+
 	private Integer docId;
-	private String userId;
-	private Date lastUpdateDt;
-	private String status;
-	private String role;
-	private String group;
-	private boolean isReworked;
-	private String overrideReason;
-
-	public Document() {
-
-	}
-
+	private String docName;
+	private String docLocation;
+	private String isBadLinkReported;
+	private String targetDocLocation;
+	private String isDeleted;
+	private String createdBy;
+	private Date creationDt;
+	
+	/**
+	 * @return the docId
+	 */
 	public Integer getDocId() {
 		return docId;
 	}
-
+	/**
+	 * @param docId the docId to set
+	 */
 	public void setDocId(Integer docId) {
 		this.docId = docId;
 	}
-
-	public String getUserId() {
-		return userId;
+	/**
+	 * @return the docName
+	 */
+	public String getDocName() {
+		return docName;
+	}
+	/**
+	 * @param docName the docName to set
+	 */
+	public void setDocName(String docName) {
+		this.docName = docName;
 	}
 
-	public void setUserId(String userId) {
-		this.userId = userId;
+	/**
+	 * @return the docLocation
+	 */
+	public String getDocLocation() {
+		return docLocation;
 	}
-
-	public Date getLastUpdateDt() {
-		return lastUpdateDt;
+	/**
+	 * @param docLocation the docLocation to set
+	 */
+	public void setDocLocation(String docLocation) {
+		this.docLocation = docLocation;
 	}
-
-	public void setLastUpdateDt(Date lastUpdateDt) {
-		this.lastUpdateDt = lastUpdateDt;
+	/**
+	 * @return the isBadLinkReported
+	 */
+	public String getIsBadLinkReported() {
+		return isBadLinkReported;
 	}
-
-	public String getStatus() {
-		return status;
+	/**
+	 * @param isBadLinkReported the isBadLinkReported to set
+	 */
+	public void setIsBadLinkReported(String isBadLinkReported) {
+		this.isBadLinkReported = isBadLinkReported;
 	}
-
-	public void setStatus(String status) {
-		this.status = status;
+	/**
+	 * @return the targetLocation
+	 */
+	public String getTargetDocLocation() {
+		return targetDocLocation;
 	}
-
-	public String getRole() {
-		return role;
+	/**
+	 * @param targetLocation the targetLocation to set
+	 */
+	public void setTargetDocLocation(String targetDocLocation) {
+		this.targetDocLocation = targetDocLocation;
 	}
-
-	public void setRole(String role) {
-		this.role = role;
+	/**
+	 * @return the isDeleted
+	 */
+	public String getIsDeleted() {
+		return isDeleted;
 	}
-
-	public String getGroup() {
-		return group;
+	/**
+	 * @param isDeleted the isDeleted to set
+	 */
+	public void setIsDeleted(String isDeleted) {
+		this.isDeleted = isDeleted;
 	}
-
-	public void setGroup(String group) {
-		this.group = group;
+	/**
+	 * @return the createdBy
+	 */
+	public String getCreatedBy() {
+		return createdBy;
 	}
-
-	public boolean isReworked() {
-		return isReworked;
+	/**
+	 * @param createdBy the createdBy to set
+	 */
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
 	}
-
-	public void setReworked(boolean isReworked) {
-		this.isReworked = isReworked;
+	/**
+	 * @return the creationDt
+	 */
+	public Date getCreationDt() {
+		return creationDt;
 	}
-
-	public String getOverrideReason() {
-		return overrideReason;
+	/**
+	 * @param creationDt the creationDt to set
+	 */
+	public void setCreationDt(Date creationDt) {
+		this.creationDt = creationDt;
 	}
-
-	public void setOverrideReason(String overrideReason) {
-		this.overrideReason = overrideReason;
-	}
-
+	
 }

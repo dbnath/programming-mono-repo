@@ -5,35 +5,31 @@ import java.util.List;
 
 import javax.ws.rs.core.Response;
 
-import com.myorg.tools.documentworkflow.dao.impl.DocumentDAOImpl;
-import com.myorg.tools.documentworkflow.model.Document;
-import com.myorg.tools.documentworkflow.model.DocumentDetail;
+import com.myorg.tools.documentworkflow.dao.DocumentWorkflowDAO;
+import com.myorg.tools.documentworkflow.model.DocumentWorkflow;
+import com.myorg.tools.documentworkflow.model.DocumentWorkflowDetail;
 import com.myorg.tools.documentworkflow.rest.resources.DocumentWorkflowService;
 
 public class DocumentWorkflowServiceImpl implements DocumentWorkflowService{
 	
-	   private DocumentDAOImpl documentDAO;
+	   private DocumentWorkflowDAO documentDAO;
 	
 		public Response getAllDocuments(){
 		  System.out.println("Inside getAllDocuments");
-	      return Response.ok().entity(new ArrayList<Document>()).build();
+	      return Response.ok().entity(new ArrayList<DocumentWorkflow>()).build();
 	   }	
 	
 	
 	   public Response getDocumentDetail(Integer docId){
-	      return Response.ok().entity(new DocumentDetail()).build();
+	      return Response.ok().entity(new DocumentWorkflowDetail()).build();
 	   }	
 	   
 	   
-	   public Response submitWorkflow(final DocumentDetail doc){
+	   public Response submitWorkflow(Boolean isFinalSubmit, final DocumentWorkflowDetail doc){
 	      return Response.ok().entity(Boolean.TRUE).build();
 	   }	
 	   
-	   public Response workflowInterimSave(final DocumentDetail doc){
-		   return Response.ok().entity(Boolean.TRUE).build();
-	   }
-	   
-	   public Response assignDocuments(List<Integer> docs){
+	   public Response assignDocuments(String userId, List<Integer> docs){
 		   return Response.ok().entity(Boolean.TRUE).build();
 	   }
 
@@ -41,7 +37,7 @@ public class DocumentWorkflowServiceImpl implements DocumentWorkflowService{
 	/**
 	 * @return the documentDAO
 	 */
-	public DocumentDAOImpl getDocumentDAO() {
+	public DocumentWorkflowDAO getDocumentDAO() {
 		return documentDAO;
 	}
 
@@ -49,7 +45,7 @@ public class DocumentWorkflowServiceImpl implements DocumentWorkflowService{
 	/**
 	 * @param documentDAO the documentDAO to set
 	 */
-	public void setDocumentDAO(DocumentDAOImpl documentDAO) {
+	public void setDocumentDAO(DocumentWorkflowDAO documentDAO) {
 		this.documentDAO = documentDAO;
 	}
 	   

@@ -1,6 +1,13 @@
 package com.myorg.tools.documentworkflow.model;
 
-public class Tag {
+import java.io.Serializable;
+
+public class Tag implements Serializable {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1518388687498845568L;
 	
 	private Integer tagId;
 	private String tagDesc;

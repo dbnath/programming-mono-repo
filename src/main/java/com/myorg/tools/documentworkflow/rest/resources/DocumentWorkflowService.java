@@ -12,7 +12,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 
-import com.myorg.tools.documentworkflow.model.DocumentDetail;
+import com.myorg.tools.documentworkflow.model.DocumentWorkflowDetail;
 
 @Provider
 @Path("/WflService")
@@ -36,19 +36,13 @@ public interface DocumentWorkflowService {
 	   @Path("/submit")
 	   @Consumes(MediaType.APPLICATION_JSON)
 	   @Produces(MediaType.APPLICATION_JSON)	   
-	   public Response submitWorkflow(final DocumentDetail doc);
-	   
-	   @POST
-	   @Path("/save")
-	   @Consumes(MediaType.APPLICATION_JSON)
-	   @Produces(MediaType.APPLICATION_JSON)	   
-	   public Response workflowInterimSave(final DocumentDetail doc);
+	   public Response submitWorkflow(Boolean isFinalSubmit, final DocumentWorkflowDetail doc);
 	   
 	   @POST
 	   @Path("/assigndoc")
 	   @QueryParam("docs")
 	   @Produces(MediaType.APPLICATION_JSON)	   
-	   public Response assignDocuments(List<Integer> docs);
+	   public Response assignDocuments(String userId, List<Integer> docs);
 
 	
 	
