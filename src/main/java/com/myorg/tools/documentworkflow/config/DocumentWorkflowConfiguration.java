@@ -4,5 +4,6 @@ public class DocumentWorkflowConfiguration {
 
 	public void init() {
 		
+		
 	}
 }
