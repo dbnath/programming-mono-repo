@@ -46,6 +46,7 @@ public class DocumentWorkflowServiceImpl extends BaseResource implements Documen
 
 	public Response getDocumentDetail(Integer docId) {
 		try {
+			System.out.println("docId" +docId);
 			DocumentWorkflowDetail documentWorkflowDetail = documentDAO
 					.getDocumentDetail(docId);
 			return Response.ok().entity(documentWorkflowDetail).build();

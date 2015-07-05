@@ -9,7 +9,7 @@ import com.myorg.tools.documentworkflow.config.DocumentWorkflowConfiguration;
 public abstract class BaseResource {
 	private @Autowired HttpServletRequest request;
 	private @Autowired HttpServletRequest response;
-	private DocumentWorkflowConfiguration config;
+	private DocumentWorkflowConfiguration appConfig;
 
 	public HttpServletRequest getRequest() {
 		return request;
@@ -27,17 +27,19 @@ public abstract class BaseResource {
 		this.response = response;
 	}
 	
-	public DocumentWorkflowConfiguration getConfig() {
-		return config;
+
+
+	public DocumentWorkflowConfiguration getAppConfig() {
+		return appConfig;
 	}
 
-	public void setConfig(DocumentWorkflowConfiguration config) {
-		this.config = config;
+	public void setAppConfig(DocumentWorkflowConfiguration appConfig) {
+		this.appConfig = appConfig;
 	}
 
 	protected String getLoggedInUserId() {
 		String loggedInUser = null;
-		loggedInUser = request.getHeader(config.getUserCookieHeaderName());
+		loggedInUser = request.getHeader(appConfig.getUserCookieHeaderName());
 	    if (loggedInUser != null) {
 	        System.out.println("Using from cookie user sid:" + loggedInUser);
 	    } else {

@@ -19,7 +19,7 @@ public class UserServiceImpl extends BaseResource implements UserService   {
 		dto.setUserId("1");
 		dto.setUserName("DEBASISH");
 		HttpHeaders headers = new HttpHeaders();
-		return Response.ok().entity(dto).header("Set-Cookie", getConfig().getUserCookieHeaderName()+"="+dto.getUserName()).build();
+		return Response.ok().entity(dto).header("Set-Cookie", getAppConfig().getUserCookieHeaderName()+"="+dto.getUserName()).build();
 	}
 
 }

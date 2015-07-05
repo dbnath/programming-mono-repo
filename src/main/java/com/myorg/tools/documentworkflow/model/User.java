@@ -22,6 +22,14 @@ public class User implements Serializable {
 	private Date creationDate;
 	private String lastUpdatedBy;
 	private Date lastUpdatedDate;
+	
+	private String roleId;
+	public String getRoleId() {
+		return roleId;
+	}
+	public void setRoleId(String roleId) {
+		this.roleId = roleId;
+	}
 	/**
 	 * @return the userId
 	 */
