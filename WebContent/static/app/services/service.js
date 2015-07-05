@@ -4,7 +4,10 @@ app.factory("service",function($http,$q){
     login : login,
     setting : setting,
     getApproval : getApproval,
-    addUser: addUser
+    addUser: addUser,
+    getAllDoc : getAllDoc,
+    getDocByUser : getDocByUser
+    
   
   };
   return data;
@@ -14,7 +17,7 @@ app.factory("service",function($http,$q){
   }
 
   function login(data){
-    return request('POST','/api/users/login',data,null);
+    return request('POST','rest/UserService/login',data,null);
   }
 
   function setting(data){
@@ -28,9 +31,17 @@ app.factory("service",function($http,$q){
   }
 
   
-
+function getAllDoc(){
+	
+	 return request('GET','rest/WflService/docs',null,null);
+	
+}
   
-
+function getDocByUser(data){
+	
+	 return request('GET','rest/WflService/docs',data,null);
+	
+}
   
 
   function request(method,url,data,headers){

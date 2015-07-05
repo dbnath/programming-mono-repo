@@ -1,14 +1,234 @@
-app.controller("homeCtrl",['service',function(service){
+app.controller("homeCtrl",['$stateParams','service','$scope','$templateCache','$log','uiGridConstants',function($stateParams,service,$scope,$templateCache,$log,uiGridConstants){
   console.log("Inside Home controller");
   var home = this;
-  home.user = {};
+  home.user = $stateParams.name;
   document.title = 'Docflow::Home';
-  
+  home.appState ="hide";
+
+  $templateCache.put('ui-grid/selectionRowHeader',
+		    "<div class=\"ui-grid-disable-selection\"><div class=\"ui-grid-cell-contents\"><ui-grid-selection-row-header-buttons></ui-grid-selection-row-header-buttons></div></div>"
+		  );
+		  
+		  $templateCache.put('ui-grid/selectionRowHeaderButtons',
+		    "<div class=\"ui-grid-selection-row-header-buttons\" ng-class=\"{'ui-grid-row-selected': row.isSelected , 'ui-grid-icon-cancel':!grid.appScope.isSelectable(row.entity), 'ui-grid-icon-ok':grid.appScope.isSelectable(row.entity)}\" ng-click=\"selectButtonClick(row, $event)\">&nbsp;</div>"
+		  );
+
+		  $scope.isSelectable = function(entity)
+		  {
+		    console.log(entity);
+//		    if(entity.company ==='Enersol')
+//		      return false;
+//		    else
+		   
+		      return true;
+		  };
+	$scope.users = [{"name": "Legal Doc", "location": "file://doc", "status": "New","assignto" : "Mrinal","documentid":"1"},
+	                {"name": "Contracts",  "location": "file://doc", "status": "Assigned","assignto" : "Bidit","documentid":"1"},
+	                {"name": "Legal",  "location": "file://doc", "status": "Rejected","assignto" : "Joy","documentid":"1"},
+	                {"name": "contracts", "location": "file://doc", "status": "Approved","assignto" : "Debashis","documentid":"1"},
+	                {"name": "legals",  "location": "file://doc", "status": "Rejected","assignto" : "Pratik","documentid":"1"}];
+	var rowTemplate =  '<div>' +
+    '  <div ng-dblclick=\"grid.appScope.onDblClick(row)\" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.colDef.name" class="ui-grid-cell" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }"  ui-grid-cell></div>' +
+    '</div>';
+	$scope.gridOptions = {
+			rowTemplate:rowTemplate,
+		//	data: 'users',
+			columnDefs: [
+			           
+			             
+			             {field: "docName", displayName: "Name"},
+			           
+			             {field: "wfStatusDesc", displayName: "Status",
+			            	 cellTemplate: '<div ng-class="{green: COL_FIELD == Rejected}"><div class="ngCellText">{{row.entity.wfStatusDesc}}</div></div>'},
+			            	 {field: "assignedTo", displayName: "Assigned To"},
+			            	 {field: "wfAssignmentGroupName", displayName: "GroupName"},
+			            	 {field: "docId", displayName: "ID"},
+			             ],
+			enableCellEdit: true,
+			enableColumnResize: true,
+			enableColumnReordering: true,
+			showFooter: true,
+			enablePaginationControls : true,
+			enableFiltering :true,
+			 appScopeProvider: { 
+			        onDblClick : function(row) {
+			        	home.appState = 'show';
+			           var url = '//google.com';
+			           $window.open(url, "_blank", "height=600,width=800,toolbar=no,location=no,menubar=no,titlebar=no");
+			         }
+			    }
+			
+			
+			
+			
+	}
+	
+	
+	$scope.gridOptionsmylist = {
+			rowTemplate:rowTemplate,
+		//	data: 'users',
+			columnDefs: [
+			           
+			             
+			             {field: "docName", displayName: "Name"},
+			             {field: "wfStatusDesc", displayName: "Status",
+			            	 cellTemplate: '<div ng-class="{green: COL_FIELD == Rejected}"><div class="ngCellText">{{row.entity.wfStatusDesc}}</div></div>'},
+			            	 {field: "assignedTo", displayName: "Assigned To"},
+			            	 {field: "wfAssignmentGroupName", displayName: "GroupName"},
+			            	 {field: "docId", displayName: "ID"},
+			             ],
+			enableCellEdit: true,
+			enableColumnResize: true,
+			enableColumnReordering: true,
+			showFooter: true,
+			enablePaginationControls : true,
+			enableFiltering :true,
+			enableHorizontalScrollbar: false,
+			 appScopeProvider: { 
+			        onDblClick : function(row) {
+			        	home.appState = 'show';
+			           var url = '//google.com';
+			           $window.open(url, "_blank", "height=600,width=800,toolbar=no,location=no,menubar=no,titlebar=no");
+			         }
+			    }
+	}
+	
+    service.getAllDoc().then(function(obj){
+    	
+        if(obj.status == 200){
+        	
+        	$scope.gridOptions.data = obj.data;
+      	  home.count =  ($scope.gridOptions.data.length);
+        	
+        	
+        } else {
+          alert("Error"+obj.data);
+        }
+      });
+	
+service.getDocByUser(home.user).then(function(obj){
+    	
+        if(obj.status == 200){
+        	$scope.gridOptionsmylist.data = obj.data;
+      	  home.countmylist =  ($scope.gridOptionsmylist.data.length);
+        } else {
+          alert("Error"+obj.data);
+        }
+      });
+	
+home.assignMe = function(){
+	
+	var log = [];
+	angular.forEach( $scope.rows, function(row, key) {
+		 
+		 var index = $scope.gridOptions.data.indexOf(row.entity);
+		 row.assignedTo =  home.user;
+		 
+		 home.countmylist =  home.countmylist+1;
+		 angular.extend( $scope.gridOptions.data[index], row);
+			$scope.gridOptionsmylist.data.push(row);
+		}, log);
+	
+};
+
+
+
+$scope.gridOptions.onRegisterApi = function(gridApi){
+    //set gridApi on scope
+    $scope.gridApi = gridApi;
+    $scope.rows = [];
+    gridApi.selection.on.rowSelectionChanged($scope,function(row){
+      var msg = 'row selected ' + row.isSelected;
+      if(row.isSelected){
+    	  $scope.rows.push(row);
+    	 
+      }
+     
+      $log.log(msg);
+   
+    });
+
+    gridApi.selection.on.rowSelectionChangedBatch($scope,function(rows){
+      var msg = 'rows changed ' + rows.length;
+      
+      $scope.rows =  rows;
+      $log.log(msg);
+    });
+  };
+
+
+  $scope.grid = {
+  enableHorizontalScrollbar: 0
+  };
+
+
   $('#myTabs a').click(function (e) {
-	  alert('Hi');
+	
 	  e.preventDefault()
 	  $(this).tab('show')
-  })
+  });
+  
+  /* document viewer  */
+  
+  (function(a) {
+      a.createModal = function(b) {
+          defaults = {
+              title: "",
+              message: "Your Message Goes Here!",
+              closeButton: true,
+              scrollable: false
+          };
+          var b = a.extend({}, defaults, b);
+          var c = (b.scrollable === true) ? 'style="max-height: 420px;overflow-y: auto;"' : "";
+          html = '<div class="modal fade" id="myModal">';
+          html += '<div class="modal-dialog">';
+          html += '<div class="modal-content">';
+          html += '<div class="modal-header">';
+          html += '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>';
+          if (b.title.length > 0) {
+              html += '<h4 class="modal-title">' + b.title + "</h4>"
+          }
+          html += "</div>";
+          html += '<div class="modal-body" ' + c + ">";
+          html += '<div class="row"><div class="col-xs-6">' + b.message + '</div><div class="col-xs-6">' +  '<div>tt</div>'+ '</div></div>';
+          html += "</div>";
+          html += '<div class="modal-footer">';
+          if (b.closeButton === true) {
+              html += '<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>'
+          }
+          html += "</div>";
+          html += "</div>";
+          html += "</div>";
+          html += "</div>";
+          a("body").prepend(html);
+          a("#myModal").modal().on("hidden.bs.modal", function() {
+              a(this).remove()
+          })
+      }
+  })(jQuery);
+  /*
+  */
+  $(function(){    
+      $('.view-pdf').on('click',function(){
+          var pdf_link = $(this).attr('href');
+          var iframe = '<div class="iframe-container"><iframe src="'+pdf_link+'"></iframe></div>' ;
+          $.createModal({
+          title:'My Title',
+          message: iframe,
+          closeButton:true,
+          scrollable:false
+          });
+          return false;        
+      });    
+  });
+  
+  $(function(){    
+      $('.tagmodal').on('click',function(){
+    	  e.preventDefault();   
+    	  $('#editModal').modal('show')
+      });    
+  });
+  
 
 }]);
 

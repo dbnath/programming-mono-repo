@@ -1,6 +1,7 @@
 
 
 app.controller("settingCtrl",['service',function(service){
+	
   var cc = this;
   cc.candidate = {};
   cc.setting = function(){
