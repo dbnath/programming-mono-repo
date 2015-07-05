@@ -9,14 +9,14 @@ public class DocumentWorkflowToolUtility {
 		if (obj == null) {
 			return true;
 		}
-		return false;
+		return "".equalsIgnoreCase(obj.toString());
 	}
 	
 	public static boolean isEmptyValue(Object obj){
 		if (obj == null) {
 			return true;
 		}
-		return "".equalsIgnoreCase(obj.toString());
+		return obj.toString().length()==0;
 	}
 	
 	public static boolean isEmptyList(List<?> objList) {

@@ -1,16 +1,29 @@
 package com.myorg.tools.documentworkflow.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class DocumentTagRelationship {
+public class DocumentTagRelationship implements Serializable {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1518488689498835668L;
 	
 	private Integer docId;
-	private Integer tagTypeId;
-	private Integer tagSubTypeId;
+	private Integer docTypeId;
+	private Integer docTagId;
+	private Integer docSubTagId;
 	private String createdBy;
 	private Date creationDt;
 	private String lastUpdatedBy;
 	private Date lastUpdatedDt;
+	/**
+	 * 
+	 */
+	public DocumentTagRelationship() {
+		// TODO Auto-generated constructor stub
+	}
 	/**
 	 * @return the docId
 	 */
@@ -24,28 +37,40 @@ public class DocumentTagRelationship {
 		this.docId = docId;
 	}
 	/**
-	 * @return the tagTypeId
+	 * @return the docTypeId
 	 */
-	public Integer getTagTypeId() {
-		return tagTypeId;
+	public Integer getDocTypeId() {
+		return docTypeId;
 	}
 	/**
-	 * @param tagTypeId the tagTypeId to set
+	 * @param docTypeId the docTypeId to set
 	 */
-	public void setTagTypeId(Integer tagTypeId) {
-		this.tagTypeId = tagTypeId;
+	public void setDocTypeId(Integer docTypeId) {
+		this.docTypeId = docTypeId;
 	}
 	/**
-	 * @return the tagSubTypeId
+	 * @return the docTagId
 	 */
-	public Integer getTagSubTypeId() {
-		return tagSubTypeId;
+	public Integer getDocTagId() {
+		return docTagId;
 	}
 	/**
-	 * @param tagSubTypeId the tagSubTypeId to set
+	 * @param docTagId the docTagId to set
 	 */
-	public void setTagSubTypeId(Integer tagSubTypeId) {
-		this.tagSubTypeId = tagSubTypeId;
+	public void setDocTagId(Integer docTagId) {
+		this.docTagId = docTagId;
+	}
+	/**
+	 * @return the docSubTagId
+	 */
+	public Integer getDocSubTagId() {
+		return docSubTagId;
+	}
+	/**
+	 * @param docSubTagId the docSubTagId to set
+	 */
+	public void setDocSubTagId(Integer docSubTagId) {
+		this.docSubTagId = docSubTagId;
 	}
 	/**
 	 * @return the createdBy
@@ -84,16 +109,15 @@ public class DocumentTagRelationship {
 		this.lastUpdatedBy = lastUpdatedBy;
 	}
 	/**
-	 * @return the lastUpdatdDt
+	 * @return the lastUpdatedDt
 	 */
 	public Date getLastUpdatedDt() {
 		return lastUpdatedDt;
 	}
 	/**
-	 * @param lastUpdatdDt the lastUpdatdDt to set
+	 * @param lastUpdatedDt the lastUpdatedDt to set
 	 */
 	public void setLastUpdatedDt(Date lastUpdatedDt) {
 		this.lastUpdatedDt = lastUpdatedDt;
 	}
-
 }

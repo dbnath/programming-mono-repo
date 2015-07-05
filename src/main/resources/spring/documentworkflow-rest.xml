@@ -7,7 +7,13 @@
   
 	
 	<bean id="documentResourceImpl" class="com.myorg.tools.documentworkflow.rest.resources.impl.DocumentWorkflowServiceImpl" scope="request">
-		<property name="documentDAO" ref="documentDAOImpl" />
+		<property name="documentDAO" ref="documentWorkflowDAOImpl" />
+	</bean>
+	<bean id="documentAdminSvcImpl" class="com.myorg.tools.documentworkflow.rest.resources.impl.DocumentAdminServiceImpl" scope="request">
+		<property name="documentAdminDAO" ref="documentAdminDAOImpl" />
+	</bean>
+	<bean id="userAdminSvcImpl" class="com.myorg.tools.documentworkflow.rest.resources.impl.UserAdminServiceImpl" scope="request">
+		<property name="userAdminDAO" ref="userAdminDAOImpl" />
 	</bean>
 	
 	<bean id="userResourceImpl" class="com.myorg.tools.documentworkflow.rest.resources.impl.UserServiceImpl" scope="request">

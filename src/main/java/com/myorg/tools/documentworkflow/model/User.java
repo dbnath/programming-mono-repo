@@ -2,6 +2,7 @@ package com.myorg.tools.documentworkflow.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 public class User implements Serializable {
 
@@ -12,7 +13,7 @@ public class User implements Serializable {
 	
 	private String userId;
 	private String userName;
-	private Integer roleId;
+	private List<Role> userRoleList;
 	private String password;
 	private String passwordType;
 	private String userStatus;
@@ -48,14 +49,14 @@ public class User implements Serializable {
 	/**
 	 * @return the roleId
 	 */
-	public Integer getRoleId() {
-		return roleId;
+	public List<Role> getUserRoleList() {
+		return userRoleList;
 	}
 	/**
 	 * @param roleId the roleId to set
 	 */
-	public void setRoleId(Integer roleId) {
-		this.roleId = roleId;
+	public void setUserRoleList(List<Role> roleList) {
+		this.userRoleList = roleList;
 	}
 	/**
 	 * @return the password

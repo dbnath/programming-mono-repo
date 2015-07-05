@@ -1,9 +1,15 @@
 package com.myorg.tools.documentworkflow.model;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-public class DocumentWorkflowDetail {
+public class DocumentWorkflowDetail implements Serializable {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1718388687498835668L;
 	
 	private Integer docId;
 	private Document document;

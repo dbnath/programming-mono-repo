@@ -14,15 +14,18 @@
 
     <context:property-placeholder location="classpath:/documentworkflow-service.properties" system-properties-mode="OVERRIDE"/> 
 	
-	<bean id="dataSource" destroy-method="close"
-		class="org.apache.commons.dbcp.BasicDataSource">
-		<property name="driverClassName" value="${jdbc.driverClassname}" />
-		<property name="url" value="${jdbc.url}" />
-		<property name="username" value="${jdbc.username}" />
-		<property name="password" value="${jdbc.password}" />
-		<property name="initialSize" value="3" />
-		<property name="maxActive" value="10" />
+	<bean id="dataSource" 
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+	   <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+	   <property name="url" value="jdbc:mysql://localhost:3306/TEST"/>
+	   <!--<property name="username" value="root"/>
+	   <property name="password" value="password"/>-->
 	</bean>
+	
+	<bean id="transactionManager" 
+      class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+      <property name="dataSource"  ref="dataSource" />    
+   </bean>
 	
 	<context:component-scan base-package="com.myorg.tools.documentworkflow.rest" />
 	

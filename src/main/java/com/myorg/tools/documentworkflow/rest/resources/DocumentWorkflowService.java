@@ -12,7 +12,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 
-import com.myorg.tools.documentworkflow.model.DocumentWorkflowDetail;
+import com.myorg.tools.documentworkflow.model.DocumentWorkflow;
+import com.myorg.tools.documentworkflow.model.DocumentWorkflowProcess;
 
 @Provider
 @Path("/WflService")
@@ -22,27 +23,26 @@ public interface DocumentWorkflowService {
 	   @GET
 	   @Path("/docs")
 	   @Produces(MediaType.APPLICATION_JSON)	   
-	   public Response getAllDocuments();
+	   public Response getAllDocuments(@QueryParam("userId") String userId);
 	   
 	   /* To populate Doc Detail scrren for Tagging*/
 	   @GET
 	   @Path("/getdetail")
-	   @QueryParam("docId")
 	   @Produces(MediaType.APPLICATION_JSON)	   
-	   public Response getDocumentDetail(Integer docId);
+	   public Response getDocumentDetail(@QueryParam("docId") Integer docId);
 	   
 	   
 	   @POST
-	   @Path("/submit")
+	   @Path("/submitwf")
 	   @Consumes(MediaType.APPLICATION_JSON)
 	   @Produces(MediaType.APPLICATION_JSON)	   
-	   public Response submitWorkflow(Boolean isFinalSubmit, final DocumentWorkflowDetail doc);
+	   public Response submitWorkflow(DocumentWorkflowProcess docWorkflowProcess);
 	   
 	   @POST
 	   @Path("/assigndoc")
-	   @QueryParam("docs")
+	   @Consumes(MediaType.APPLICATION_JSON)
 	   @Produces(MediaType.APPLICATION_JSON)	   
-	   public Response assignDocuments(String userId, List<Integer> docs);
+	   public Response assignDocuments(List<DocumentWorkflow> docs);
 
 	
 	
