@@ -14,7 +14,7 @@ public class DocumentDetail {
 	private List<TagValues> existingTagValues;
 	private List<TagValues> newTagValues;
 	private String overrideReason;
-	
+	 
 	public DocumentDetail(){
 		
 	}
