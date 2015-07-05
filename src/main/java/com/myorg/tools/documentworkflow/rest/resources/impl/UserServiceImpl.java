@@ -15,11 +15,11 @@ public class UserServiceImpl extends BaseResource implements UserService   {
 	public Response login(User user) {
 		// TODO Auto-generated method stub
 		System.out.println("user is " + user);
-		UserDTO  dto = new UserDTO();
-		dto.setUserid(1);
-		
+		User  dto = new User();
+		dto.setUserId("1");
+		dto.setUserName("DEBASISH");
 		HttpHeaders headers = new HttpHeaders();
-		return Response.ok().entity(dto).header("Set-Cookie","DOC_WORKFLOW_UID="+dto.getUserid()).build();
+		return Response.ok().entity(dto).header("Set-Cookie", getConfig().getUserCookieHeaderName()+"="+dto.getUserName()).build();
 	}
 
 }

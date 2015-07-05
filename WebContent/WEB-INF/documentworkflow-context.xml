@@ -30,6 +30,7 @@
 	<context:component-scan base-package="com.myorg.tools.documentworkflow.rest" />
 	
 	<bean id="appConfig" scope="singleton"	class="com.myorg.tools.documentworkflow.config.DocumentWorkflowConfiguration" init-method="init">
+		<property name="userCookieHeaderName" value="DOC_WORKFLOW_UID"/>
 	</bean>
 	
 	<bean id="log4jInitializer"

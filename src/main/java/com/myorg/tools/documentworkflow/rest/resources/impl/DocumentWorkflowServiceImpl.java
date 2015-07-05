@@ -57,7 +57,7 @@ public class DocumentWorkflowServiceImpl extends BaseResource implements Documen
 
 	public Response submitWorkflow(DocumentWorkflowProcess docWorkflowProcess) {
 		//System.out.println("###### GORU ");
-		String	userId = "PRATIK";// FIXME This should be replaced by Logged in user Id
+		String	userId = getLoggedInUserId();
 		try {
 			
 			if(docWorkflowProcess != null){
@@ -119,7 +119,7 @@ public class DocumentWorkflowServiceImpl extends BaseResource implements Documen
 		System.out.println("###### GORU "+docs);*/
 		
 		try {
-			String	userId = "PRATIK";// FIXME This should be replaced by Logged in user Id
+			String	userId = getLoggedInUserId();
 
 			
 			System.out.println("###### user id "+userId+" ###### "+docs);
