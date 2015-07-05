@@ -10,5 +10,7 @@
 		<property name="documentDAO" ref="documentDAOImpl" />
 	</bean>
 	
+	<bean id="userResourceImpl" class="com.myorg.tools.documentworkflow.rest.resources.impl.UserServiceImpl" scope="request">
+    </bean>
 	
 </beans>
