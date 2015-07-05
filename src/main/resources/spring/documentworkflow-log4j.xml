@@ -26,7 +26,7 @@
 	
 	<category name="java.sql.PreparedStatement">
 		<priority value="INFO" />
-	</category>
+	</category> 
 	
     <root>
 		<appender-ref ref="ASYNC_FILE_APPENDER"/>
