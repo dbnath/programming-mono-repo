@@ -1,6 +1,5 @@
 package com.myorg.tools.documentworkflow.rest.resources.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.core.Response;
@@ -12,9 +11,10 @@ import com.myorg.tools.documentworkflow.model.DocumentTag;
 import com.myorg.tools.documentworkflow.model.DocumentTagSubTagMapping;
 import com.myorg.tools.documentworkflow.model.DocumentType;
 import com.myorg.tools.documentworkflow.model.DocumentTypeTagMapping;
+import com.myorg.tools.documentworkflow.rest.resources.BaseResource;
 import com.myorg.tools.documentworkflow.rest.resources.DocumentAdminService;
 
-public class DocumentAdminServiceImpl implements DocumentAdminService {
+public class DocumentAdminServiceImpl extends BaseResource implements DocumentAdminService {
 	
 	private DocumentAdminDAO documentAdminDAO;
 	

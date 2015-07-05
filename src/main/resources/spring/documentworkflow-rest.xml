@@ -5,18 +5,21 @@
   http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
   
+  
+  	<bean id="baseResource" abstract="true">
+	</bean>
 	
-	<bean id="documentResourceImpl" class="com.myorg.tools.documentworkflow.rest.resources.impl.DocumentWorkflowServiceImpl" scope="request">
+	<bean id="documentResourceImpl" class="com.myorg.tools.documentworkflow.rest.resources.impl.DocumentWorkflowServiceImpl" scope="request" parent="baseResource">
 		<property name="documentDAO" ref="documentWorkflowDAOImpl" />
 	</bean>
-	<bean id="documentAdminSvcImpl" class="com.myorg.tools.documentworkflow.rest.resources.impl.DocumentAdminServiceImpl" scope="request">
+	<bean id="documentAdminSvcImpl" class="com.myorg.tools.documentworkflow.rest.resources.impl.DocumentAdminServiceImpl" scope="request" parent="baseResource">
 		<property name="documentAdminDAO" ref="documentAdminDAOImpl" />
 	</bean>
-	<bean id="userAdminSvcImpl" class="com.myorg.tools.documentworkflow.rest.resources.impl.UserAdminServiceImpl" scope="request">
+	<bean id="userAdminSvcImpl" class="com.myorg.tools.documentworkflow.rest.resources.impl.UserAdminServiceImpl" scope="request" parent="baseResource">
 		<property name="userAdminDAO" ref="userAdminDAOImpl" />
 	</bean>
 	
-	<bean id="userResourceImpl" class="com.myorg.tools.documentworkflow.rest.resources.impl.UserServiceImpl" scope="request">
+	<bean id="userResourceImpl" class="com.myorg.tools.documentworkflow.rest.resources.impl.UserServiceImpl" scope="request" parent="baseResource">
     </bean>
 	
 </beans>

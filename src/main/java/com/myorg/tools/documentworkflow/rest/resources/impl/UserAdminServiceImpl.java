@@ -8,9 +8,10 @@ import com.myorg.tools.documentworkflow.dao.UserAdminDAO;
 import com.myorg.tools.documentworkflow.model.Role;
 import com.myorg.tools.documentworkflow.model.RoleUsersMapping;
 import com.myorg.tools.documentworkflow.model.User;
+import com.myorg.tools.documentworkflow.rest.resources.BaseResource;
 import com.myorg.tools.documentworkflow.rest.resources.UserAdminService;
 
-public class UserAdminServiceImpl implements UserAdminService {
+public class UserAdminServiceImpl extends BaseResource implements UserAdminService {
 	
 	private UserAdminDAO userAdminDAO;
 

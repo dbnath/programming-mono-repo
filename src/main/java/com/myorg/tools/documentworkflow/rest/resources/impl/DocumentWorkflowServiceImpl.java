@@ -10,9 +10,10 @@ import com.myorg.tools.documentworkflow.dao.DocumentWorkflowDAO;
 import com.myorg.tools.documentworkflow.model.DocumentWorkflow;
 import com.myorg.tools.documentworkflow.model.DocumentWorkflowDetail;
 import com.myorg.tools.documentworkflow.model.DocumentWorkflowProcess;
+import com.myorg.tools.documentworkflow.rest.resources.BaseResource;
 import com.myorg.tools.documentworkflow.rest.resources.DocumentWorkflowService;
 
-public class DocumentWorkflowServiceImpl implements DocumentWorkflowService {
+public class DocumentWorkflowServiceImpl extends BaseResource implements DocumentWorkflowService {
 
 	private DocumentWorkflowDAO documentDAO;
 	
