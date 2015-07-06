@@ -32,8 +32,9 @@ public class DocumentWorkflowServiceImpl extends BaseResource implements Documen
 		this.documentDAO = documentDAO;
 	}
 	
-	public Response getAllDocuments(String userId) {
+	public Response getAllDocuments() {
 		try {
+			String userId = getLoggedInUserId();
 			System.out.println("Inside getAllDocuments");
 			List<DocumentWorkflow> documentList = documentDAO
 					.getAllDocuments(userId);

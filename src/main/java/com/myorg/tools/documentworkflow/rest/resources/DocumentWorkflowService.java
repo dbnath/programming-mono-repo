@@ -20,10 +20,10 @@ import com.myorg.tools.documentworkflow.model.DocumentWorkflowProcess;
 public interface DocumentWorkflowService {
 	
 	   /* To populate Doc list in Workflow Landing page*/
-	   @GET
+	   @POST
 	   @Path("/docs")
 	   @Produces(MediaType.APPLICATION_JSON)	   
-	   public Response getAllDocuments(@QueryParam("userId") String userId);
+	   public Response getAllDocuments();
 	   
 	   /* To populate Doc Detail scrren for Tagging*/
 	   @GET

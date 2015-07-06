@@ -1,5 +1,6 @@
 package com.myorg.tools.documentworkflow.rest.resources;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,6 @@ import com.myorg.tools.documentworkflow.config.DocumentWorkflowConfiguration;
 
 public abstract class BaseResource {
 	private @Autowired HttpServletRequest request;
-	private @Autowired HttpServletRequest response;
 	private DocumentWorkflowConfiguration appConfig;
 
 	public HttpServletRequest getRequest() {
@@ -18,15 +18,6 @@ public abstract class BaseResource {
 	public void setRequest(HttpServletRequest request) {
 		this.request = request;
 	}
-
-	public HttpServletRequest getResponse() {
-		return response;
-	}
-
-	public void setResponse(HttpServletRequest response) {
-		this.response = response;
-	}
-	
 
 
 	public DocumentWorkflowConfiguration getAppConfig() {
@@ -39,7 +30,10 @@ public abstract class BaseResource {
 
 	protected String getLoggedInUserId() {
 		String loggedInUser = null;
-		loggedInUser = request.getHeader(appConfig.getUserCookieHeaderName());
+		Cookie[] cookies = request.getCookies();
+		
+		System.out.println("cookies="+cookies);
+		loggedInUser = request.getHeader("Cookie");
 	    if (loggedInUser != null) {
 	        System.out.println("Using from cookie user sid:" + loggedInUser);
 	    } else {
