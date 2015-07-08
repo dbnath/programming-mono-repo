@@ -77,6 +77,7 @@ public interface DocumentAdminService {
 	   @Path("/template")
 	   @Produces("application/vnd.ms-excel")	   
 	   public Response getTemplate();
+	   
 
 	   /*@POST
 	   @Path("/updatedoctypes")
