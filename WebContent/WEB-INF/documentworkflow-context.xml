@@ -17,7 +17,7 @@
 	<bean id="dataSource" 
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 	   <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
-	   <property name="url" value="jdbc:mysql://localhost:3306/TEST"/>
+	   <property name="url" value="jdbc:mysql://10.227.112.54:3306/TEST"/>
 	   <property name="username" value="root"/>
 	   <property name="password" value="password"/>
 	</bean>
@@ -31,6 +31,7 @@
 	
 	<bean id="appConfig" scope="singleton"	class="com.myorg.tools.documentworkflow.config.DocumentWorkflowConfiguration" init-method="init">
 		<property name="userCookieHeaderName" value="DOC_WORKFLOW_UID"/>
+		<property name="tempFileLocation" value="D:/temp"/>
 	</bean>
 	
 	<bean id="log4jInitializer"

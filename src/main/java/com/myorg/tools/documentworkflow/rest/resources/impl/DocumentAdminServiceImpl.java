@@ -1,5 +1,8 @@
 package com.myorg.tools.documentworkflow.rest.resources.impl;
 
+import java.awt.Color;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
@@ -8,7 +11,14 @@ import java.util.List;
 
 import javax.ws.rs.core.Response;
 
+import org.apache.poi.ss.usermodel.DataValidation;
+import org.apache.poi.ss.usermodel.DataValidationConstraint;
+import org.apache.poi.ss.usermodel.DataValidationHelper;
+import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFColor;
+import org.apache.poi.xssf.usermodel.XSSFDataValidationHelper;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -193,31 +203,127 @@ public class DocumentAdminServiceImpl extends BaseResource implements DocumentAd
 		
 		
 		try {
-			List<DocumentRepository> repoLIst = documentAdminDAO.populateDocumentRepos();
+			List<DocumentRepository> repoList = documentAdminDAO.populateDocumentRepos();
 			List<DocumentType> typeList = documentAdminDAO.populateDocumentTypes();
+			
+			
+			String[] repoValues = new String[repoList.size()];
+			int i=0;
+			for(DocumentRepository repo : repoList){
+				repoValues[i] = repo.getDocRepoName();
+				i++;
+			}
+			
+			i=0;
+			String[] typeValues = new String[typeList.size()];
+			for(DocumentType type : typeList){
+				typeValues[i] = type.getDocTypeName();
+				i++;
+			}
+			
 			
 			XSSFWorkbook wb = new XSSFWorkbook();			
 			XSSFSheet sheet = wb.createSheet();
+			XSSFCellStyle headerStyle = wb.createCellStyle();
 			
-			XSSFRow headerRow = sheet.createRow(0);
+			Font headerFont = wb.createFont();
+			headerFont.setBold(true);
 			
-			XSSFCell cell = headerRow.createCell(0);
+			createTemplateHeader(sheet, headerFont, headerStyle);
+			createTemplateBody(sheet, repoValues, typeValues);
 			
+			File file = new File(this.getAppConfig().getTempFileLocation()+"/template"+System.currentTimeMillis()+".xlsx");
 			
+			FileOutputStream baos = new FileOutputStream(file);
+			wb.write(baos);
+			baos.close();
 			
+			return Response.ok(file).header("Content-Disposition", "attachment; filename=\"FileUploadTemplate.xlsx\"").build();
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return Response.status(404).entity("Template Not Available: ").type("text/plain").build();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return Response.status(404).entity("Template Not Available: ").type("text/plain").build();
 		}
 		
-		
-		
-		return null;
 	}
+	
+	private void createTemplateHeader(XSSFSheet sheet, Font headerFont, XSSFCellStyle headerStyle) {
+
+		XSSFRow headerRow = sheet.createRow(0);
+
+		XSSFColor headerColor = new XSSFColor(Color.DARK_GRAY);
+		headerStyle.setFillBackgroundColor(headerColor);
+		headerStyle.setFont(headerFont);
+
+		for (int i = 0; i < 5; i++) {
+			XSSFCell cell = headerRow.createCell(i);
+			cell.setCellStyle(headerStyle);
+
+			switch (i) {
+			case 0:
+				cell.setCellValue("Document Name");
+				break;
+			case 1:
+				cell.setCellValue("Document Type");
+				break;
+			case 2:
+				cell.setCellValue("Document Repository");
+				break;
+			case 3:
+				cell.setCellValue("Document Hyperlink");
+				break;
+			case 4:
+				cell.setCellValue("Document Location");
+				break;
+			}
+		}
+		return;
+	}
+	
+	private void createTemplateBody(XSSFSheet sheet, String[] repoValues, String[] typeValues) {
+
+		
+		DataValidationHelper validationHelper = new XSSFDataValidationHelper(sheet);
+		String[] allowedValues = new String[]{""};
+		
+        DataValidationConstraint repoConstraint = validationHelper.createExplicitListConstraint(repoValues);
+        DataValidationConstraint typeConstraint = validationHelper.createExplicitListConstraint(typeValues);
+        DataValidationConstraint constraint = validationHelper.createExplicitListConstraint(allowedValues);
+        
+        org.apache.poi.ss.util.CellRangeAddressList repoAddressList = new org.apache.poi.ss.util.CellRangeAddressList(1, 1001,2, 2);
+        org.apache.poi.ss.util.CellRangeAddressList typeAddressList = new org.apache.poi.ss.util.CellRangeAddressList(1, 1001,1, 1);
+        DataValidation repoValidation = validationHelper.createValidation(repoConstraint, repoAddressList);
+        DataValidation typeValidation = validationHelper.createValidation(typeConstraint, typeAddressList);
+        DataValidation dataValidation = null;
+        
+        repoValidation.setSuppressDropDownArrow(true);        
+        typeValidation.setSuppressDropDownArrow(true);
+        //dataValidation.createPromptBox("Valid Values", "The following values are valid for this cell:" +allowedValues); 
+        repoValidation.setShowPromptBox(true); 
+        repoValidation.setErrorStyle(DataValidation.ErrorStyle.STOP); 
+        repoValidation.createErrorBox("Validation Error", "You can only select values from dropdown");
+        repoValidation.setShowErrorBox(true);
+        sheet.addValidationData(repoValidation); 
+        
+        typeValidation.setShowPromptBox(true); 
+        typeValidation.setErrorStyle(DataValidation.ErrorStyle.STOP); 
+        typeValidation.createErrorBox("Validation Error", "You can only select values from dropdown");
+        typeValidation.setShowErrorBox(true);
+        sheet.addValidationData(typeValidation); 
+        
+        org.apache.poi.ss.util.CellRangeAddressList addressList = new org.apache.poi.ss.util.CellRangeAddressList(1002, 1048575,0,4);
+        dataValidation = validationHelper.createValidation(constraint, addressList); 
+        dataValidation.setSuppressDropDownArrow(false);        
+        dataValidation.setShowPromptBox(true); 
+        dataValidation.setErrorStyle(DataValidation.ErrorStyle.STOP); 
+        dataValidation.createErrorBox("Validation Error", "You can enter maximum 1000 rows at a time");
+        dataValidation.setShowErrorBox(true);
+        sheet.addValidationData(dataValidation); 		
+		return;
+	}	
 	
 	
 	
