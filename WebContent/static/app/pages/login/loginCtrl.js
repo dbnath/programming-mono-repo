@@ -21,12 +21,13 @@ app.controller("loginCtrl",['service',function(service){
     service.login(data).then(function(obj){
     	
       if(obj.status == 200){
-        if(login.user.role === 'System Admin'){
-        
+        if(login.user.role === 'System Admin'){        
           window.location.href = '#/setting';
         } else {
           window.location.href = '#/home/'+login.user.username;
         }
+        alert(obj.headers);
+        alert(obj.headers['X-DOCWRKFLOW-AUTH']);
       } else {
         alert("Error"+obj.data);
       }

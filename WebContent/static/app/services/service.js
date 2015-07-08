@@ -133,18 +133,18 @@ app.factory("service",function($http,$q){
 	      data : data,
 	      params :params
 	      
-	    }).success(function(data,status){
-	      var result = {
-	        data : data || {},
-	        status : status
-	      }
-	      deferred.resolve(result);
+	    }).success(function(data,status, headers,config){
+			var results = [] ;
+			results.data = data || {} ;
+			results.headers = headers();
+			results.status = status;
+			results.config = config;		  
+			deferred.resolve(results);
 	    }).error(function(error,status){
-	      var result= {
-	        data : error || {},
-	          status : status
-	      }
-	      deferred.resolve(result);
+			var results = [] ;
+			results.data = error || {} ;
+			results.status = status;
+			deferred.resolve(results);
 	    })
 	    return deferred.promise;
   	}
