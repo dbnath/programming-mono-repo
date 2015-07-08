@@ -28,8 +28,8 @@
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    width: 850px;
+    height: 300px;
 }
 
 .tags {
@@ -104,3 +104,15 @@ transition: 300ms linear all;
 	background-color:#707070;
 	font-size:1em;
 }
+
+.myModal {
+    /* new custom width */
+    width: 760px;
+    /* must be half of the width, minus scrollbar on the left (30px) */
+}
+
+.modal.modal-wide .modal-dialog {
+  width: 90%;
+}
+
+#myModal .modal-body p { margin-bottom: 800px }

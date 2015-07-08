@@ -61,7 +61,8 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$templateCache','$
 			        	service.getDocDetails(row.entity.docId).then(function(obj){
 			        		
 			        	    if(obj.status == 200){
-			        	 //   alert(angular.toJson(obj.data, true));
+			        	    //alert(angular.toJson(obj.data, true));
+			        	    	home.docdetails ={};
 			        	    	home.docdetails = obj.data;
 			        	    } else {
 			        	      alert("Error"+obj.data); 
@@ -103,18 +104,19 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$templateCache','$
 			 appScopeProvider: { 
 			        onDblClick : function(row) {
 			        	home.appState = 'show';
-			          
-			        	service.getDocDetails(row.entity.docId).then(function(obj){
+  	service.getDocDetails(row.entity.docId).then(function(obj){
 			        		
 			        	    if(obj.status == 200){
-			        	 //     alert(angular.toJson(obj.data, true));
+			        	    //alert(angular.toJson(obj.data, true));
+			        	    	home.docdetails ={};
 			        	    	home.docdetails = obj.data;
 			        	    } else {
 			        	      alert("Error"+obj.data); 
 			        	    }
 			        	  });
+
 			         }
-			 }
+			    }
 	}
 	
     service.getAllDoc().then(function(obj){
@@ -143,10 +145,10 @@ service.getDocByUser(home.user).then(function(obj){
 home.assignMe = function(){
 	
 	var log = [];
-	//angular.forEach( $scope.rows, function(row, key) {
+	/*angular.forEach( $scope.rows, function(row, key) {
 		//alert(angular.toJson(row, true));
 	//	alert(key);
-		/*var newrow ={};
+		var newrow ={};
 		 var index = $scope.gridOptions.data.indexOf(row.entity);
 		 newrow.assignedTo =  home.user;
 		 newrow.docName  = row.entity.docName;
@@ -220,6 +222,11 @@ $scope.gridOptions.onRegisterApi = function(gridApi){
 	  $(this).tab('show')
   });
   
+
+  var tags = '<select id="example-multiple-optgroups" multiple="multiple">' +'</select>';
+  tags += '<textarea class="form-control" rows="3"></textarea>';
+  tags += ' <a href="#" class="btn btn-primary"><span class="glyphicon glyphicon-floppy-disk"></span>Save</a>';
+  
   /* document viewer  */
   
   (function(a) {
@@ -232,7 +239,7 @@ $scope.gridOptions.onRegisterApi = function(gridApi){
           };
           var b = a.extend({}, defaults, b);
           var c = (b.scrollable === true) ? 'style="max-height: 420px;overflow-y: auto;"' : "";
-          html = '<div class="modal fade" id="myModal">';
+          html = '<div class="modal fade modal-wide" id="myModal" >';
           html += '<div class="modal-dialog">';
           html += '<div class="modal-content">';
           html += '<div class="modal-header">';
@@ -242,7 +249,7 @@ $scope.gridOptions.onRegisterApi = function(gridApi){
           }
           html += "</div>";
           html += '<div class="modal-body" ' + c + ">";
-          html += '<div class="row"><div class="col-xs-6">' + b.message + '</div><div class="col-xs-6">' +  '<div>tt</div>'+ '</div></div>';
+          html += '<div class="row"><div class="col-xs-9">' + b.message + '</div><div class="col-xs-3">' +  '<div>' + tags +'</div>'+ '</div></div>';
           html += "</div>";
           html += '<div class="modal-footer">';
           if (b.closeButton === true) {
@@ -253,6 +260,61 @@ $scope.gridOptions.onRegisterApi = function(gridApi){
           html += "</div>";
           html += "</div>";
           a("body").prepend(html);
+          var height = $(window).height() - 50;
+          
+          var optgroups = [
+                           {
+                               label: 'Group 1', children: [
+                                   {label: 'Option 1.1', value: '1-1'},
+                                   {label: 'Option 1.2', value: '1-2'},
+                                   {label: 'Option 1.3', value: '1-3'}
+                               ]
+                           },
+                           {
+                               label: 'Group 2', children: [
+                                   {label: 'Option 2.1', value: '2-1'},
+                                   {label: 'Option 2.2', value: '2-2'},
+                                   {label: 'Option 2.3', value: '2-3'}
+                               ]
+                           },
+                           {
+                               label: 'Group 3', children: [
+                                   {label: 'Option 3.1', value: '3-1'},
+                                   {label: 'Option 3.2', value: '3-2'},
+                                   {label: 'Option 3.3', value: '3-3'}
+                               ]
+                           }
+                       ];
+                       $('#example-multiple-optgroups').multiselect('dataprovider', optgroups);
+                       var selectconfig = {
+                               enableFiltering: true,
+                               onChange: function(option, checked) {
+                                   // Get selected options.
+                                   var selectedOptions = $('#example-multiple-optgroups option:selected');
+                                   
+                                   var sopt = [];
+                                   selectedOptions.each(function() {
+                                	   sopt.push($(this).parent().attr('label'));
+                                   });
+                                   
+                                   var result = $.grep(sopt, function(e){ return e == $(option).parent().attr('label'); });
+                                   //alert(result);
+                                   if(checked === true && sopt.length > 1 && result.length > 1) {
+                                	   //alert($(option).val());
+                                	   $('#example-multiple-optgroups').multiselect('deselect', $(option).val());
+                                   }
+                                   
+                               }                          
+                       };
+                       $('#example-multiple-optgroups').multiselect('setOptions', selectconfig);
+                       $('#example-multiple-optgroups').multiselect('rebuild');
+         /* $('#example-multiple-optgroups').multiselect({
+              enableFiltering: true
+          });*/
+    	  
+    	  
+    	  $("#myModal").css("max-height", height);
+    	  
           a("#myModal").modal().on("hidden.bs.modal", function() {
               a(this).remove()
           })
@@ -274,31 +336,6 @@ $scope.gridOptions.onRegisterApi = function(gridApi){
       });    
   });
   
-  var optgroups = [
-                   {
-                       label: 'Group 1', children: [
-                           {label: 'Option 1.1', value: '1-1'},
-                           {label: 'Option 1.2', value: '1-2'},
-                           {label: 'Option 1.3', value: '1-3'}
-                       ]
-                   },
-                   {
-                       label: 'Group 2', children: [
-                           {label: 'Option 2.1', value: '2-1'},
-                           {label: 'Option 2.2', value: '2-2'},
-                           {label: 'Option 2.3', value: '2-3'}
-                       ]
-                   },
-                   {
-                       label: 'Group 3', children: [
-                           {label: 'Option 3.1', value: '3-1'},
-                           {label: 'Option 3.2', value: '3-2'},
-                           {label: 'Option 3.3', value: '3-3'}
-                       ]
-                   }
-               ];
-
-  
   $(function(){    
       $('.tagmodal').on('click',function(){
     	  e.preventDefault();   
@@ -306,7 +343,5 @@ $scope.gridOptions.onRegisterApi = function(gridApi){
       });    
   });
   
-
+    
 }]);
-
-
