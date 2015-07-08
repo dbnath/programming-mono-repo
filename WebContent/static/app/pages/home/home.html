@@ -51,7 +51,7 @@
 	 
 		 <div id="myTabContent" class="tab-content">
 		       <div role="tabpanel" class="tab-pane fade in active" id="home" aria-labelledBy="home-tab">
-		         <div class="gridStyle" ui-grid="gridOptions"  ui-grid-selection class="grid">
+		         <div class="gridStyle" ui-grid="gridOptions"  ui-grid-selection class="grid" >
 		          </div>
 		           <div class="col-xs-4">
 		             <br>
@@ -86,14 +86,17 @@
 					</a>
 					<h4 class="list-group-item-heading">
 						<a href="#">
-							Alparvis_Ltd.pdf
+							{{hc.docdetails.document.docName}}
 						</a>
 					</h4>
-					<p class="list-group-item-text"><strong>PDF</strong></p>
-					<p class="list-group-item-text"><strong>3.2Mb</strong></p>
+					<p class="list-group-item-text"><strong>{{hc.docdetails.document.docTypeDesc}}</strong></p>
+					<p class="list-group-item-text"><strong>{{hc.docdetails.document.docHyperlink}}</strong></p>
 				</div>
 				<div class="list-group-item">
-					<p class="list-group-item-text"><strong>Last modified by Jack Herbert on 5 Mar 2014</strong></p>
+					<p class="list-group-item-text"><strong>Last modified by {{hc.docdetails.document.lastUpdatedBy}} on {{hc.docdetails.document.lastUpdatedDt}}</strong></p>
+				</div>
+				<div class="list-group-item">
+					<p class="list-group-item-text"><strong>Created by {{hc.docdetails.document.createdBy}} on {{hc.docdetails.document.creationDt}}</strong></p>
 				</div>
 				<div class="list-group-item">
 					<ul class="tags">

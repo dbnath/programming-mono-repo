@@ -6,7 +6,8 @@ var app = angular.module('legalrpf', [
   'ngSanitize',
   'ui.router',
   'ui.bootstrap',
-  'ui.grid','ui.grid.selection'
+  'ui.grid','ui.grid.selection',
+  'ngAnimate'
 ])
   .config(function ($stateProvider, $urlRouterProvider, $locationProvider) {
     $urlRouterProvider.otherwise('/login');

@@ -18,8 +18,8 @@
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 	   <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
 	   <property name="url" value="jdbc:mysql://localhost:3306/TEST"/>
-	   <!--<property name="username" value="root"/>
-	   <property name="password" value="password"/>-->
+	   <property name="username" value="root"/>
+	   <property name="password" value="admin"/>
 	</bean>
 	
 	<bean id="transactionManager" 
@@ -47,10 +47,10 @@
 	
 	<!-- AOP-based caching (DB, web service, etc) -->
 	
-	<bean id="ehCacheManager"
-		class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
-		<property name="configLocation" value="classpath:/spring/documentworkflow-cache.xml" />
-	</bean>
+<!-- 	<bean id="ehCacheManager" -->
+<!-- 		class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean"> -->
+<!-- 		<property name="configLocation" value="classpath:/spring/documentworkflow-cache.xml" /> -->
+<!-- 	</bean> -->
 	
 	<import resource="classpath:/spring/documentworkflow-dao.xml" />
 	<import resource="classpath:/spring/documentworkflow-rest.xml" />

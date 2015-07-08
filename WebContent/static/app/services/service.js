@@ -6,8 +6,8 @@ app.factory("service",function($http,$q){
     getApproval : getApproval,
     addUser: addUser,
     getAllDoc : getAllDoc,
-    getDocByUser : getDocByUser
-    
+    getDocByUser : getDocByUser,
+    getDocDetails : getDocDetails
   
   };
   return data;
@@ -39,18 +39,25 @@ function getAllDoc(){
   
 function getDocByUser(data){
 	
-	 return request('GET','rest/WflService/docs',data,null);
+	 return request('GET','rest/WflService/docs',null,null,{'userId':data});
 	
 }
   
-
-  function request(method,url,data,headers){
+function getDocDetails(data){
+	
+	 return request('GET','rest/WflService/getdetail',null,null,{'docId':data});
+	
+}
+ 
+  function request(method,url,data,headers,params){
     var deferred = $q.defer();
     $http({
       method : method,
       headers : headers,
       url : url,
-      data : data
+      data : data,
+      params :params
+      
     }).success(function(data,status){
       var result = {
         data : data || {},
