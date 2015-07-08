@@ -29,28 +29,27 @@ public abstract class BaseResource {
 	}
 
 	protected User getLoggedInUser() {
-		String customHeader = request.getHeader("X-DOCWRKFLOW-AUTH");
+		String customHeader = request.getHeader("x-docwrkflow-auth");
 		System.out.println("Custom Header="+customHeader);
 		String loggedInUserId = null;
-		String loggedInUser = null;
+		String loggedInUserName = null;
 		String selectedRoleId = null;
-		User user = null;
 	    if (customHeader != null) {
 	    	String[] headerSplits = customHeader.split("\\|");
 	    	for (int i = 0; i < headerSplits.length; i++) {
 				System.out.println(i+":"+headerSplits[i]);
 			}
 	    	loggedInUserId = headerSplits[0];
-	    	loggedInUser = headerSplits[1];
-	    	selectedRoleId = headerSplits[2];
-	        System.out.println("Using from header user sid:" + loggedInUser);
+	    	selectedRoleId = headerSplits[1];
+	    	loggedInUserName = null;
+	        System.out.println("Using from header user sid:" + loggedInUserId);
 	    } else {
 	    	loggedInUserId = "1";
-	    	loggedInUser = "DEBASISH";
 	    	selectedRoleId = "1";
-	    	System.out.println("Using hardcoded sid:" + loggedInUser);
+	    	loggedInUserName = "DEBASISH";
+	    	System.out.println("Using hardcoded sid:" + loggedInUserId);
 	    }
-	    return new User(loggedInUserId, loggedInUser, selectedRoleId);
+	    return new User(loggedInUserId, loggedInUserName, selectedRoleId);
 	}
 
 }

@@ -14,10 +14,10 @@ public class UserServiceImpl extends BaseResource implements UserService   {
 		System.out.println("user is " + user);
 		User  dto = new User();
 		dto.setUserId(user.getUserId());
-		dto.setUserName(user.getUserName());
+		dto.setPassword(user.getPassword());
 		dto.setRoleId(user.getRoleId());
-		String customHeader = dto.getUserId()+"|"+dto.getUserName()+"|"+dto.getRoleId();
-		return Response.ok().entity(dto).header("X-DOCWRKFLOW-AUTH", customHeader).build();
+		String customHeader = dto.getUserId()+"|"+dto.getRoleId(); //apply encryption here
+		return Response.ok().entity(dto).header("x-docwrkflow-auth", customHeader).build();
 	}
 
 }

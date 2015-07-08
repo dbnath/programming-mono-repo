@@ -14,7 +14,7 @@ app.controller("loginCtrl",['service',function(service){
   login.login = function(){
 	 
     var data = {
-      "userName" : login.user.username,
+      "userId" : login.user.username,
       "password" : login.user.password,
       "roleId" : login.user.role
     };
@@ -26,8 +26,7 @@ app.controller("loginCtrl",['service',function(service){
         } else {
           window.location.href = '#/home/'+login.user.username;
         }
-        alert(obj.headers);
-        alert(obj.headers['X-DOCWRKFLOW-AUTH']);
+        console.log("The selected user role:"+obj.headers['x-docwrkflow-auth']);
       } else {
         alert("Error"+obj.data);
       }
