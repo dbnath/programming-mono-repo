@@ -22,7 +22,7 @@ public interface DocumentWorkflowService {
 	   @GET
 	   @Path("/docs")
 	   @Produces(MediaType.APPLICATION_JSON)	   
-	   public Response getAllDocuments(@QueryParam("userId") String userId);
+	   public Response getAllDocuments();
 	   
 	   /* To populate Doc Detail scrren for Tagging*/
 	   @GET
