@@ -36,9 +36,10 @@ public abstract class BaseResource {
 	    	loggedInUser = customHeader.split("|")[1];
 	        System.out.println("Using from header user sid:" + loggedInUser);
 	    } else {
-	    	loggedInUser = "DEBASISH";
+	    	loggedInUser = "PRATIK";
 	    	 System.out.println("Using hardcoded sid:" + loggedInUser);
 	    }
+	    loggedInUser = "PRATIK";
 	    return loggedInUser;
 	}
 
