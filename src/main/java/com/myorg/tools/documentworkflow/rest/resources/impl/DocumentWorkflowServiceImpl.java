@@ -13,6 +13,7 @@ import com.myorg.tools.documentworkflow.model.DocumentWorkflowProcess;
 import com.myorg.tools.documentworkflow.model.User;
 import com.myorg.tools.documentworkflow.rest.resources.BaseResource;
 import com.myorg.tools.documentworkflow.rest.resources.DocumentWorkflowService;
+import com.myorg.tools.documentworkflow.util.DocumentWorkflowToolUtility;
 
 public class DocumentWorkflowServiceImpl extends BaseResource implements DocumentWorkflowService {
 
@@ -124,16 +125,18 @@ public class DocumentWorkflowServiceImpl extends BaseResource implements Documen
 			List<DocumentWorkflow> docs = documentDAO.fetchDocumentWorkflows(docIds);
 			User user = getLoggedInUser();
 			String userId = user.getUserId();
-			
-			System.out.println("###### user id "+userId+" ###### "+docs);
+			String userRoleId = user.getRoleId();
 			for (DocumentWorkflow doc : docs) {
-				if (!userId.equalsIgnoreCase(doc.getAssignedTo())) {
+				if (DocumentWorkflowToolUtility.areAllObjectsNull(doc.getAssignedTo(), doc.getUserRole())) {
 					doc.setAssignedTo(userId);
 					doc.setAssignedDt(new Date());
+					doc.setUserRole(userRoleId);
 					doc.setWfStatusId(doc.getWfStatusId()+1);
 					doc.setWfStatusDesc(null);
 					doc.setLastUpdatedBy(userId);
 					doc.setLastUpdateDt(new Date());
+				} else {
+					docs.remove(doc);
 				}
 			}
 			documentDAO.assignWorkflow(docs);

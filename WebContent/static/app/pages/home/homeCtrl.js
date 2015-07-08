@@ -104,6 +104,15 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$templateCache','$
 			        onDblClick : function(row) {
 			        	home.appState = 'show';
 			          
+			        	service.getDocDetails(row.entity.docId).then(function(obj){
+			        		
+			        	    if(obj.status == 200){
+			        	 //     alert(angular.toJson(obj.data, true));
+			        	    	home.docdetails = obj.data;
+			        	    } else {
+			        	      alert("Error"+obj.data); 
+			        	    }
+			        	  });
 			         }
 			 }
 	}
@@ -134,10 +143,10 @@ service.getDocByUser(home.user).then(function(obj){
 home.assignMe = function(){
 	
 	var log = [];
-	angular.forEach( $scope.rows, function(row, key) {
+	//angular.forEach( $scope.rows, function(row, key) {
 		//alert(angular.toJson(row, true));
 	//	alert(key);
-		var newrow ={};
+		/*var newrow ={};
 		 var index = $scope.gridOptions.data.indexOf(row.entity);
 		 newrow.assignedTo =  home.user;
 		 newrow.docName  = row.entity.docName;
@@ -147,7 +156,28 @@ home.assignMe = function(){
 		 home.countmylist =  home.countmylist+1;
 		 angular.extend( $scope.gridOptions.data[index], newrow);
 			$scope.gridOptionsmylist.data.push(newrow);
-		}, log);
+		}, log);*/
+		
+		var docIdList = [];
+		angular.forEach($scope.rows, function(row, key) {
+			docIdList.push(row.entity.docId);
+		});
+		service.assignToMe(docIdList).then(function(obj){
+			if (obj.status == 200) {
+				home.countmylist =  home.countmylist+docIdList.length;
+				angular.forEach($scope.rows, function(row, key) {
+					var newrow ={};
+					var index = $scope.gridOptions.data.indexOf(row.entity);
+					newrow.assignedTo =  home.user;
+					newrow.docName  = row.entity.docName;
+					newrow.wfStatusDesc = row.entity.wfStatusDesc;
+					newrow.wfAssignmentGroupName = row.entity.wfAssignmentGroupName;
+					newrow.docId = row.entity.docId;
+					angular.extend( $scope.gridOptions.data[index], newrow);
+					$scope.gridOptionsmylist.data.push(newrow);
+				}, log);
+			}
+		});
 	
 };
 
