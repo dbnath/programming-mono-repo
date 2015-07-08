@@ -70,7 +70,7 @@ public class DocumentWorkflowDAOImpl extends BaseJDBCTemplate implements Documen
 	    List<DocumentTagRelationship> docTagRelationships = getDocTagRelationshipList(docId);
 	    String SQL = DocumentWorkflowToolConstant.WKFL_DTL_DOC_TAG_OVERRIDE_SQL;
 		try{
-			this.getJdbcTemplateObject().queryForObject(SQL, new Object[]{docId}, new DocumentWorkflowDetailMapper());
+			docWflDetail = this.getJdbcTemplateObject().queryForObject(SQL, new Object[]{docId}, new DocumentWorkflowDetailMapper());
 		} catch(EmptyResultDataAccessException e){
 			docWflDetail = new DocumentWorkflowDetail();
 			if (! DocumentWorkflowToolUtility.isEmpty(document)) {

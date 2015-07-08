@@ -10,6 +10,7 @@ import com.myorg.tools.documentworkflow.dao.DocumentWorkflowDAO;
 import com.myorg.tools.documentworkflow.model.DocumentWorkflow;
 import com.myorg.tools.documentworkflow.model.DocumentWorkflowDetail;
 import com.myorg.tools.documentworkflow.model.DocumentWorkflowProcess;
+import com.myorg.tools.documentworkflow.model.User;
 import com.myorg.tools.documentworkflow.rest.resources.BaseResource;
 import com.myorg.tools.documentworkflow.rest.resources.DocumentWorkflowService;
 
@@ -32,9 +33,8 @@ public class DocumentWorkflowServiceImpl extends BaseResource implements Documen
 		this.documentDAO = documentDAO;
 	}
 	
-	public Response getAllDocuments() {
+	public Response getAllDocuments(String userId) {
 		try {
-			String userId = getLoggedInUserId();
 			System.out.println("Inside getAllDocuments userId = "+userId);
 			List<DocumentWorkflow> documentList = documentDAO
 					.getAllDocuments(userId);
@@ -59,7 +59,8 @@ public class DocumentWorkflowServiceImpl extends BaseResource implements Documen
 
 	public Response submitWorkflow(DocumentWorkflowProcess docWorkflowProcess) {
 		//System.out.println("###### GORU ");
-		String	userId = getLoggedInUserId();
+		User user = getLoggedInUser();
+		String userId = user.getUserId();
 		try {
 			
 			if(docWorkflowProcess != null){
@@ -121,7 +122,9 @@ public class DocumentWorkflowServiceImpl extends BaseResource implements Documen
 	public Response assignDocumentsTo(List<Integer> docIds) {
 		try {
 			List<DocumentWorkflow> docs = documentDAO.fetchDocumentWorkflows(docIds);
-			String	userId = getLoggedInUserId();
+			User user = getLoggedInUser();
+			String userId = user.getUserId();
+			
 			System.out.println("###### user id "+userId+" ###### "+docs);
 			for (DocumentWorkflow doc : docs) {
 				if (!userId.equalsIgnoreCase(doc.getAssignedTo())) {

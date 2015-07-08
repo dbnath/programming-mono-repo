@@ -1,11 +1,11 @@
 package com.myorg.tools.documentworkflow.rest.resources;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.myorg.tools.documentworkflow.config.DocumentWorkflowConfiguration;
+import com.myorg.tools.documentworkflow.model.User;
 
 public abstract class BaseResource {
 	private @Autowired HttpServletRequest request;
@@ -28,19 +28,29 @@ public abstract class BaseResource {
 		this.appConfig = appConfig;
 	}
 
-	protected String getLoggedInUserId() {
+	protected User getLoggedInUser() {
 		String customHeader = request.getHeader("X-DOCWRKFLOW-AUTH");
 		System.out.println("Custom Header="+customHeader);
+		String loggedInUserId = null;
 		String loggedInUser = null;
+		String selectedRoleId = null;
+		User user = null;
 	    if (customHeader != null) {
-	    	loggedInUser = customHeader.split("|")[1];
+	    	String[] headerSplits = customHeader.split("\\|");
+	    	for (int i = 0; i < headerSplits.length; i++) {
+				System.out.println(i+":"+headerSplits[i]);
+			}
+	    	loggedInUserId = headerSplits[0];
+	    	loggedInUser = headerSplits[1];
+	    	selectedRoleId = headerSplits[2];
 	        System.out.println("Using from header user sid:" + loggedInUser);
 	    } else {
-	    	loggedInUser = "PRATIK";
-	    	 System.out.println("Using hardcoded sid:" + loggedInUser);
+	    	loggedInUserId = "1";
+	    	loggedInUser = "DEBASISH";
+	    	selectedRoleId = "1";
+	    	System.out.println("Using hardcoded sid:" + loggedInUser);
 	    }
-	    loggedInUser = "PRATIK";
-	    return loggedInUser;
+	    return new User(loggedInUserId, loggedInUser, selectedRoleId);
 	}
 
 }
