@@ -2,7 +2,7 @@ package com.myorg.tools.documentworkflow.model;
 
 import java.io.Serializable;
 
-public class DocumentType implements Serializable {
+public class DocumentType implements Serializable, ReverseMappable {
 
 	/**
 	 * 
@@ -43,5 +43,24 @@ public class DocumentType implements Serializable {
 	public void setDocTypeName(String docTypeName) {
 		this.docTypeName = docTypeName;
 	}
+
+	/* (non-Javadoc)
+	 * @see com.myorg.tools.documentworkflow.model.Mappable#getMapKey()
+	 */
+	@Override
+	public String getMapKey() {
+		return docTypeName;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.myorg.tools.documentworkflow.model.ReverseMappable#getCode()
+	 */
+	@Override
+	public Integer getCode() {
+		return docTypeId;
+	}
+	
+	
+
 	
 }

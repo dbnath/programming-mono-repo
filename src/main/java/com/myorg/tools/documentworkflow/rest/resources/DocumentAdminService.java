@@ -1,6 +1,6 @@
 package com.myorg.tools.documentworkflow.rest.resources;
 
-import java.util.List;
+import java.io.InputStream;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -12,12 +12,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 
-import com.myorg.tools.documentworkflow.model.DocumentRepository;
-import com.myorg.tools.documentworkflow.model.DocumentSubTagValues;
-import com.myorg.tools.documentworkflow.model.DocumentTag;
-import com.myorg.tools.documentworkflow.model.DocumentTagSubTagMapping;
-import com.myorg.tools.documentworkflow.model.DocumentType;
-import com.myorg.tools.documentworkflow.model.DocumentTypeTagMapping;
+import com.sun.jersey.core.header.FormDataContentDisposition;
+import com.sun.jersey.multipart.FormDataParam;
 
 @Provider
 @Path("/docadmin")
@@ -70,6 +66,17 @@ public interface DocumentAdminService {
 	   @Path("/docunmappedtagsubtags")
 	   @Produces(MediaType.APPLICATION_JSON)	   
 	   public Response populateUnmappedDocTagSubTags(@QueryParam("docTagId") Integer docTagId);
+	   
+	   @POST
+	   @Path("/uploaddoc")
+	   @Consumes(MediaType.MULTIPART_FORM_DATA)
+	   @Produces(MediaType.APPLICATION_JSON)	   
+	   public Response uploadDocuments(@FormDataParam("file") InputStream uploadedInputStream,  @FormDataParam("file") FormDataContentDisposition fileDetail, @FormDataParam("path") String path);
+	   
+	   @GET
+	   @Path("/template")
+	   @Produces("application/vnd.ms-excel")	   
+	   public Response getTemplate();
 
 	   /*@POST
 	   @Path("/updatedoctypes")

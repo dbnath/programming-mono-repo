@@ -2,18 +2,26 @@ package com.myorg.tools.documentworkflow.dao.impl;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 
 import com.myorg.tools.documentworkflow.constant.DocumentWorkflowToolConstant;
 import com.myorg.tools.documentworkflow.dao.DocumentAdminDAO;
+import com.myorg.tools.documentworkflow.model.Document;
 import com.myorg.tools.documentworkflow.model.DocumentRepository;
 import com.myorg.tools.documentworkflow.model.DocumentSubTagValues;
 import com.myorg.tools.documentworkflow.model.DocumentTag;
 import com.myorg.tools.documentworkflow.model.DocumentTagSubTagMapping;
 import com.myorg.tools.documentworkflow.model.DocumentType;
 import com.myorg.tools.documentworkflow.model.DocumentTypeTagMapping;
+import com.myorg.tools.documentworkflow.model.ReverseMappable;
 import com.myorg.tools.documentworkflow.util.DocumentWorkflowToolUtility;
 
 public class DocumentAdminDAOImpl extends BaseJDBCTemplate implements DocumentAdminDAO {
@@ -141,4 +149,80 @@ public class DocumentAdminDAOImpl extends BaseJDBCTemplate implements DocumentAd
 		}
 		return null;
 	}
+
+
+	/* (non-Javadoc)
+	 * @see com.myorg.tools.documentworkflow.dao.DocumentAdminDAO#uploadDocumentInformation(java.util.List)
+	 */
+	@Override
+	public boolean uploadDocumentInformation(List<Document> docList, String userId) throws SQLException, Exception {
+		
+		if(docList != null){
+			
+			HashMap<String, Integer> typeMap = DocumentWorkflowToolUtility.mapByValue(new ArrayList<ReverseMappable>(populateDocumentTypes()));
+			HashMap<String, Integer> repoMap = DocumentWorkflowToolUtility.mapByValue(new ArrayList<ReverseMappable>(populateDocumentRepos()));
+			
+			System.out.println("###### typeMap "+typeMap);
+			System.out.println("###### repoMap "+repoMap);
+			
+			SimpleJdbcCall jdbcCall = new SimpleJdbcCall(this.getDataSource()).withProcedureName("addDocument");
+			
+			
+			try {
+				for(Document doc : docList){
+					if(doc != null){
+						doc.setDocTypeId(typeMap.get(doc.getDocTypeDesc()));
+						doc.setDocRepoId(repoMap.get(doc.getDocRepoDesc()));
+						doc.setCreatedBy(userId);
+						doc.setCreationDt(new java.util.Date());
+						doc.setIsBadLinkReported("N");
+						doc.setIsDeleted("N");
+						
+						insertDocumentsIntoDatabase(jdbcCall, doc);
+					}
+				}
+				return true;
+			} catch (SQLException e) {
+				e.printStackTrace();
+				return false;
+			}			
+		}
+		return false;
+	}
+	
+	private void insertDocumentsIntoDatabase(SimpleJdbcCall jdbcCall, Document doc) throws SQLException, Exception {
+		
+		Set<String> params = new HashSet<String>();		
+		params.add("ID_DOC");
+		params.add("NM_DOC");
+		params.add("ID_DOC_TYPE");
+		params.add("ID_DOC_REPO");
+		params.add("DOC_HYPERLINK");
+		params.add("DOC_LOCATION");
+		params.add("IS_DELETED");
+		params.add("IS_VALID_LINK");
+		params.add("CREATED_BY");
+		params.add("CREATION_DT");
+		params.add("LAST_UPDATED_BY");
+		params.add("LAST_UPDATE_DT");
+		
+		jdbcCall.setInParameterNames(params);
+		
+		MapSqlParameterSource in = new MapSqlParameterSource().addValue("ID_DOC",500);
+		in.addValue("NM_DOC", doc.getDocName());		
+		in.addValue("ID_DOC_TYPE", doc.getDocTypeId());
+		in.addValue("ID_DOC_REPO", doc.getDocRepoId());
+		in.addValue("DOC_HYPERLINK", doc.getDocHyperlink());
+		in.addValue("DOC_LOCATION", doc.getDocLocation());
+		in.addValue("IS_DELETED", doc.getIsDeleted());
+		in.addValue("IS_VALID_LINK", doc.getIsBadLinkReported());
+		in.addValue("CREATED_BY", doc.getCreatedBy());
+		in.addValue("CREATION_DT", doc.getCreationDt());
+		in.addValue("LAST_UPDATED_BY", doc.getLastUpdatedBy());
+		in.addValue("LAST_UPDATE_DT", doc.getLastUpdatedDt());
+		
+		Map<String, Object> out = jdbcCall.execute(in);
+	}
+	
+	
 }

@@ -12,8 +12,11 @@ public class DocumentTagRelationship implements Serializable {
 	
 	private Integer docId;
 	private Integer docTypeId;
+	private String docTypeDesc;
 	private Integer docTagId;
+	private String docTagDesc;
 	private Integer docSubTagId;
+	private String docSubTagDesc;
 	private String createdBy;
 	private Date creationDt;
 	private String lastUpdatedBy;
@@ -49,6 +52,18 @@ public class DocumentTagRelationship implements Serializable {
 		this.docTypeId = docTypeId;
 	}
 	/**
+	 * @return the docTypeDesc
+	 */
+	public String getDocTypeDesc() {
+		return docTypeDesc;
+	}
+	/**
+	 * @param docTypeDesc the docTypeDesc to set
+	 */
+	public void setDocTypeDesc(String docTypeDesc) {
+		this.docTypeDesc = docTypeDesc;
+	}
+	/**
 	 * @return the docTagId
 	 */
 	public Integer getDocTagId() {
@@ -61,6 +76,18 @@ public class DocumentTagRelationship implements Serializable {
 		this.docTagId = docTagId;
 	}
 	/**
+	 * @return the docTagDesc
+	 */
+	public String getDocTagDesc() {
+		return docTagDesc;
+	}
+	/**
+	 * @param docTagDesc the docTagDesc to set
+	 */
+	public void setDocTagDesc(String docTagDesc) {
+		this.docTagDesc = docTagDesc;
+	}
+	/**
 	 * @return the docSubTagId
 	 */
 	public Integer getDocSubTagId() {
@@ -71,6 +98,18 @@ public class DocumentTagRelationship implements Serializable {
 	 */
 	public void setDocSubTagId(Integer docSubTagId) {
 		this.docSubTagId = docSubTagId;
+	}
+	/**
+	 * @return the docSubTagDesc
+	 */
+	public String getDocSubTagDesc() {
+		return docSubTagDesc;
+	}
+	/**
+	 * @param docSubTagDesc the docSubTagDesc to set
+	 */
+	public void setDocSubTagDesc(String docSubTagDesc) {
+		this.docSubTagDesc = docSubTagDesc;
 	}
 	/**
 	 * @return the createdBy

@@ -32,9 +32,8 @@ public class DocumentWorkflowServiceImpl extends BaseResource implements Documen
 		this.documentDAO = documentDAO;
 	}
 	
-	public Response getAllDocuments() {
+	public Response getAllDocuments(String userId) {
 		try {
-			String userId = getLoggedInUserId();
 			System.out.println("Inside getAllDocuments");
 			List<DocumentWorkflow> documentList = documentDAO
 					.getAllDocuments(userId);
@@ -72,23 +71,19 @@ public class DocumentWorkflowServiceImpl extends BaseResource implements Documen
 				System.out.println("###### docDetailObj "+docDetailObj);
 				
 				if(isFinalSubmit){
-					
 					docObj.setAssignedTo(null);
 					docObj.setAssignedDt(null);
 					
-					docObj.setLastUpdatedBy(userId);
-					docObj.setLastUpdateDt(new Date());
-					
-					docDetailObj.setLastUpdatedBy(userId);
-					docDetailObj.setLastUpdatedDt(new Date());
-					
 					docObj.setWfStatusId(docObj.getWfStatusId()+1);
 					docObj.setWfStatusDesc(null);
-					
-					
 				}
-				documentDAO.submitWorkflow(docObj, docDetailObj);
+				docObj.setLastUpdatedBy(userId);
+				docObj.setLastUpdateDt(new Date());
 				
+				docDetailObj.setLastUpdatedBy(userId);
+				docDetailObj.setLastUpdatedDt(new Date());
+				
+				documentDAO.submitWorkflow(docObj, docDetailObj);
 			}
 			
 			return Response.ok().entity(Boolean.TRUE).build();
@@ -102,33 +97,15 @@ public class DocumentWorkflowServiceImpl extends BaseResource implements Documen
 		}
 	}
 	
-	
-
-	public Response assignDocuments(List<DocumentWorkflow> docs) {
-
-		/*System.out.println("###### GORU");
-		DocumentWorkflow flow = new DocumentWorkflow();
-		flow.setDocId(1);
-		flow.setWfStatusId(1);
-		flow.setIsReworked("N");
-		docs.add(flow);
-		
-		flow = new DocumentWorkflow();
-		flow.setDocId(2);
-		flow.setWfStatusId(1);
-		flow.setIsReworked("N");
-		docs.add(flow);
-		System.out.println("###### GORU "+docs);*/
-		
+	/*public Response assignDocuments(List<DocumentWorkflow> docs) {
 		try {
 			String	userId = getLoggedInUserId();
-
-			
 			System.out.println("###### user id "+userId+" ###### "+docs);
 			for (DocumentWorkflow doc : docs) {
 				doc.setAssignedTo(userId);
 				doc.setAssignedDt(new Date());
-				
+				doc.setLastUpdatedBy(userId);
+				doc.setLastUpdateDt(new Date());
 				doc.setWfStatusId(doc.getWfStatusId()+1);
 				doc.setWfStatusDesc(null);
 			}
@@ -138,6 +115,28 @@ public class DocumentWorkflowServiceImpl extends BaseResource implements Documen
 			e.printStackTrace();
 			return Response.serverError().build();
 		}
-	}
+	}*/
 
+	public Response assignDocumentsTo(List<Integer> docIds) {
+		try {
+			List<DocumentWorkflow> docs = documentDAO.fetchDocumentWorkflows(docIds);
+			String	userId = getLoggedInUserId();
+			System.out.println("###### user id "+userId+" ###### "+docs);
+			for (DocumentWorkflow doc : docs) {
+				if (!userId.equalsIgnoreCase(doc.getAssignedTo())) {
+					doc.setAssignedTo(userId);
+					doc.setAssignedDt(new Date());
+					doc.setWfStatusId(doc.getWfStatusId()+1);
+					doc.setWfStatusDesc(null);
+					doc.setLastUpdatedBy(userId);
+					doc.setLastUpdateDt(new Date());
+				}
+			}
+			documentDAO.assignWorkflow(docs);
+			return Response.ok().entity(Boolean.TRUE).build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.serverError().build();
+		}
+	}
 }

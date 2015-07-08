@@ -214,6 +214,13 @@
 			</exclusions>
 		</dependency>
 
+		<dependency>
+			<groupId>com.sun.jersey.contribs</groupId>
+			<artifactId>jersey-multipart</artifactId>
+			<version>${jersey.version}</version>
+		</dependency>
+		
+
 		<!-- Jackson dependencies -->
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
@@ -423,6 +430,16 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<version>5.1.34</version>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>3.12</version>
+		</dependency>
+		<dependency>
+		        <groupId>org.apache.poi</groupId>
+		        <artifactId>poi-ooxml</artifactId>
+		        <version>3.12</version>
+		</dependency>				
 				
 
 	</dependencies>

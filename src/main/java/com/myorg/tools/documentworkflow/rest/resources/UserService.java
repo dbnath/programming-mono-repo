@@ -1,6 +1,5 @@
 package com.myorg.tools.documentworkflow.rest.resources;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -20,6 +19,6 @@ public interface UserService {
 	   @Path("/login")
 	   @Consumes(MediaType.APPLICATION_JSON)
 	   @Produces(MediaType.APPLICATION_JSON)	   
-	   public Response login( User   user);
+	   public Response login( User   user );
 
 }

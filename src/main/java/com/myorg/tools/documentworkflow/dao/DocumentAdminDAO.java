@@ -3,6 +3,7 @@ package com.myorg.tools.documentworkflow.dao;
 import java.sql.SQLException;
 import java.util.List;
 
+import com.myorg.tools.documentworkflow.model.Document;
 import com.myorg.tools.documentworkflow.model.DocumentRepository;
 import com.myorg.tools.documentworkflow.model.DocumentSubTagValues;
 import com.myorg.tools.documentworkflow.model.DocumentTag;
@@ -27,6 +28,8 @@ public interface DocumentAdminDAO {
 	public DocumentTagSubTagMapping populateDocumentTagSubTagMapping(Integer docTagId) throws SQLException, Exception;
 
 	public List<DocumentSubTagValues> populateUnmappedDocTagSubTags(Integer docTagId) throws SQLException, Exception;
+	
+	public boolean uploadDocumentInformation(List<Document> docList, String userId) throws SQLException, Exception;
 
 	/*public Boolean updateDocumentTypes(List<DocumentType> docTypeList) throws SQLException, Exception;
 

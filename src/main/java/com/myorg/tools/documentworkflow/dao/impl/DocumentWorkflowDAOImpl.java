@@ -1,6 +1,7 @@
 package com.myorg.tools.documentworkflow.dao.impl;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -177,6 +178,17 @@ public class DocumentWorkflowDAOImpl extends BaseJDBCTemplate implements Documen
 		 }
 		 String INS_AUDIT_SQL = DocumentWorkflowToolConstant.INS_DOC_WFL_PROCESS_AUDIT_SQL;
 		 jdbcTemplate.update(INS_AUDIT_SQL, docObj.getDocId(), versionId+1, docObj.getWfStatusId(), docObj.getIsReworked(), docObj.getAssignedTo(), docObj.getAssignedDt(), docObj.getUserRole(), docObj.getLastUpdatedBy(), docObj.getLastUpdateDt());
+	 }
+	 
+	 public List<DocumentWorkflow> fetchDocumentWorkflows(List<Integer> docIds) throws SQLException, Exception {
+		 String SQL = DocumentWorkflowToolConstant.FETCH_DOC_WFL_SQL + "("+DocumentWorkflowToolUtility.joinString(docIds, "?")+")";
+		 List<DocumentWorkflow> docWorkflowList = null;
+		 if (! DocumentWorkflowToolUtility.isEmptyList(docIds)){
+			 docWorkflowList = new ArrayList<DocumentWorkflow>();
+			 Object[] documentIds = docIds.toArray();
+			 docWorkflowList = this.getJdbcTemplateObject().query(SQL, documentIds, new DocWorkflowMapper());
+		 }
+		 return docWorkflowList;
 	 }
 	 
 	 /**

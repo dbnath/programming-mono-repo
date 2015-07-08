@@ -12,7 +12,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 
-import com.myorg.tools.documentworkflow.model.DocumentWorkflow;
 import com.myorg.tools.documentworkflow.model.DocumentWorkflowProcess;
 
 @Provider
@@ -20,10 +19,10 @@ import com.myorg.tools.documentworkflow.model.DocumentWorkflowProcess;
 public interface DocumentWorkflowService {
 	
 	   /* To populate Doc list in Workflow Landing page*/
-	   @POST
+	   @GET
 	   @Path("/docs")
 	   @Produces(MediaType.APPLICATION_JSON)	   
-	   public Response getAllDocuments();
+	   public Response getAllDocuments(@QueryParam("userId") String userId);
 	   
 	   /* To populate Doc Detail scrren for Tagging*/
 	   @GET
@@ -38,12 +37,16 @@ public interface DocumentWorkflowService {
 	   @Produces(MediaType.APPLICATION_JSON)	   
 	   public Response submitWorkflow(DocumentWorkflowProcess docWorkflowProcess);
 	   
-	   @POST
+	   /*@POST
 	   @Path("/assigndoc")
 	   @Consumes(MediaType.APPLICATION_JSON)
 	   @Produces(MediaType.APPLICATION_JSON)	   
-	   public Response assignDocuments(List<DocumentWorkflow> docs);
+	   public Response assignDocuments(List<DocumentWorkflow> docs);*/
 
 	
-	
+	   @POST
+	   @Path("/assigndocto")
+	   @Consumes(MediaType.APPLICATION_JSON)
+	   @Produces(MediaType.APPLICATION_JSON)	   
+	   public Response assignDocumentsTo(List<Integer> docIds);
 }

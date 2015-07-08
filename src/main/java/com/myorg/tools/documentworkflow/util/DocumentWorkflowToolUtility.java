@@ -1,7 +1,10 @@
 package com.myorg.tools.documentworkflow.util;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.myorg.tools.documentworkflow.model.ReverseMappable;
 
 public class DocumentWorkflowToolUtility {
 	
@@ -89,4 +92,31 @@ public class DocumentWorkflowToolUtility {
 	public static boolean equalTrimmedStrings(String a, String b) {
 		return equalStrings(a, b, false, true);		
 	}
+	
+	public static HashMap<String, Integer> mapByValue(List<ReverseMappable> t) {
+
+		if (t != null) {
+			HashMap<String, Integer> map = new HashMap<String, Integer>();
+			for (ReverseMappable t1 : t) {
+				if (t1.getMapKey() != null) {
+					map.put(t1.getMapKey(), t1.getCode());
+				}
+			}
+
+			return map;
+		}
+		return null;
+	}
+	
+	public static String joinString(List<Integer> objs, String toAppend) {
+		StringBuilder sb = new StringBuilder();
+		if (! isEmptyList(objs)) {
+			for (@SuppressWarnings("unused") Integer i : objs){
+				sb.append(toAppend);
+				sb.append(", ");
+			}
+		}
+		return (! isEmptyValue(sb.toString())) ? sb.toString().substring(0, sb.toString().lastIndexOf(", ")) : null;
+	}
+	
 }

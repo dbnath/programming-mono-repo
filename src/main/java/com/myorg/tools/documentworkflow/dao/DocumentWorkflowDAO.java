@@ -36,6 +36,14 @@ public interface DocumentWorkflowDAO {
 	  * @param docIds
 	  * @return true if assignment can be done successfully, else false
 	  */
+	 public List<DocumentWorkflow> fetchDocumentWorkflows(List<Integer> docIds) throws SQLException, Exception;
+	 
+	 /**
+	  * 
+	  * @param userId
+	  * @param docIds
+	  * @return true if assignment can be done successfully, else false
+	  */
 	 public boolean assignWorkflow(List<DocumentWorkflow> docIds) throws SQLException, Exception;
 
 }

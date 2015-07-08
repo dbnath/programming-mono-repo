@@ -13,8 +13,8 @@ public class RESTClient {
 	// http://localhost:8080/RESTfulExample/json/product/post
 	public static void main(String[] args) {
  
-	  String assignToMeURL = "http://localhost:8080/documentworkflow/rest/WflService/assigndoc";
-	  String assingToMeJSON = "[{\"docId\":3,\"wfStatusId\":1,\"isReworked\":\"N\"}]";
+	  String assignToMeURL = "http://localhost:8080/documentworkflow/rest/WflService/assigndocto";
+	  String assingToMeJSON = "[2,3,4]";
 	  
 	  String submitDocURL = "http://localhost:8080/documentworkflow/rest/WflService/submitwf";
 	  String submitDocJSON = "{   \"isFinalSubmit\":true,"+
@@ -23,13 +23,13 @@ public class RESTClient {
 		
 		try {
  
-		URL url = new URL("http://localhost:8080/documentworkflow/rest/WflService/submitwf");
+		URL url = new URL(assignToMeURL);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		conn.setDoOutput(true);
 		conn.setRequestMethod("POST");
 		conn.setRequestProperty("Content-Type", "application/json");
  
-		String input = submitDocJSON;
+		String input = assingToMeJSON; //submitDocJSON;
  
 		OutputStream os = conn.getOutputStream();
 		os.write(input.getBytes());

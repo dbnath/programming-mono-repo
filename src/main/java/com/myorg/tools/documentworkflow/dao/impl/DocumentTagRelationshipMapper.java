@@ -15,8 +15,11 @@ public class DocumentTagRelationshipMapper implements RowMapper<DocumentTagRelat
       if (! DocumentWorkflowToolUtility.isEmpty(rs)) {
 	      docTagRelationship.setDocId(rs.getInt("ID_DOC"));
 	      docTagRelationship.setDocTypeId(rs.getInt("ID_DOC_TYPE"));
+	      docTagRelationship.setDocTypeDesc(rs.getString("TX_DOC_TYPE"));
 	      docTagRelationship.setDocTagId(rs.getInt("ID_DOC_TAG"));
+	      docTagRelationship.setDocTagDesc(rs.getString("TX_DOC_TAG"));
 	      docTagRelationship.setDocSubTagId(rs.getInt("ID_DOC_SUB_TAG"));
+	      docTagRelationship.setDocSubTagDesc(rs.getString("TX_DOC_SUB_TAG"));
 	      docTagRelationship.setCreationDt(rs.getDate("CREATION_DT"));
 	      docTagRelationship.setCreatedBy(rs.getString("CREATED_BY"));
 	      docTagRelationship.setLastUpdatedDt(rs.getDate("LAST_UPDATE_DT"));
