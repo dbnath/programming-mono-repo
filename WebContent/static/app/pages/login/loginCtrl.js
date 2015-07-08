@@ -27,6 +27,8 @@ app.controller("loginCtrl",['service',function(service){
           window.location.href = '#/home/'+login.user.username;
         }
         console.log("The selected user role:"+obj.headers['x-docwrkflow-auth']);
+        service.setDocWorkflowAuthorizationId(obj.headers['x-docwrkflow-auth']);
+        console.log("The user role set :"+service.getDocWorkflowAuthorizationId());
       } else {
         alert("Error"+obj.data);
       }
