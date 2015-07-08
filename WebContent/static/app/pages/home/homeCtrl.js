@@ -2,16 +2,17 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$templateCache','$
   console.log("Inside Home controller");
   var home = this;
   home.user = $stateParams.name;
+  home.docdetails = {};
   document.title = 'Docflow::Home';
   home.appState ="hide";
 
-  $templateCache.put('ui-grid/selectionRowHeader',
-		    "<div class=\"ui-grid-disable-selection\"><div class=\"ui-grid-cell-contents\"><ui-grid-selection-row-header-buttons></ui-grid-selection-row-header-buttons></div></div>"
-		  );
-		  
-		  $templateCache.put('ui-grid/selectionRowHeaderButtons',
-		    "<div class=\"ui-grid-selection-row-header-buttons\" ng-class=\"{'ui-grid-row-selected': row.isSelected , 'ui-grid-icon-cancel':!grid.appScope.isSelectable(row.entity), 'ui-grid-icon-ok':grid.appScope.isSelectable(row.entity)}\" ng-click=\"selectButtonClick(row, $event)\">&nbsp;</div>"
-		  );
+//  $templateCache.put('ui-grid/selectionRowHeader',
+//		    "<div class=\"ui-grid-disable-selection\"><div class=\"ui-grid-cell-contents\"><ui-grid-selection-row-header-buttons></ui-grid-selection-row-header-buttons></div></div>"
+//		  );
+//		  
+//		  $templateCache.put('ui-grid/selectionRowHeaderButtons',
+//		    "<div class=\"ui-grid-selection-row-header-buttons\" ng-class=\"{'ui-grid-row-selected': row.isSelected , 'ui-grid-icon-cancel':!grid.appScope.isSelectable(row.entity), 'ui-grid-icon-ok':grid.appScope.isSelectable(row.entity)}\" ng-click=\"selectButtonClick(row, $event)\">&nbsp;</div>"
+//		  );
 
 		  $scope.isSelectable = function(entity)
 		  {
@@ -48,13 +49,25 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$templateCache','$
 			enableColumnResize: true,
 			enableColumnReordering: true,
 			showFooter: true,
+		    enableRowSelection: true,
+		    enableSelectAll: true,
+		    selectionRowHeaderWidth: 35,
 			enablePaginationControls : true,
 			enableFiltering :true,
 			 appScopeProvider: { 
 			        onDblClick : function(row) {
 			        	home.appState = 'show';
-			           var url = '//google.com';
-			           $window.open(url, "_blank", "height=600,width=800,toolbar=no,location=no,menubar=no,titlebar=no");
+			        	
+			        	service.getDocDetails(row.entity.docId).then(function(obj){
+			        		
+			        	    if(obj.status == 200){
+			        	 //   alert(angular.toJson(obj.data, true));
+			        	    	home.docdetails = obj.data;
+			        	    } else {
+			        	      alert("Error"+obj.data); 
+			        	    }
+			        	  });
+
 			         }
 			    }
 			
@@ -81,14 +94,16 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$templateCache','$
 			enableColumnResize: true,
 			enableColumnReordering: true,
 			showFooter: true,
+			enableRowSelection: true,
+		    enableSelectAll: true,
+		    selectionRowHeaderWidth: 35,
 			enablePaginationControls : true,
 			enableFiltering :true,
 			enableHorizontalScrollbar: false,
 			 appScopeProvider: { 
 			        onDblClick : function(row) {
 			        	home.appState = 'show';
-			           var url = '//google.com';
-			           $window.open(url, "_blank", "height=600,width=800,toolbar=no,location=no,menubar=no,titlebar=no");
+			          
 			         }
 			    }
 	}
@@ -120,16 +135,22 @@ home.assignMe = function(){
 	
 	var log = [];
 	angular.forEach( $scope.rows, function(row, key) {
-		 
+		//alert(angular.toJson(row, true));
+	//	alert(key);
+		var newrow ={};
 		 var index = $scope.gridOptions.data.indexOf(row.entity);
-		 row.assignedTo =  home.user;
-		 
+		 newrow.assignedTo =  home.user;
+		 newrow.docName  = row.entity.docName;
+		 newrow.wfStatusDesc = row.entity.wfStatusDesc;
+		 newrow.wfAssignmentGroupName = row.entity.wfAssignmentGroupName;
+		 newrow.docId = row.entity.docId;
 		 home.countmylist =  home.countmylist+1;
-		 angular.extend( $scope.gridOptions.data[index], row);
-			$scope.gridOptionsmylist.data.push(row);
+		 angular.extend( $scope.gridOptions.data[index], newrow);
+			$scope.gridOptionsmylist.data.push(newrow);
 		}, log);
 	
 };
+
 
 
 
@@ -140,6 +161,7 @@ $scope.gridOptions.onRegisterApi = function(gridApi){
     gridApi.selection.on.rowSelectionChanged($scope,function(row){
       var msg = 'row selected ' + row.isSelected;
       if(row.isSelected){
+    	 
     	  $scope.rows.push(row);
     	 
       }
