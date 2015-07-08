@@ -244,6 +244,31 @@ $scope.gridOptions.onRegisterApi = function(gridApi){
       });    
   });
   
+  var optgroups = [
+                   {
+                       label: 'Group 1', children: [
+                           {label: 'Option 1.1', value: '1-1'},
+                           {label: 'Option 1.2', value: '1-2'},
+                           {label: 'Option 1.3', value: '1-3'}
+                       ]
+                   },
+                   {
+                       label: 'Group 2', children: [
+                           {label: 'Option 2.1', value: '2-1'},
+                           {label: 'Option 2.2', value: '2-2'},
+                           {label: 'Option 2.3', value: '2-3'}
+                       ]
+                   },
+                   {
+                       label: 'Group 3', children: [
+                           {label: 'Option 3.1', value: '3-1'},
+                           {label: 'Option 3.2', value: '3-2'},
+                           {label: 'Option 3.3', value: '3-3'}
+                       ]
+                   }
+               ];
+
+  
   $(function(){    
       $('.tagmodal').on('click',function(){
     	  e.preventDefault();   

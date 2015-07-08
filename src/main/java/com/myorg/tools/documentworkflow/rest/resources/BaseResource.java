@@ -29,13 +29,12 @@ public abstract class BaseResource {
 	}
 
 	protected String getLoggedInUserId() {
+		String customHeader = request.getHeader("X-DOCWRKFLOW-AUTH");
+		System.out.println("Custom Header="+customHeader);
 		String loggedInUser = null;
-		Cookie[] cookies = request.getCookies();
-		
-		System.out.println("cookies="+cookies);
-		loggedInUser = request.getHeader("Cookie");
-	    if (loggedInUser != null) {
-	        System.out.println("Using from cookie user sid:" + loggedInUser);
+	    if (customHeader != null) {
+	    	loggedInUser = customHeader.split("|")[1];
+	        System.out.println("Using from header user sid:" + loggedInUser);
 	    } else {
 	    	loggedInUser = "DEBASISH";
 	    	 System.out.println("Using hardcoded sid:" + loggedInUser);

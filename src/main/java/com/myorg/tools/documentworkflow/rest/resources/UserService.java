@@ -19,6 +19,6 @@ public interface UserService {
 	   @Path("/login")
 	   @Consumes(MediaType.APPLICATION_JSON)
 	   @Produces(MediaType.APPLICATION_JSON)	   
-	   public Response login( User   user );
+	   public Response login(User user);
 
 }

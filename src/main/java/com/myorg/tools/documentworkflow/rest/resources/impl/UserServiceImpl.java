@@ -1,6 +1,5 @@
 package com.myorg.tools.documentworkflow.rest.resources.impl;
 
-import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 
 import com.myorg.tools.documentworkflow.model.User;
@@ -16,8 +15,9 @@ public class UserServiceImpl extends BaseResource implements UserService   {
 		User  dto = new User();
 		dto.setUserId(user.getUserId());
 		dto.setUserName(user.getUserName());
-		NewCookie cookie = new NewCookie(getAppConfig().getUserCookieHeaderName(), dto.getUserName());
-		return Response.ok().entity(dto).cookie(cookie).build();
+		dto.setRoleId(user.getRoleId());
+		String customHeader = dto.getUserId()+"|"+dto.getUserName()+"|"+dto.getRoleId();
+		return Response.ok().entity(dto).header("X-DOCWRKFLOW-AUTH", customHeader).build();
 	}
 
 }
