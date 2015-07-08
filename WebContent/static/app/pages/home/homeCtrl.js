@@ -105,7 +105,7 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$templateCache','$
 			        	home.appState = 'show';
 			          
 			         }
-			    }
+			 }
 	}
 	
     service.getAllDoc().then(function(obj){
