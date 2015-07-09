@@ -19,7 +19,6 @@ public interface UserService {
 	   @Path("/login")
 	   @Consumes(MediaType.APPLICATION_JSON)
 	   @Produces(MediaType.APPLICATION_JSON)	   
-<<<<<<< HEAD
 	   public Response login(User user);
 	   
 	   @POST
@@ -27,8 +26,5 @@ public interface UserService {
 	   @Consumes(MediaType.APPLICATION_JSON)
 	   @Produces(MediaType.APPLICATION_JSON)	   
 	   public Response logout();
-=======
-	   public Response login( User   user );
->>>>>>> branch 'master' of https://github.com/toolsrepo/docflowtool.git
 
 }
