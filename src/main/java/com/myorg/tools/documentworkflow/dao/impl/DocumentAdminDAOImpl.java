@@ -21,6 +21,7 @@ import com.myorg.tools.documentworkflow.model.DocumentTag;
 import com.myorg.tools.documentworkflow.model.DocumentTagSubTagMapping;
 import com.myorg.tools.documentworkflow.model.DocumentType;
 import com.myorg.tools.documentworkflow.model.DocumentTypeTagMapping;
+import com.myorg.tools.documentworkflow.model.DocumentTypeTagSubTagsMap;
 import com.myorg.tools.documentworkflow.model.ReverseMappable;
 import com.myorg.tools.documentworkflow.util.DocumentWorkflowToolUtility;
 
@@ -149,6 +150,21 @@ public class DocumentAdminDAOImpl extends BaseJDBCTemplate implements DocumentAd
 		}
 		return null;
 	}
+	
+	public DocumentTypeTagSubTagsMap populateDocumentTypeTagSubTagsMap(Integer docTypeId) throws SQLException, Exception {
+		DocumentTypeTagMapping docTypeTagMapping = populateDocumentTypeTagMapping(docTypeId);
+		List<DocumentTag> docTags = docTypeTagMapping.getDocTags();
+		List<DocumentTagSubTagMapping> docTagSubTagMaps = new ArrayList<DocumentTagSubTagMapping>();
+		for (DocumentTag docTag : docTags) {
+			DocumentTagSubTagMapping docTagSubTagMap = populateDocumentTagSubTagMapping(docTag.getDocTagId());
+			docTagSubTagMap.setDocTagDesc(docTag.getDocTagDesc());
+			docTagSubTagMaps.add(docTagSubTagMap);
+		}
+		DocumentTypeTagSubTagsMap docTypeTagSubTagsMap = new DocumentTypeTagSubTagsMap();
+		docTypeTagSubTagsMap.setDocTypeId(docTypeId);
+		docTypeTagSubTagsMap.setDocTagSubTagMap(docTagSubTagMaps);
+		return docTypeTagSubTagsMap;
+	}
 
 
 	/* (non-Javadoc)
@@ -221,6 +237,7 @@ public class DocumentAdminDAOImpl extends BaseJDBCTemplate implements DocumentAd
 		in.addValue("LAST_UPDATED_BY", doc.getLastUpdatedBy());
 		in.addValue("LAST_UPDATE_DT", doc.getLastUpdatedDt());
 		
+		@SuppressWarnings("unused")
 		Map<String, Object> out = jdbcCall.execute(in);
 	}
 	

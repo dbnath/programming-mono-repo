@@ -12,6 +12,7 @@ public class DocumentWorkflowToolConstant {
 	public static String DOC_SUBTAG_POPULATE_SQL = "select * from doc_sub_tag_info";
 	public static String DOC_TYPE_TAG_MAP_SQL = "select a.ID_DOC_TAG ID_DOC_TAG, b.TX_DOC_TAG TX_DOC_TAG from doc_type_tag_mapping a, doc_tag_info b where a.ID_DOC_TYPE = ? and a.ID_DOC_TAG = b.ID_DOC_TAG";
 	public static String DOC_TAG_SUB_TAG_MAP_SQL = "select a.ID_DOC_SUB_TAG ID_DOC_SUB_TAG, b.TX_DOC_SUB_TAG TX_DOC_SUB_TAG from doc_tag_subtag_map a, doc_sub_tag_info b where a.ID_DOC_TAG = ? and a.ID_DOC_SUB_TAG = b.ID_DOC_SUB_TAG";
+	public static String DOC_TYPE_TAG_SUBTAGS_MAP_SQL = "select a.ID_DOC_TAG ID_DOC_TAG, b.TX_DOC_TAG TX_DOC_TAG, c.ID_DOC_SUB_TAG ID_DOC_SUB_TAG, d.TX_DOC_SUB_TAG TX_DOC_SUB_TAG from doc_type_tag_mapping a, doc_tag_info b, doc_tag_subtag_map c, doc_sub_tag_info d where a.ID_DOC_TYPE = ? and a.ID_DOC_TAG = b.ID_DOC_TAG and a.ID_DOC_TAG = c.ID_DOC_TAG and c.ID_DOC_SUB_TAG = d.ID_DOC_SUB_TAG";
 	public static String USER_BASE_POPULATE_SQL = "select * from user";
 	public static String MASTER_ROLE_POPULATE_SQL = "select * from role";
 	public static String FETCH_USER_DETAILS_SQL = "select * from user where ID_USER = ?";

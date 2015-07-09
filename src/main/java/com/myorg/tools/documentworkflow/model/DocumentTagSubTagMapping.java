@@ -11,6 +11,7 @@ public class DocumentTagSubTagMapping implements Serializable {
 	private static final long serialVersionUID = 1518488687498835668L;
 	
 	private Integer docTagId;
+	private String docTagDesc;
 	private List<DocumentSubTagValues> docSubTags;
 	
 	/**
@@ -32,6 +33,20 @@ public class DocumentTagSubTagMapping implements Serializable {
 	 */
 	public void setDocTagId(Integer docTagId) {
 		this.docTagId = docTagId;
+	}
+
+	/**
+	 * @return the docTagDesc
+	 */
+	public String getDocTagDesc() {
+		return docTagDesc;
+	}
+
+	/**
+	 * @param docTagDesc the docTagDesc to set
+	 */
+	public void setDocTagDesc(String docTagDesc) {
+		this.docTagDesc = docTagDesc;
 	}
 
 	/**

@@ -67,6 +67,12 @@ public interface DocumentAdminService {
 	   @Produces(MediaType.APPLICATION_JSON)	   
 	   public Response populateUnmappedDocTagSubTags(@QueryParam("docTagId") Integer docTagId);
 	   
+	   /* To populate Doc Tyape, Tag, SubTags based on doc type */
+	   @GET
+	   @Path("/doctypetagsubtags")
+	   @Produces(MediaType.APPLICATION_JSON)	   
+	   public Response populateDocTypeTagSubTagsMap(@QueryParam("docTypeId") Integer docTypeId);
+
 	   @POST
 	   @Path("/uploaddoc")
 	   @Consumes(MediaType.MULTIPART_FORM_DATA)

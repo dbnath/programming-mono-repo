@@ -10,6 +10,7 @@ import com.myorg.tools.documentworkflow.model.DocumentTag;
 import com.myorg.tools.documentworkflow.model.DocumentTagSubTagMapping;
 import com.myorg.tools.documentworkflow.model.DocumentType;
 import com.myorg.tools.documentworkflow.model.DocumentTypeTagMapping;
+import com.myorg.tools.documentworkflow.model.DocumentTypeTagSubTagsMap;
 
 public interface DocumentAdminDAO {
 	
@@ -29,6 +30,8 @@ public interface DocumentAdminDAO {
 
 	public List<DocumentSubTagValues> populateUnmappedDocTagSubTags(Integer docTagId) throws SQLException, Exception;
 	
+	public DocumentTypeTagSubTagsMap populateDocumentTypeTagSubTagsMap(Integer docTypeId) throws SQLException, Exception;
+
 	public boolean uploadDocumentInformation(List<Document> docList, String userId) throws SQLException, Exception;
 
 	/*public Boolean updateDocumentTypes(List<DocumentType> docTypeList) throws SQLException, Exception;

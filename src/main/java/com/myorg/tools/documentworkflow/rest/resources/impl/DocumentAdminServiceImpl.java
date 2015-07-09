@@ -31,6 +31,7 @@ import com.myorg.tools.documentworkflow.model.DocumentTag;
 import com.myorg.tools.documentworkflow.model.DocumentTagSubTagMapping;
 import com.myorg.tools.documentworkflow.model.DocumentType;
 import com.myorg.tools.documentworkflow.model.DocumentTypeTagMapping;
+import com.myorg.tools.documentworkflow.model.DocumentTypeTagSubTagsMap;
 import com.myorg.tools.documentworkflow.rest.resources.BaseResource;
 import com.myorg.tools.documentworkflow.rest.resources.DocumentAdminService;
 import com.sun.jersey.core.header.FormDataContentDisposition;
@@ -126,6 +127,16 @@ public class DocumentAdminServiceImpl extends BaseResource implements DocumentAd
 		}
 	}
 	
+	public Response populateDocTypeTagSubTagsMap(Integer docTypeId) {
+		try{
+			DocumentTypeTagSubTagsMap docTypeTagSubTagsMap = documentAdminDAO.populateDocumentTypeTagSubTagsMap(docTypeId);
+			return Response.ok().entity(docTypeTagSubTagsMap).build();
+		} catch(Exception e){
+			e.printStackTrace();
+			return Response.serverError().build();			
+		}
+	}
+	
 	public Response uploadDocuments(@FormDataParam("file") InputStream uploadedInputStream,  @FormDataParam("file") FormDataContentDisposition fileDetail, @FormDataParam("path") String path){
 		
 		try {
@@ -201,11 +212,9 @@ public class DocumentAdminServiceImpl extends BaseResource implements DocumentAd
 	@Override
 	public Response getTemplate() {
 		
-		
 		try {
 			List<DocumentRepository> repoList = documentAdminDAO.populateDocumentRepos();
 			List<DocumentType> typeList = documentAdminDAO.populateDocumentTypes();
-			
 			
 			String[] repoValues = new String[repoList.size()];
 			int i=0;
@@ -220,7 +229,6 @@ public class DocumentAdminServiceImpl extends BaseResource implements DocumentAd
 				typeValues[i] = type.getDocTypeName();
 				i++;
 			}
-			
 			
 			XSSFWorkbook wb = new XSSFWorkbook();			
 			XSSFSheet sheet = wb.createSheet();
@@ -324,9 +332,6 @@ public class DocumentAdminServiceImpl extends BaseResource implements DocumentAd
         sheet.addValidationData(dataValidation); 		
 		return;
 	}	
-	
-	
-	
 	
 	
 	/*public Response updateDocTypes(List<DocumentType> docTypeList){
