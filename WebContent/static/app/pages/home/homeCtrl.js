@@ -1,8 +1,12 @@
 app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$templateCache','$log','uiGridConstants',function($stateParams,service,$scope,$rootScope,$templateCache,$log,uiGridConstants){
   console.log("Inside Home controller");
   var home = this;
+<<<<<<< HEAD
   home.userId = $rootScope.selectedUserRole.userId;
   home.userName = $rootScope.selectedUserRole.userName;
+=======
+  home.user = $rootScope.selectedUserRole.userId;
+>>>>>>> branch 'master' of https://github.com/toolsrepo/docflowtool
   home.docdetails = {};
   document.title = 'Docflow::Home';
   home.appState ="hide";

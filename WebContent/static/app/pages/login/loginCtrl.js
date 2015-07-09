@@ -26,7 +26,11 @@ app.controller("loginCtrl",['service', '$rootScope',function(service, $rootScope
     	  if(login.user.role === 'System Admin'){        
     		  window.location.href = '#/setting';
     	  } else {
+<<<<<<< HEAD
     		  window.location.href = '#/home/'+$rootScope.selectedUserRole.userId;
+=======
+    		  window.location.href = '#/home/'+$rootScope.selectedUserRole.userName;
+>>>>>>> branch 'master' of https://github.com/toolsrepo/docflowtool
     	  }
       } else {    	  
     	  alert(obj.data.responseMessage);
