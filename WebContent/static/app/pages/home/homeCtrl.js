@@ -1,7 +1,7 @@
-app.controller("homeCtrl",['$stateParams','service','$scope','$templateCache','$log','uiGridConstants',function($stateParams,service,$scope,$templateCache,$log,uiGridConstants){
+app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$templateCache','$log','uiGridConstants',function($stateParams,service,$scope,$rootScope,$templateCache,$log,uiGridConstants){
   console.log("Inside Home controller");
   var home = this;
-  home.user = $stateParams.name;
+  home.user = $rootScope.selectedUserRole.userId;
   home.docdetails = {};
   document.title = 'Docflow::Home';
   home.appState ="hide";

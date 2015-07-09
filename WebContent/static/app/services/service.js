@@ -1,5 +1,4 @@
 app.factory("service",function($http,$q,$rootScope){
-	 var docwrkflowauth = null; 
 	 var data = {
 	    addUser : addUser,
 	    login : login,
@@ -132,12 +131,14 @@ app.factory("service",function($http,$q,$rootScope){
 		 return request('GET','rest/docadmin/template',{'x-docwrkflow-auth' : getDocWorkflowAuthorizationId()});
 	}
 	
-	function setDocWorkflowAuthorizationId(authId) {
-		$rootScope.selectedUserRole = authId;
+	function setDocWorkflowAuthorizationId(userData) {
+		$rootScope.selectedUserRole.userId = userData.userId;
+		$rootScope.selectedUserRole.userName = userData.userName;
+		$rootScope.selectedUserRole.selectedRoleId = userData.roleId;
 	}
 	
 	function getDocWorkflowAuthorizationId() {
-		return $rootScope.selectedUserRole;
+		return $rootScope.selectedUserRole.userId+"|"+$rootScope.selectedUserRole.selectedRoleId;
 	}
 
   	function request(method,url,headers,data,params){
