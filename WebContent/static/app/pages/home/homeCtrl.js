@@ -155,6 +155,7 @@ service.getDocByUser(home.userId).then(function(obj){
 
 home.changeRole() = function(roleId) {
 	console.log('New Role changed ::'+roleId);
+	$rootScope.selectedUserRole.selectedRoleId = roleId;
 }
 
 home.logout = function() {
