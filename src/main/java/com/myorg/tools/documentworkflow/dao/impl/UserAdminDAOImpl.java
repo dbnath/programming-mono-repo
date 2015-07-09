@@ -39,7 +39,10 @@ public class UserAdminDAOImpl extends BaseJDBCTemplate implements UserAdminDAO {
 		}		
 		if (! DocumentWorkflowToolUtility.isEmpty(userDetailObj)) {
 			List<Role> roleList = populateRoleForUser(userId);
-			userDetailObj.setUserRoleList(roleList);
+			if (roleList != null && !roleList.isEmpty()) {
+				userDetailObj.setRoleId(roleList.get(0).getRoleId().toString());
+				userDetailObj.setUserRoleList(roleList);
+			}
 		}
 		return userDetailObj;
 	}
