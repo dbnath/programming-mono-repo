@@ -8,12 +8,8 @@ var app = angular.module('legalrpf', [
   'ui.bootstrap',
   'ui.grid','ui.grid.selection',
   'ngAnimate'
-])
-  .config(function ($stateProvider, $urlRouterProvider, $locationProvider) {
+]).config(function ($stateProvider, $urlRouterProvider, $locationProvider) {
     $urlRouterProvider.otherwise('/login');
-
-   
-
     $stateProvider.state('login',{ 
       url : '/login',
       templateUrl : 'static/app/pages/login/login.html',
@@ -27,4 +23,7 @@ var app = angular.module('legalrpf', [
         controller : 'homeCtrl as hc',
         templateUrl : 'static/app/pages/home/home.html'
     })
+  }).run(function($rootScope) {
+    $rootScope.selectedRoleId = null;
   });
+  

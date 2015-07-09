@@ -1,4 +1,4 @@
-app.factory("service",function($http,$q){
+app.factory("service",function($http,$q,$rootScope){
 	 var docwrkflowauth = null; 
 	 var data = {
 	    addUser : addUser,

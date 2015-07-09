@@ -1,4 +1,4 @@
-app.controller("loginCtrl",['service',function(service){
+app.controller("loginCtrl",['service', '$rootScope',function(service, $rootScope){
  
   var login = this;
   login.user = {};
@@ -6,6 +6,7 @@ app.controller("loginCtrl",['service',function(service){
   login.signIn=function(){
     window.location.href = '/#/userhome'
   }
+  
   login.signUp = function(){
     login.user = {};
     $("#signUp").modal("show");
@@ -15,11 +16,9 @@ app.controller("loginCtrl",['service',function(service){
 	 
     var data = {
       "userId" : login.user.username,
-      "password" : login.user.password,
-      "roleId" : login.user.role
+      "password" : login.user.password
     };
     service.login(data).then(function(obj){
-    	
       if(obj.status == 200){
         if(login.user.role === 'System Admin'){        
           window.location.href = '#/setting';
@@ -29,8 +28,8 @@ app.controller("loginCtrl",['service',function(service){
         console.log("The selected user role:"+obj.headers['x-docwrkflow-auth']);
         service.setDocWorkflowAuthorizationId(obj.headers['x-docwrkflow-auth']);
         console.log("The user role set :"+service.getDocWorkflowAuthorizationId());
-      } else {
-        alert("Error"+obj.data);
+      } else {    	  
+    	  alert(obj.data.responseMessage);
       }
     });
   }

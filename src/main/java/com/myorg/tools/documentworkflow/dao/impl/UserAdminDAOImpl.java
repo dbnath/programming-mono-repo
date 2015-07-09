@@ -4,6 +4,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.naming.AuthenticationException;
+
 import org.springframework.dao.EmptyResultDataAccessException;
 
 import com.myorg.tools.documentworkflow.constant.DocumentWorkflowToolConstant;
@@ -12,6 +14,7 @@ import com.myorg.tools.documentworkflow.model.Role;
 import com.myorg.tools.documentworkflow.model.RoleUsersMapping;
 import com.myorg.tools.documentworkflow.model.User;
 import com.myorg.tools.documentworkflow.util.DocumentWorkflowToolUtility;
+import com.sun.jersey.api.NotFoundException;
 
 public class UserAdminDAOImpl extends BaseJDBCTemplate implements UserAdminDAO {
 
@@ -33,12 +36,23 @@ public class UserAdminDAOImpl extends BaseJDBCTemplate implements UserAdminDAO {
 			userDetailObj = this.getJdbcTemplateObject().queryForObject(SQL, new Object[]{userId}, new UserMapper());
 		} catch(EmptyResultDataAccessException e) {
 			userDetailObj = null;
-		}
-		List<Role> roleList = populateRoleForUser(userId);
-		if (! DocumentWorkflowToolUtility.isEmpty(userDetailObj) && ! DocumentWorkflowToolUtility.isEmptyList(roleList)) {
+		}		
+		if (! DocumentWorkflowToolUtility.isEmpty(userDetailObj)) {
+			List<Role> roleList = populateRoleForUser(userId);
 			userDetailObj.setUserRoleList(roleList);
 		}
 		return userDetailObj;
+	}
+	
+	public User authenticateAndFetchDetails(String userId, String password) throws Exception {
+		User userDetailObj = fetchUserDetail(userId);
+		if (userDetailObj == null)		 {
+			throw new Exception("User Id : "+userId +" doesn't exists in the system. Please Contact Admin.");
+		} else if (userDetailObj != null && !userDetailObj.getPassword().equals(password)){
+			throw new Exception("Login ID / Password entered is not correct.");
+		} else {
+			return userDetailObj;
+		}
 	}
 
 	public List<Role> populateMasterRoleList() throws SQLException, Exception {
