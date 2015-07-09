@@ -153,6 +153,9 @@ service.getDocByUser(home.userId).then(function(obj){
         }
       });
 
+home.changeRole() = function(roleId) {
+	console.log('New Role changed ::'+roleId);
+}
 
 home.logout = function() {
 	  service.logout().then(function(obj){
