@@ -6,6 +6,7 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
   home.docdetails = {};
   document.title = 'Docflow::Home';
   home.appState ="hide";
+  $scope.mappedRoles = [];
 
 //  $templateCache.put('ui-grid/selectionRowHeader',
 //		    "<div class=\"ui-grid-disable-selection\"><div class=\"ui-grid-cell-contents\"><ui-grid-selection-row-header-buttons></ui-grid-selection-row-header-buttons></div></div>"
@@ -119,6 +120,15 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
 			         }
 			    }
 	}
+	
+	service.retrieveUserDetais(home.userId).then(function(obj){
+	    if(obj.status == 200){
+	    	$scope.mappedRoles = obj.data.userRoleList;
+	    	console.log("Assigned role size :"+$scope.mappedRoles.length);
+	    } else {
+	    	alert("Error"+obj.data);
+	    }
+	});
 	
     service.getAllDoc().then(function(obj){
     	
