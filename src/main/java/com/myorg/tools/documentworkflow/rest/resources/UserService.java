@@ -20,5 +20,11 @@ public interface UserService {
 	   @Consumes(MediaType.APPLICATION_JSON)
 	   @Produces(MediaType.APPLICATION_JSON)	   
 	   public Response login(User user);
+	   
+	   @POST
+	   @Path("/logout")
+	   @Consumes(MediaType.APPLICATION_JSON)
+	   @Produces(MediaType.APPLICATION_JSON)	   
+	   public Response logout();
 
 }

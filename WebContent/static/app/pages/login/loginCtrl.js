@@ -37,6 +37,7 @@ app.controller("loginCtrl",['service', '$scope','$rootScope',function(service, $
       }
     });
   }
+  
   login.save = function(){
     if(login.user.password === login.user.confirmPass){
       login.user.status = 'notapplied';

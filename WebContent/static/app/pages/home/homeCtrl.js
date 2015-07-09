@@ -142,7 +142,18 @@ service.getDocByUser(home.userId).then(function(obj){
           alert("Error"+obj.data);
         }
       });
-	
+
+
+home.logout = function() {
+	  service.logout().then(function(obj){
+		  if(obj.status == 200){
+			  window.location.href = '#/login'
+		  } else {
+			  alert("Error:"+obj.data)
+		  }
+	  });
+}
+
 home.assignMe = function(){
 	
 	var log = [];
