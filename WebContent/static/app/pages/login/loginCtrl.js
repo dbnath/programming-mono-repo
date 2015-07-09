@@ -28,8 +28,11 @@ app.controller("loginCtrl",['service', '$rootScope',function(service, $rootScope
         console.log("The selected user role:"+obj.headers['x-docwrkflow-auth']);
         service.setDocWorkflowAuthorizationId(obj.headers['x-docwrkflow-auth']);
         console.log("The user role set :"+service.getDocWorkflowAuthorizationId());
+        console.log("Selected User-Role in rootscope: "+$rootScope.selectedUserRole);
       } else {    	  
     	  alert(obj.data.responseMessage);
+    	  login.user.username="";
+    	  login.user.password="";
       }
     });
   }

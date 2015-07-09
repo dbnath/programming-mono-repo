@@ -24,6 +24,6 @@ var app = angular.module('legalrpf', [
         templateUrl : 'static/app/pages/home/home.html'
     })
   }).run(function($rootScope) {
-    $rootScope.selectedRoleId = null;
+    $rootScope.selectedUserRole = null;
   });
   

@@ -133,11 +133,11 @@ app.factory("service",function($http,$q,$rootScope){
 	}
 	
 	function setDocWorkflowAuthorizationId(authId) {
-		docwrkflowauth = authId;
+		$rootScope.selectedUserRole = authId;
 	}
 	
 	function getDocWorkflowAuthorizationId() {
-		return docwrkflowauth;
+		return $rootScope.selectedUserRole;
 	}
 
   	function request(method,url,headers,data,params){
