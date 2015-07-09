@@ -194,6 +194,9 @@ public class DocumentAdminDAOImpl extends BaseJDBCTemplate implements DocumentAd
 						doc.setIsBadLinkReported("N");
 						doc.setIsDeleted("N");
 						
+						System.out.println("###### doc Repo "+doc.getDocRepoDesc()+" ###### "+doc.getDocRepoId());
+						System.out.println("###### doc Repo "+doc.getDocTypeDesc()+" ###### "+doc.getDocTypeId());
+						
 						insertDocumentsIntoDatabase(jdbcCall, doc);
 					}
 				}

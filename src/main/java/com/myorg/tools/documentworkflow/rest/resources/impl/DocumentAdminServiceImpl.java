@@ -146,13 +146,16 @@ public class DocumentAdminServiceImpl extends BaseResource implements DocumentAd
 			List<Document> docList = parseBulkUploadFile(uploadedInputStream);
 			documentAdminDAO.uploadDocumentInformation(docList, userId);
 			
+			return Response.ok().entity("Documents uploaded successfully").build();
+			
 		} catch (IOException e) {
 			e.printStackTrace();
+			return Response.serverError().entity("Documents failed to upload").build();
 		} catch (Exception e) {
 			e.printStackTrace();
+			return Response.serverError().entity("Documents failed to upload").build();
 		}
 		
-		return null;
 	}
 	
 	private List<Document> parseBulkUploadFile(InputStream stream) throws IOException {
@@ -192,7 +195,7 @@ public class DocumentAdminServiceImpl extends BaseResource implements DocumentAd
 							doc.setDocHyperlink(s);
 							break;
 						case 4:
-							doc.setDocRepoDesc(s);
+							doc.setDocLocation(s);
 							break;
 						}
 

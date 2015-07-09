@@ -7,7 +7,7 @@ var app = angular.module('legalrpf', [
   'ui.router',
   'ui.bootstrap',
   'ui.grid','ui.grid.selection',
-  'ngAnimate'
+  'ngAnimate', 'ngUpload'
 ]).config(function ($stateProvider, $urlRouterProvider, $locationProvider) {
     $urlRouterProvider.otherwise('/login');
     $stateProvider.state('login',{ 

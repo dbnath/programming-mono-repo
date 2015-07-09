@@ -12,7 +12,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 public class Test {
 
 	public static void main(String[] args) throws Exception {
-		XSSFWorkbook wb = new XSSFWorkbook();
+		/*XSSFWorkbook wb = new XSSFWorkbook();
 		
 		XSSFSheet sheet = wb.createSheet();
 		
@@ -39,7 +39,14 @@ public class Test {
         FileOutputStream fos = new FileOutputStream("D:/Pratik/Test.xlsx");
         wb.write(fos);
         
-        fos.close();
+        fos.close();*/
+		
+		XSSFWorkbook wb = new XSSFWorkbook("D:/Pratik/joghonno.xlsx");
+		XSSFSheet sheet = wb.getSheetAt(0);
+		XSSFRow row = sheet.getRow(2);
+		
+		System.out.println(row.getCell(1).getRichStringCellValue().getString());
+		System.out.println(row.getCell(2).getRichStringCellValue().getString());
         
 	}
 	
