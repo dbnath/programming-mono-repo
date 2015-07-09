@@ -227,6 +227,13 @@ $scope.gridOptions.onRegisterApi = function(gridApi){
   enableHorizontalScrollbar: 0
   };
 
+  $scope.uploadComplete = function (content) {
+    $scope.response = content; // Presumed content is a json string!  JSON.parse(
+    $scope.response.style = {
+      color: $scope.response.color,
+      "font-weight": "bold"
+    };
+  };
 
   $('#myTabs a').click(function (e) {
 	
@@ -261,7 +268,7 @@ $scope.gridOptions.onRegisterApi = function(gridApi){
           }
           html += "</div>";
           html += '<div class="modal-body" ' + c + ">";
-          html += '<div class="row"><div class="col-xs-9">' + b.message + '</div><div class="col-xs-3">' +  '<div>' + tags +'</div>'+ '</div></div>';
+          html += '<div class="row"><div class="col-xs-9">' + b.message + '</div><div class="col-xs-3"></div></div>';/* +  '<div>' + tags +'</div>'+ '</div></div>'*/;
           html += "</div>";
           html += '<div class="modal-footer">';
           if (b.closeButton === true) {
@@ -355,5 +362,17 @@ $scope.gridOptions.onRegisterApi = function(gridApi){
       });    
   });
   
+  $(function(){    
+      $('.wfl-doc_upload').on('click',function(){
+          var iframe = '<div><a href="rest/docadmin/template">Download Template for Bulk Upload</a></div><div><form method="POST" enctype="multipart/form-data" ng-upload="uploadComplete(content)" action="rest/docadmin/uploaddoc"><p><label>Select File:</label><input type="file" name="file" /></p><input type="submit" class="btn" value="Submit" ng-disabled="$isUploading" /></div></form>' ;
+          $.createModal({
+          title:'Bulk Upload',
+          message: iframe,
+          closeButton:true,
+          scrollable:false
+          });
+          return false;        
+      });    
+  });  
     
 }]);
