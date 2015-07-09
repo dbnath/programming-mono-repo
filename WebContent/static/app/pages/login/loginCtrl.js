@@ -1,8 +1,9 @@
-app.controller("loginCtrl",['service', '$rootScope',function(service, $rootScope){
+app.controller("loginCtrl",['service', '$scope','$rootScope',function(service, $scope, $rootScope){
  
   var login = this;
   login.user = {};
-
+  login.loginErrorMessage = "";
+  
   login.signIn=function(){
     window.location.href = '/#/userhome'
   }
@@ -27,9 +28,10 @@ app.controller("loginCtrl",['service', '$rootScope',function(service, $rootScope
     		  window.location.href = '#/setting';
     	  } else {
     		  window.location.href = '#/home/'+$rootScope.selectedUserRole.userId;
-    	  }
-      } else {    	  
-    	  alert(obj.data.responseMessage);
+    	  }    	  
+      } else {   	  
+    	  login.loginErrorMessage = obj.data.responseMessage;
+    	  $scope.hasloginerror = true;
     	  login.user.username="";
     	  login.user.password="";
       }
