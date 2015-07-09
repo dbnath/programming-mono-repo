@@ -19,6 +19,13 @@ app.controller("loginCtrl",['service', '$scope','$rootScope',function(service, $
       "userId" : login.user.username,
       "password" : login.user.password
     };
+    
+    if(!login.user.username ) {
+      login.loginErrorMessage = "Please provide username.";
+  	  $scope.hasloginerror = true;
+  	  return;
+    }
+    
     service.login(data).then(function(obj){
       if(obj.status == 200){
     	  service.setDocWorkflowAuthorizationId(obj.data);
@@ -37,6 +44,7 @@ app.controller("loginCtrl",['service', '$scope','$rootScope',function(service, $
       }
     });
   }
+  
   login.save = function(){
     if(login.user.password === login.user.confirmPass){
       login.user.status = 'notapplied';

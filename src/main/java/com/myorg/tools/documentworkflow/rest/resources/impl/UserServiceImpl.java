@@ -47,5 +47,11 @@ public class UserServiceImpl extends BaseResource implements UserService   {
 		}
 		
 	}
+	
+	@Override
+	public Response logout() {
+		getRequest().getSession().invalidate();
+		return Response.ok().build();
+	}
 
 }

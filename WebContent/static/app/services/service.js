@@ -2,6 +2,7 @@ app.factory("service",function($http,$q,$rootScope){
 	 var data = {
 	    addUser : addUser,
 	    login : login,
+	    logout : logout,
 	    setting : setting,
 	    getApproval : getApproval,
 	    addUser: addUser,
@@ -37,6 +38,10 @@ app.factory("service",function($http,$q,$rootScope){
 	
 	function login(data){
 		return request('POST','rest/UserService/login',{'x-docwrkflow-auth' :  undefined},data);
+	}
+	
+	function logout(){
+		return request('POST','rest/UserService/logout',{'x-docwrkflow-auth' :  getDocWorkflowAuthorizationId()});
 	}
 	
 	function setting(data){
