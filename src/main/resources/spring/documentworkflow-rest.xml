@@ -10,6 +10,7 @@
   		<property name="appConfig" ref="appConfig" />
 	</bean>
 	
+<<<<<<< HEAD
 	<bean id="documentResourceImpl" class="com.myorg.tools.documentworkflow.rest.resources.impl.DocumentWorkflowServiceImpl" scope="request" parent="baseResource">
 		<property name="documentDAO" ref="documentWorkflowDAOImpl" />
 	</bean>
@@ -23,5 +24,10 @@
 	<bean id="userResourceImpl" class="com.myorg.tools.documentworkflow.rest.resources.impl.UserServiceImpl" scope="request" parent="baseResource">
 		<property name="userAdminDAO" ref="userAdminDAOImpl" />
     </bean>
+=======
+	<bean id="userResourceImpl" class="com.myorg.tools.documentworkflow.rest.resources.impl.UserServiceImpl" scope="request">
+		
+	</bean>
+>>>>>>> branch 'master' of https://github.com/toolsrepo/docflowtool.git
 	
 </beans>
