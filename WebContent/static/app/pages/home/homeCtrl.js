@@ -6,6 +6,7 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
   home.docdetails = {};
   document.title = 'Docflow::Home';
   home.appState ="hide";
+  $scope.mappedRoles = [];
 
 //  $templateCache.put('ui-grid/selectionRowHeader',
 //		    "<div class=\"ui-grid-disable-selection\"><div class=\"ui-grid-cell-contents\"><ui-grid-selection-row-header-buttons></ui-grid-selection-row-header-buttons></div></div>"
@@ -120,6 +121,15 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
 			    }
 	}
 	
+	service.retrieveUserDetais(home.userId).then(function(obj){
+	    if(obj.status == 200){
+	    	$scope.mappedRoles = obj.data.userRoleList;
+	    	console.log("Assigned role size :"+$scope.mappedRoles.length);
+	    } else {
+	    	alert("Error"+obj.data);
+	    }
+	});
+	
     service.getAllDoc().then(function(obj){
     	
         if(obj.status == 200){
@@ -143,6 +153,10 @@ service.getDocByUser(home.userId).then(function(obj){
         }
       });
 
+home.changeRole() = function(roleId) {
+	console.log('New Role changed ::'+roleId);
+	$rootScope.selectedUserRole.selectedRoleId = roleId;
+}
 
 home.logout = function() {
 	  service.logout().then(function(obj){
@@ -364,7 +378,7 @@ $scope.gridOptions.onRegisterApi = function(gridApi){
   
   $(function(){    
       $('.wfl-doc_upload').on('click',function(){
-          var iframe = '<div><a href="rest/docadmin/template">Download Template for Bulk Upload</a></div><div><form method="POST" enctype="multipart/form-data" ng-upload="uploadComplete(content)" action="rest/docadmin/uploaddoc"><p><label>Select File:</label><input type="file" name="file" /></p><input type="submit" class="btn" value="Submit" ng-disabled="$isUploading" /></div></form>' ;
+         var iframe = '<div><a href="rest/docadmin/template">Download Template for Bulk Upload</a></div><div><form method="POST" enctype="multipart/form-data" ng-upload="uploadComplete(content)" action="rest/docadmin/uploaddoc"><label>Select File:</label><input type="file" name="file" /><br><input type="submit" class="btn" value="Submit" ng-disabled="$isUploading" /></form></div>' ;
           $.createModal({
           title:'Bulk Upload',
           message: iframe,
