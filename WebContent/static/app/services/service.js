@@ -16,6 +16,7 @@ app.factory("service",function($http,$q){
 	    retrieveAllDocTypes : retrieveAllDocTypes,
 	    retrieveAllDocTags : retrieveAllDocTags,
 	    retrieveAllDocSubTags : retrieveAllDocSubTags,
+	    retrieveTypeTagSubTagsMap : retrieveTypeTagSubTagsMap,
 	    retrieveAllDocRepos : retrieveAllDocRepos,
 	    retrieveAllUnmappedTypeTags : retrieveAllUnmappedTypeTags,
 	    retrieveAllUnmappedTagsSubTags : retrieveAllUnmappedTagsSubTags,
@@ -75,6 +76,10 @@ app.factory("service",function($http,$q){
 		 return request('GET','rest/docadmin/doctagsubtags',{'x-docwrkflow-auth' : getDocWorkflowAuthorizationId()},null,{'docTagId':data});
 	}
 	
+	function retrieveTypeTagSubTagsMap(data){
+		 return request('GET','rest/docadmin/doctypetagsubtags',{'x-docwrkflow-auth' : getDocWorkflowAuthorizationId()},null,{'docTypeId':data});
+	}
+
 	function retrieveAllDocTypes() {
 		 return request('GET','rest/docadmin/doctype',{'x-docwrkflow-auth' : getDocWorkflowAuthorizationId()});
 	}
