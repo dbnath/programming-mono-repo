@@ -1,7 +1,8 @@
-app.controller("homeCtrl",['$stateParams','service','$scope','$templateCache','$log','uiGridConstants',function($stateParams,service,$scope,$templateCache,$log,uiGridConstants){
+app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$templateCache','$log','uiGridConstants',function($stateParams,service,$scope,$rootScope,$templateCache,$log,uiGridConstants){
   console.log("Inside Home controller");
   var home = this;
-  home.user = $stateParams.name;
+  home.userId = $rootScope.selectedUserRole.userId;
+  home.userName = $rootScope.selectedUserRole.userName;
   home.docdetails = {};
   document.title = 'Docflow::Home';
   home.appState ="hide";
@@ -132,7 +133,7 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$templateCache','$
         }
       });
 	
-service.getDocByUser(home.user).then(function(obj){
+service.getDocByUser(home.userId).then(function(obj){
     	
         if(obj.status == 200){
         	$scope.gridOptionsmylist.data = obj.data;
@@ -150,7 +151,7 @@ home.assignMe = function(){
 	//	alert(key);
 		var newrow ={};
 		 var index = $scope.gridOptions.data.indexOf(row.entity);
-		 newrow.assignedTo =  home.user;
+		 newrow.assignedTo =  home.userId;
 		 newrow.docName  = row.entity.docName;
 		 newrow.wfStatusDesc = row.entity.wfStatusDesc;
 		 newrow.wfAssignmentGroupName = row.entity.wfAssignmentGroupName;
@@ -170,7 +171,7 @@ home.assignMe = function(){
 				angular.forEach($scope.rows, function(row, key) {
 					var newrow ={};
 					var index = $scope.gridOptions.data.indexOf(row.entity);
-					newrow.assignedTo =  home.user;
+					newrow.assignedTo =  home.userId;
 					newrow.docName  = row.entity.docName;
 					newrow.wfStatusDesc = row.entity.wfStatusDesc;
 					newrow.wfAssignmentGroupName = row.entity.wfAssignmentGroupName;

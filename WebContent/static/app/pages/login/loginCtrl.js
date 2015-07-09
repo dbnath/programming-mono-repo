@@ -20,15 +20,14 @@ app.controller("loginCtrl",['service', '$rootScope',function(service, $rootScope
     };
     service.login(data).then(function(obj){
       if(obj.status == 200){
-        if(login.user.role === 'System Admin'){        
-          window.location.href = '#/setting';
-        } else {
-          window.location.href = '#/home/'+login.user.username;
-        }
-        console.log("The selected user role:"+obj.headers['x-docwrkflow-auth']);
-        service.setDocWorkflowAuthorizationId(obj.headers['x-docwrkflow-auth']);
-        console.log("The user role set :"+service.getDocWorkflowAuthorizationId());
-        console.log("Selected User-Role in rootscope: "+$rootScope.selectedUserRole);
+    	  service.setDocWorkflowAuthorizationId(obj.data);
+    	  console.log("The user role set :"+service.getDocWorkflowAuthorizationId());
+    	  console.log("Selected User-Role in rootscope: "+$rootScope.selectedUserRole.selectedRoleId);
+    	  if(login.user.role === 'System Admin'){        
+    		  window.location.href = '#/setting';
+    	  } else {
+    		  window.location.href = '#/home/'+$rootScope.selectedUserRole.userId;
+    	  }
       } else {    	  
     	  alert(obj.data.responseMessage);
     	  login.user.username="";
