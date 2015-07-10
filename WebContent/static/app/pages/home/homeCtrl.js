@@ -168,6 +168,74 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
 			 appScopeProvider: { 
 			        onDblClick : function(row) {
 			        	home.appState = 'show';
+			        	service.getDocDetails(row.entity.docId).then(function(obj){
+			        		
+			        		var documentWorkflow = {}
+			        		documentWorkflow.docId = row.entity.docId;
+			        		documentWorkflow.docName = row.entity.docName;
+			        		documentWorkflow.docTypeId = row.entity.docTypeId;
+			        		documentWorkflow.docTypeDesc = row.entity.docTypeDesc;
+			        		documentWorkflow.docRepoId = row.entity.docRepoId;
+			        		documentWorkflow.docRepoDesc = row.entity.docRepoDesc;
+			        		documentWorkflow.docHyperlink = row.entity.docHyperlink;
+			        		documentWorkflow.docLocation = row.entity.docLocation;
+			        		documentWorkflow.wfStatusId = row.entity.wfStatusId;
+			        		documentWorkflow.wfStatusDesc = row.entity.wfStatusDesc;
+			        		documentWorkflow.userRole = row.entity.userRole;
+			        		documentWorkflow.wfAssignmentGroupId = row.entity.wfAssignmentGroupId;
+			        		documentWorkflow.wfAssignmentGroupName = row.entity.wfAssignmentGroupName;
+			        		documentWorkflow.wfActivityDesc = row.entity.wfActivityDesc;
+			        		documentWorkflow.isReworked = row.entity.isReworked;
+			        		documentWorkflow.assignedTo = row.entity.assignedTo;
+			        		documentWorkflow.assignedDt = row.entity.assignedDt;
+			        		documentWorkflow.lastUpdatedBy =row.entity.lastUpdatedBy;
+			        		documentWorkflow.lastUpdateDt = row.entity.lastUpdateDt;
+			        	
+			        		 $scope.DocumentWorkflowProcess.docObj = documentWorkflow;
+			        		
+			        	    if(obj.status == 200){
+			        	    	
+			        	    	home.docdetails = obj.data;
+			        	       $scope.DocumentWorkflowProcess.docDetail = 	home.docdetails;
+			        	       home.tagnames = home.docdetails.docTagRelationship;
+			        	    //alert(angular.toJson(obj.data, true));
+			        	        service.retrieveTypeTagSubTagsMap(home.docdetails.document.docTypeId).then(function(obj){
+			        	        	
+			        	            if(obj.status == 200){
+			        	            	  
+			        	            	   var tagarray = [];
+			        	            	   angular.forEach(  obj.data.docTagSubTagMap, function(row, key) {
+			        	            		   var tag = {};
+			        	            	    tag.label = row.docTagDesc;
+			        	            	   
+			        	            	    tag.children =[];
+			        	            	    angular.forEach(  row.docSubTags, function(subrow, key) {
+			        	            	    	var subtag = {};
+			        	            	    	subtag.label = subrow.docSubTagDesc;
+			        	            	    	
+			        	            	    	subtag.value = row.docTagId +'-' + subrow.docSubTagId;
+			        	            	    	
+			        	            	    	
+			        	            	    	tag.children.push(subtag);
+			        	            	    });
+			        	            	    tagarray.push(tag);  
+			        	            	   });
+			        	            	 //  alert(angular.toJson(tagarray, true));
+			        	            	   var pdfLink = 'http://www.bodossaki.gr/userfiles/file/dummy.pdf';
+						        	    	var title = row.entity.docName;
+						        	    	var availableTag = tagarray;  //get the tag from service for a doc type
+						        	    	var checkedTag = ''; // all save tags, for new doc its empty
+								        	createPDF(pdfLink, title, availableTag, checkedTag);
+			        	            } else {
+			        	              alert("Error"+obj.data);
+			        	            }
+			        	          });
+			        	    	//send below parameter from service
+			        	    	
+			        	    } else {
+			        	      alert("Error"+obj.data); 
+			        	    }
+			        	  });
 
 			         }
 			    }
@@ -188,7 +256,7 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
 	service.retrieveUserDetais(home.userId).then(function(obj){
 	    if(obj.status == 200){
 	    	$scope.mappedRoles = obj.data.userRoleList;
-	    	console.log("Assigned role size :"+$scope.mappedRoles.length);
+	    	//console.log("Assigned role size :"+$scope.mappedRoles.length);
 	    } else {
 	    	alert("Error"+obj.data);
 	    }
@@ -237,7 +305,7 @@ home.logout = function() {
 home.assignMe = function(){
 	
 	var log = [];
-	 $scope.docids =[];
+	/*$scope.docids =[];
 	angular.forEach( $scope.rows, function(row, key) {
 		//alert(angular.toJson(row, true));
 	//	alert(key);
@@ -252,7 +320,7 @@ home.assignMe = function(){
 		 home.countmylist =  home.countmylist+1;
 		 angular.extend( $scope.gridOptions.data[index], newrow);
 			$scope.gridOptionsmylist.data.push(newrow);
-		}, log);
+		}, log);*/
 	
 service.assignToMe($scope.docids).then(function(obj){
 		
@@ -321,7 +389,7 @@ $scope.gridOptions.onRegisterApi = function(gridApi){
 		var tagarray =	selectedtag.value.split('-');
 			docTagRelationship.docId =  $scope.DocumentWorkflowProcess.docObj.docId;
 			docTagRelationship.docTypeId =  $scope.DocumentWorkflowProcess.docObj.docTypeId;
-			docTagRelationship.docTypeDesc =  $scope.DocumentWorkflowProcess.docObj.docTypeDesc;
+			//docTagRelationship.docTypeDesc =  $scope.DocumentWorkflowProcess.docObj.docTypeDesc;
 			docTagRelationship.docTagId =  tagarray[0];
 			docTagRelationship.docSubTagId =  tagarray[1];
 			docTagRelationship.lastUpdatedBy =   home.userId ;
@@ -358,7 +426,7 @@ $scope.gridOptions.onRegisterApi = function(gridApi){
 		var tagarray =	selectedtag.value.split('-');
 			docTagRelationship.docId =  $scope.DocumentWorkflowProcess.docObj.docId;
 			docTagRelationship.docTypeId =  $scope.DocumentWorkflowProcess.docObj.docTypeId;
-			docTagRelationship.docTypeDesc =  $scope.DocumentWorkflowProcess.docObj.docTypeDesc;
+			//docTagRelationship.docTypeDesc =  $scope.DocumentWorkflowProcess.docObj.docTypeDesc;
 			docTagRelationship.docTagId =  tagarray[0];
 			docTagRelationship.docSubTagId =  tagarray[1];
 			docTagRelationship.lastUpdatedBy =   home.userId ;
@@ -404,7 +472,7 @@ $scope.gridOptions.onRegisterApi = function(gridApi){
   
 
   var tags = '<div class="input-group"><span class="input-group-addon" id="basic-addon1">Assign Tags</span>';
-  tags += '<select id="example-multiple-optgroups" multiple="multiple">' +'</select></div>';
+  tags += '<select id="example-multiple-optgroups" multiple="multiple">' +'</select></div><br>';
   tags += '<div class="input-group"><span class="input-group-addon" id="basic-addon1">Comment&nbsp;&nbsp;&nbsp;&nbsp;</span>'
   tags += '<textarea class="form-control" rows="3"></textarea></div>';
   //tags += '<div class="btn-group btn-group-justified">'
