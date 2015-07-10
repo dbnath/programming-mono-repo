@@ -296,7 +296,7 @@
             selectedClass: 'active',
             // Maximum height of the dropdown menu.
             // If maximum height is exceeded a scrollbar will be displayed.
-            maxHeight: false,
+            maxHeight: true,
             checkboxName: false,
             includeSelectAllOption: false,
             includeSelectAllIfMoreThan: 0,
@@ -358,9 +358,10 @@
             }
 
             // Manually add button width if set.
-            if (this.options.buttonWidth && this.options.buttonWidth !== 'auto') {
+            //if (this.options.buttonWidth && this.options.buttonWidth !== 'auto') {
+            if(true) {
                 this.$button.css({
-                    'width' : this.options.buttonWidth,
+                    'width' : "265px", //this.options.buttonWidth,
                     'overflow' : 'hidden',
                     'text-overflow' : 'ellipsis'
                 });
@@ -392,9 +393,10 @@
 
             // Set max height of dropdown menu to activate auto scrollbar.
             if (this.options.maxHeight) {
+            	//alert('hh');
                 // TODO: Add a class for this option to move the css declarations.
                 this.$ul.css({
-                    'max-height': this.options.maxHeight + 'px',
+                    'max-height': '300px',
                     'overflow-y': 'auto',
                     'overflow-x': 'hidden'
                 });

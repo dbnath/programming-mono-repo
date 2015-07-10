@@ -42,7 +42,7 @@
 
   <!-- slide in menu (mobile only) -->
   
-  <div class="container bootcards-container" id="main">
+  <div class="container bootcards-container" id="main" ng-init="hc.inithome();">
     
 <div class="row">
 	
@@ -104,9 +104,12 @@
 				</div>
 				<div class="list-group-item">
 					<ul class="tags">
-					  <li><a href="#" class="tag">Governing Law</a></li>
-					  <li><a href="#" class="tag">Party Agreement</a></li>
-					  <li><a href="#" class="tag">Cross Default</a></li>
+			
+					  
+					   <li ng-repeat="tag in hc.tagnames">
+					   <a href="#" class="tag">{{tag.docTagDesc}}</a>
+                                   
+                                              </li>
 					</ul>
 				</div>			
 			</div>
@@ -118,14 +121,14 @@
 							View  
 						</a>
 					</div>
-					<div class="btn-group">
+					<!-- <div class="btn-group">
 						<button class="btn btn-default">
 							<i class="fa fa-star""></i>
 							Favorite  
 						</button>
-					</div>
+					</div> -->
 					<div class="btn-group" >
-						<a class="btn btn-default tagmodal" data-toggle="modal" data-target="#editModal">
+						<a class="btn btn-default assign-tag">
 							<i class="fa fa-tags"></i>
 							Assign Tags 
 						</a>
@@ -164,7 +167,21 @@
 
     <!--recommended: FTLabs FastClick library-->
   
-	
-  
+	<div class="panel-footer clearfix" id="savepanel">
+				<div class="btn-group btn-group-justified">					
+					<div class="btn-group" >
+						<a class="btn btn-default save-tag" href ng-click="hc.saveDoc()">
+							<i class="glyphicon glyphicon-floppy-disk"></i>
+							Save
+						</a>
+					</div>	
+					<div class="btn-group" >
+						<a class="btn btn-default submit-tag" href ng-click="hc.submitDoc()" >
+							<i class="glyphicon glyphicon-save"></i>
+							Save &amp; Submit
+						</a>
+					</div>															
+				</div>
+			</div>
   
 
