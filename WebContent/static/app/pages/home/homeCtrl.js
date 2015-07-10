@@ -117,7 +117,7 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
 			        	            	    tagarray.push(tag);  
 			        	            	   });
 			        	            	 //  alert(angular.toJson(tagarray, true));
-			        	            	   var pdfLink = 'http://www.bodossaki.gr/userfiles/file/dummy.pdf';
+			        	            	   var pdfLink = 'http://www.irs.gov/pub/irs-pdf/f1065.pdf';
 						        	    	var title = row.entity.docName;
 						        	    	var availableTag = tagarray;  //get the tag from service for a doc type
 						        	    	var checkedTag = ''; // all save tags, for new doc its empty
