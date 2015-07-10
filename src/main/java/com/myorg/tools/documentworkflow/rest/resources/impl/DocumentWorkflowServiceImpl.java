@@ -59,7 +59,6 @@ public class DocumentWorkflowServiceImpl extends BaseResource implements Documen
 	}
 
 	public Response submitWorkflow(DocumentWorkflowProcess docWorkflowProcess) {
-		//System.out.println("###### GORU ");
 		User user = getLoggedInUser();
 		String userId = user.getUserId();
 		try {
@@ -126,7 +125,9 @@ public class DocumentWorkflowServiceImpl extends BaseResource implements Documen
 			User user = getLoggedInUser();
 			String userId = user.getUserId();
 			String userRoleId = user.getRoleId();
-			for (DocumentWorkflow doc : docs) {
+			//for (DocumentWorkflow doc : docs) {
+			for (int i=0; i<docs.size(); i++) {
+				DocumentWorkflow doc = docs.get(i);
 				if (DocumentWorkflowToolUtility.areAllObjectsNull(doc.getAssignedTo(), doc.getUserRole())) {
 					doc.setAssignedTo(userId);
 					doc.setAssignedDt(new Date());

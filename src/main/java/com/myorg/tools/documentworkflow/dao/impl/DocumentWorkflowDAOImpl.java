@@ -109,8 +109,12 @@ public class DocumentWorkflowDAOImpl extends BaseJDBCTemplate implements Documen
 			TransactionStatus status = this.getTransactionManager().getTransaction(def);
 			 try {
 				 submitDocumentTagRelationship(jdbcTemplate, docId, docDetailObj.getDocTagRelationship(), status);
-				 submitDocument(jdbcTemplate, docDetailObj.getDocument(), status);
-				 submitDocWorkflowDetail(jdbcTemplate, docDetailObj, status);
+				 if (! DocumentWorkflowToolUtility.isEmpty(docDetailObj.getDocument())) {
+					 submitDocument(jdbcTemplate, docDetailObj.getDocument(), status);
+				 }
+				 if (! DocumentWorkflowToolUtility.isEmpty(docDetailObj.getTagOverrideReason()) || ! DocumentWorkflowToolUtility.isEmpty(docDetailObj.getTargetDocLocation())) {
+					 submitDocWorkflowDetail(jdbcTemplate, docDetailObj, status);
+			 	 }
 				 submitWorkflowProcess(jdbcTemplate, docObj, status);
 				 this.getTransactionManager().commit(status);
 				 return Boolean.TRUE;
