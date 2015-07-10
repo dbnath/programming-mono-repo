@@ -25,7 +25,7 @@
             </li>
            	<li><a href="#task/{{hc.userId}}"><span class="glyphicon glyphicon-list-alt">Task</a></li>
             <li><a href="#contact"><span class="fa fa-pie-chart">Reports</a></li>
-            <li><a href="#" class="wfl-doc_upload" >Bulk Upload Documents</a></li>
+            <li><a href="#" class="wfl-doc_upload" id="doc_upload" style="display:none" >Bulk Upload Documents</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
 			<li class="dropdown">
@@ -44,16 +44,16 @@
   
   <div class="container bootcards-container" id="main" ng-init="hc.inithome();">
     
-<div class="row">
+	<div class="row">
 	
-	<div class="col-sm-5">
-  <ul class="nav nav-tabs" id="myTabs">
-   <li role="presentation" class="active"><a href="#home"><span class="glyphicon glyphicon-tags"></span>&nbspTeam View <span class="badge">{{hc.count}}</span></a></li>
-   <li role="presentation"><a href="#profile"><span class="glyphicon glyphicon-tag"></span>&nbsp;My View <span class="badge">{{hc.countmylist}}</span></a></li>
- </ul>
+		<div class="col-sm-5">
+			<ul class="nav nav-tabs" id="myTabs">
+				<li role="presentation" class="active"><a href="#home"><span class="glyphicon glyphicon-tags"></span>&nbspTeam View <span class="badge">{{hc.count}}</span></a></li>
+				<li role="presentation"><a href="#profile"><span class="glyphicon glyphicon-tag"></span>&nbsp;My View <span class="badge">{{hc.countmylist}}</span></a></li>
+			</ul>
  
 	 
-		 <div id="myTabContent" class="tab-content">
+			<div id="myTabContent" class="tab-content">
 		       <div role="tabpanel" class="tab-pane fade in active" id="home" aria-labelledBy="home-tab">
 		         <div class="gridStyle" ui-grid="gridOptions"  ui-grid-selection class="grid" >
 		          </div>
@@ -63,12 +63,12 @@
 		                    <i class="glyphicon glyphicon-hand-up"></i> 
 		                    <span>Assign Me</span>
 		                  </a>
-		                </div>
+		             </div>
 		       </div>
 		       <div role="tabpanel" class="tab-pane fade" id="profile" aria-labelledBy="profile-tab">
 		           <div class="gridStyle" ui-grid="gridOptionsmylist"  ui-grid-selection class="grid">         
 		          </div>
-		  </div>
+			   </div>
 		
 		</div>
 	</div>
@@ -136,7 +136,7 @@
 				</div>
 			</div>
 			<div class="panel-footer">
-				<small class="pull-left">Assigned to Analyst - Mrinal Saha</small>
+				<small class="pull-left">Assigned to {{hc.roleName}} - {{hc.userName}}</small>
 				<!-- <a class="btn btn-link btn-xs pull-right"
 									href="#"
 									data-toggle="modal"
@@ -167,7 +167,7 @@
 
     <!--recommended: FTLabs FastClick library-->
   
-	<div class="panel-footer clearfix" id="savepanel">
+	<div class="panel-footer clearfix" id="savepanel" style="display:none">
 				<div class="btn-group btn-group-justified">					
 					<div class="btn-group" >
 						<a class="btn btn-default save-tag" href ng-click="hc.saveDoc()">

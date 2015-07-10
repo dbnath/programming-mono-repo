@@ -3,6 +3,8 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
   var home = this;
   home.userId = $rootScope.selectedUserRole.userId;
   home.userName = $rootScope.selectedUserRole.userName;
+  home.roleId = $rootScope.selectedUserRole.selectedRoleId;
+  home.roleName = '';
   home.docdetails = {};
   document.title = 'Docflow::Home';
   home.appState ="hide";
@@ -66,7 +68,7 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
 			        //	alert($filter('date')(new Date(),'yyyy-MM-dd HH:mm:ss'));
 			        	service.getDocDetails(row.entity.docId).then(function(obj){
 			        		
-			        		var documentWorkflow = {}
+			        		var documentWorkflow = {};
 			        		documentWorkflow.docId = row.entity.docId;
 			        		documentWorkflow.docName = row.entity.docName;
 			        		documentWorkflow.docTypeId = row.entity.docTypeId;
@@ -86,15 +88,17 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
 			        		documentWorkflow.assignedDt = row.entity.assignedDt;
 			        		documentWorkflow.lastUpdatedBy =row.entity.lastUpdatedBy;
 			        		documentWorkflow.lastUpdateDt = row.entity.lastUpdateDt;
+							home.roleName = row.entity.wfAssignmentGroupName;
+							home.wfStatusId = row.entity.wfStatusId;
 			        	
-			        		 $scope.DocumentWorkflowProcess.docObj = documentWorkflow;
-			        		
+			        		$scope.DocumentWorkflowProcess.docObj = documentWorkflow;
+							
 			        	    if(obj.status == 200){
 			        	    	
-			        	    	home.docdetails = obj.data;
-			        	       $scope.DocumentWorkflowProcess.docDetail = 	home.docdetails;
-			        	       home.tagnames = home.docdetails.docTagRelationship;
-			        	    //alert(angular.toJson(obj.data, true));
+								home.docdetails = obj.data;
+								$scope.DocumentWorkflowProcess.docDetail = 	home.docdetails;
+								home.tagnames = home.docdetails.docTagRelationship;
+								//alert(angular.toJson(obj.data, true));
 			        	        service.retrieveTypeTagSubTagsMap(home.docdetails.document.docTypeId).then(function(obj){
 			        	        	
 			        	            if(obj.status == 200){
@@ -116,12 +120,27 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
 			        	            	    });
 			        	            	    tagarray.push(tag);  
 			        	            	   });
-			        	            	 //  alert(angular.toJson(tagarray, true));
-			        	            	   var pdfLink = 'http://www.irs.gov/pub/irs-pdf/f1065.pdf';
+										    //  alert(angular.toJson(tagarray, true));
+											var pdfLink = 'http://www.irs.gov/pub/irs-pdf/f1065.pdf';
 						        	    	var title = row.entity.docName;
 						        	    	var availableTag = tagarray;  //get the tag from service for a doc type
 						        	    	var checkedTag = ''; // all save tags, for new doc its empty
 								        	createPDF(pdfLink, title, availableTag, checkedTag);
+											
+											$('#divLocation').hide();
+											$('#divComment').hide();
+											
+											if(home.roleId == 2 || home.roleId == 3){
+												$('#divLocation').hide();
+												$('#divComment').show();
+											}
+											if(home.roleId == 1 && home.wfStatusId == 7){
+												$('#divLocation').show();
+												$('#divComment').show();
+												$('#divComment').disabled();
+											}
+											
+											
 			        	            } else {
 			        	              alert("Error"+obj.data);
 			        	            }
@@ -170,7 +189,7 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
 			        	home.appState = 'show';
 			        	service.getDocDetails(row.entity.docId).then(function(obj){
 			        		
-			        		var documentWorkflow = {}
+			        		var documentWorkflow = {};
 			        		documentWorkflow.docId = row.entity.docId;
 			        		documentWorkflow.docName = row.entity.docName;
 			        		documentWorkflow.docTypeId = row.entity.docTypeId;
@@ -190,15 +209,17 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
 			        		documentWorkflow.assignedDt = row.entity.assignedDt;
 			        		documentWorkflow.lastUpdatedBy =row.entity.lastUpdatedBy;
 			        		documentWorkflow.lastUpdateDt = row.entity.lastUpdateDt;
+							home.roleName = row.entity.wfAssignmentGroupName;
+							home.wfStatusId = row.entity.wfStatusId;
 			        	
-			        		 $scope.DocumentWorkflowProcess.docObj = documentWorkflow;
+			        		$scope.DocumentWorkflowProcess.docObj = documentWorkflow;
 			        		
 			        	    if(obj.status == 200){
 			        	    	
 			        	    	home.docdetails = obj.data;
-			        	       $scope.DocumentWorkflowProcess.docDetail = 	home.docdetails;
-			        	       home.tagnames = home.docdetails.docTagRelationship;
-			        	    //alert(angular.toJson(obj.data, true));
+								$scope.DocumentWorkflowProcess.docDetail = 	home.docdetails;
+								home.tagnames = home.docdetails.docTagRelationship;
+								//alert(angular.toJson(obj.data, true));
 			        	        service.retrieveTypeTagSubTagsMap(home.docdetails.document.docTypeId).then(function(obj){
 			        	        	
 			        	            if(obj.status == 200){
@@ -220,12 +241,26 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
 			        	            	    });
 			        	            	    tagarray.push(tag);  
 			        	            	   });
-			        	            	 //  alert(angular.toJson(tagarray, true));
-			        	            	   var pdfLink = 'http://www.bodossaki.gr/userfiles/file/dummy.pdf';
+											//  alert(angular.toJson(tagarray, true));
+											var pdfLink = 'http://www.irs.gov/pub/irs-pdf/f1065.pdf';
 						        	    	var title = row.entity.docName;
 						        	    	var availableTag = tagarray;  //get the tag from service for a doc type
 						        	    	var checkedTag = ''; // all save tags, for new doc its empty
 								        	createPDF(pdfLink, title, availableTag, checkedTag);
+
+											$('#divLocation').hide();
+											$('#divComment').hide();
+											
+											if(home.roleId == 2 || home.roleId == 3){
+												$('#divLocation').hide();
+												$('#divComment').show();
+											}
+											if(home.roleId == 1 && home.wfStatusId == 7){
+												$('#divLocation').show();
+												$('#divComment').show();
+												$('#divComment').disabled();
+											}
+											
 			        	            } else {
 			        	              alert("Error"+obj.data);
 			        	            }
@@ -256,13 +291,40 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
 	service.retrieveUserDetais(home.userId).then(function(obj){
 	    if(obj.status == 200){
 	    	$scope.mappedRoles = obj.data.userRoleList;
+			//alert(obj.data.userRoleList[0].roleName);
 	    	//console.log("Assigned role size :"+$scope.mappedRoles.length);
 	    } else {
 	    	alert("Error"+obj.data);
 	    }
 	});
 	
-    service.getAllDoc().then(function(obj){
+	home.setupMenu = function(){
+		if(home.roleId == 1 || home.roleId == 4){
+			$('#doc_upload').show();
+		}
+	
+	};
+	
+	home.refreshGrid = function(obj) {
+		service.getAllDoc().then(function(obj){
+			if(obj.status == 200){
+				$scope.gridOptions.data = obj.data;
+				home.count =  ($scope.gridOptions.data.length);
+			} else {
+			  alert("Error"+obj.data);
+			}
+		  });
+		service.getDocByUser(home.userId).then(function(obj){
+			if(obj.status == 200){
+				$scope.gridOptionsmylist.data = obj.data;
+				home.countmylist =  ($scope.gridOptionsmylist.data.length);
+			} else {
+				alert("Error"+obj.data);
+			}
+		});
+	  };
+	
+    /*service.getAllDoc().then(function(obj){
     	
         if(obj.status == 200){
         	
@@ -276,8 +338,7 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
       });
 	
 
-	
-service.getDocByUser(home.userId).then(function(obj){
+	service.getDocByUser(home.userId).then(function(obj){
     	
         if(obj.status == 200){
         	$scope.gridOptionsmylist.data = obj.data;
@@ -285,90 +346,62 @@ service.getDocByUser(home.userId).then(function(obj){
         } else {
           alert("Error"+obj.data);
         }
-      });
+      });*/
 
-home.changeRole = function(roleId) {
-	console.log('New Role changed ::'+roleId);
-	$rootScope.selectedUserRole.selectedRoleId = roleId;
-}
+	home.changeRole = function(roleId) {
+		console.log('New Role changed ::'+roleId);
+		$rootScope.selectedUserRole.selectedRoleId = roleId;
+	}
 
-home.logout = function() {
-	  service.logout().then(function(obj){
-		  if(obj.status == 200){
-			  window.location.href = '#/login'
-		  } else {
-			  alert("Error:"+obj.data)
-		  }
-	  });
-}
+	home.logout = function() {
+		  service.logout().then(function(obj){
+			  if(obj.status == 200){
+				  window.location.href = '#/login'
+			  } else {
+				  alert("Error:"+obj.data)
+			  }
+		  });
+	}
 
-home.assignMe = function(){
-	
-	var log = [];
-	/*$scope.docids =[];
-	angular.forEach( $scope.rows, function(row, key) {
-		//alert(angular.toJson(row, true));
-	//	alert(key);
-		var newrow ={};
-		 var index = $scope.gridOptions.data.indexOf(row.entity);
-		 newrow.assignedTo =  home.userId;
-		 newrow.docName  = row.entity.docName;
-		 newrow.wfStatusDesc = row.entity.wfStatusDesc;
-		 newrow.wfAssignmentGroupName = row.entity.wfAssignmentGroupName;
-		 newrow.docId = row.entity.docId;
-		 $scope.docids.push(row.entity.docId);
-		 home.countmylist =  home.countmylist+1;
-		 angular.extend( $scope.gridOptions.data[index], newrow);
-			$scope.gridOptionsmylist.data.push(newrow);
-		}, log);*/
-	
-service.assignToMe($scope.docids).then(function(obj){
+	home.assignMe = function(){
 		
+		var log = [];
 		var docIdList = [];
 		angular.forEach($scope.rows, function(row, key) {
 			docIdList.push(row.entity.docId);
 		});
 		service.assignToMe(docIdList).then(function(obj){
+		    //alert(obj.status);
 			if (obj.status == 200) {
-				home.countmylist =  home.countmylist+docIdList.length;
-				angular.forEach($scope.rows, function(row, key) {
-					var newrow ={};
-					var index = $scope.gridOptions.data.indexOf(row.entity);
-					newrow.assignedTo =  home.userId;
-					newrow.docName  = row.entity.docName;
-					newrow.wfStatusDesc = row.entity.wfStatusDesc;
-					newrow.wfAssignmentGroupName = row.entity.wfAssignmentGroupName;
-					newrow.docId = row.entity.docId;
-					angular.extend( $scope.gridOptions.data[index], newrow);
-					$scope.gridOptionsmylist.data.push(newrow);
-				}, log);
+				home.refreshGrid(obj);
 			}
 		});
-	
-});
-};
+	};
 
 
-home.inithome = function(){
-	//alert('home');
-}
+	home.inithome = function(obj){
+		//alert('home');
+		//alert($rootScope.selectedUserRole.selectedRoleId);
+		home.refreshGrid(obj);
+		home.setupMenu();
+	}
 
 
-$scope.gridOptions.onRegisterApi = function(gridApi){
-    //set gridApi on scope
-    $scope.gridApi = gridApi;
-    $scope.rows = [];
-    gridApi.selection.on.rowSelectionChanged($scope,function(row){
-      var msg = 'row selected ' + row.isSelected;
-      if(row.isSelected){
-    	 
-    	  $scope.rows.push(row);
-    	 
-      }
-     
-      $log.log(msg);
-   
-    });
+	$scope.gridOptions.onRegisterApi = function(gridApi){
+		//set gridApi on scope
+		$scope.gridApi = gridApi;
+		$scope.rows = [];
+		gridApi.selection.on.rowSelectionChanged($scope,function(row){
+		  var msg = 'row selected ' + row.isSelected;
+		  if(row.isSelected){
+			 
+			  $scope.rows.push(row);
+			 
+		  }
+		 
+		  $log.log(msg);
+	   
+		});
 
     gridApi.selection.on.rowSelectionChangedBatch($scope,function(rows){
       var msg = 'rows changed ' + rows.length;
@@ -379,35 +412,36 @@ $scope.gridOptions.onRegisterApi = function(gridApi){
   };
 
   home.saveDoc = function(){  
-	  $scope.DocumentWorkflowProcess.docDetail.docTagRelationship =[];
+		$scope.DocumentWorkflowProcess.docDetail.docTagRelationship =[];
 		var  selectedtagarray = $('#example-multiple-optgroups option:selected');
     	
 		angular.forEach( selectedtagarray, function(selectedtag, key){
 			
 			var docTagRelationship = {};
 			
-		var tagarray =	selectedtag.value.split('-');
+			var tagarray =	selectedtag.value.split('-');
 			docTagRelationship.docId =  $scope.DocumentWorkflowProcess.docObj.docId;
 			docTagRelationship.docTypeId =  $scope.DocumentWorkflowProcess.docObj.docTypeId;
 			//docTagRelationship.docTypeDesc =  $scope.DocumentWorkflowProcess.docObj.docTypeDesc;
 			docTagRelationship.docTagId =  tagarray[0];
 			docTagRelationship.docSubTagId =  tagarray[1];
-			docTagRelationship.lastUpdatedBy =   home.userId ;
+			docTagRelationship.lastUpdatedBy =   home.user ;
 			docTagRelationship.lastUpdatedDt =   $filter('date')(new Date(),'yyyy-MM-dd') ;
 			
-			docTagRelationship.createdBy =   home.userId ;
+			docTagRelationship.createdBy =   home.user ;
 			docTagRelationship.creationDt =   $filter('date')(new Date(),'yyyy-MM-dd') ;
 			$scope.DocumentWorkflowProcess.isFinalSubmit = false;
+			
 			$scope.DocumentWorkflowProcess.docDetail.docTagRelationship.push(docTagRelationship);
 		});
 		
 		// alert(angular.toJson($scope.DocumentWorkflowProcess, true));
 		service.submitWorkflow($scope.DocumentWorkflowProcess).then(function(obj){
-	    	alert(obj.status);
+	    	//alert(obj.status);
 	        if(obj.status == 200){
-	        	alert("Success");
-	        //	$scope.gridOptionsmylist.data = obj.data;
-	      	//  home.countmylist =  ($scope.gridOptionsmylist.data.length);
+	        	//alert("Success");
+				home.refreshGrid(obj);
+				$('#myModal').modal('hide');
 	        } else {
 	          alert("Error"+obj.data);
 	        }
@@ -423,16 +457,16 @@ $scope.gridOptions.onRegisterApi = function(gridApi){
 			
 			var docTagRelationship = {};
 			
-		var tagarray =	selectedtag.value.split('-');
+			var tagarray =	selectedtag.value.split('-');
 			docTagRelationship.docId =  $scope.DocumentWorkflowProcess.docObj.docId;
 			docTagRelationship.docTypeId =  $scope.DocumentWorkflowProcess.docObj.docTypeId;
 			//docTagRelationship.docTypeDesc =  $scope.DocumentWorkflowProcess.docObj.docTypeDesc;
 			docTagRelationship.docTagId =  tagarray[0];
 			docTagRelationship.docSubTagId =  tagarray[1];
-			docTagRelationship.lastUpdatedBy =   home.userId ;
+			docTagRelationship.lastUpdatedBy =   home.user ;
 			docTagRelationship.lastUpdatedDt =   $filter('date')(new Date(),'yyyy-MM-dd') ;
 			
-			docTagRelationship.createdBy =   home.userId ;
+			docTagRelationship.createdBy =   home.user ;
 			docTagRelationship.creationDt =   $filter('date')(new Date(),'yyyy-MM-dd') ;
 			$scope.DocumentWorkflowProcess.isFinalSubmit = true;
 			$scope.DocumentWorkflowProcess.docDetail.docTagRelationship.push(docTagRelationship);
@@ -440,11 +474,11 @@ $scope.gridOptions.onRegisterApi = function(gridApi){
 		
 		// alert(angular.toJson($scope.DocumentWorkflowProcess, true));
 		service.submitWorkflow($scope.DocumentWorkflowProcess).then(function(obj){
-	    	alert(obj.status);
+	    	//alert(obj.status);
 	        if(obj.status == 200){
-	        	alert("Success");
-	        //	$scope.gridOptionsmylist.data = obj.data;
-	      	//  home.countmylist =  ($scope.gridOptionsmylist.data.length);
+	        	//alert("Success");
+				home.refreshGrid(obj);
+				$('#myModal').modal('hide');
 	        } else {
 	          alert("Error"+obj.data);
 	        }
@@ -453,7 +487,7 @@ $scope.gridOptions.onRegisterApi = function(gridApi){
 };
 
   $scope.grid = {
-  enableHorizontalScrollbar: 0
+	enableHorizontalScrollbar: 0
   };
 
   $scope.uploadComplete = function (content) {
@@ -465,7 +499,6 @@ $scope.gridOptions.onRegisterApi = function(gridApi){
   };
 
   $('#myTabs a').click(function (e) {
-	
 	  e.preventDefault()
 	  $(this).tab('show')
   });
@@ -473,7 +506,9 @@ $scope.gridOptions.onRegisterApi = function(gridApi){
 
   var tags = '<div class="input-group"><span class="input-group-addon" id="basic-addon1">Assign Tags</span>';
   tags += '<select id="example-multiple-optgroups" multiple="multiple">' +'</select></div><br>';
-  tags += '<div class="input-group"><span class="input-group-addon" id="basic-addon1">Comment&nbsp;&nbsp;&nbsp;&nbsp;</span>'
+  tags += '<div class="input-group" id="divComment"><span class="input-group-addon" id="basic-addon1">Comment&nbsp;&nbsp;&nbsp;&nbsp;</span>'
+  tags += '<textarea class="form-control" rows="3"></textarea></div>';
+  tags += '<div class="input-group" id="divLocation"><span class="input-group-addon" id="basic-addon1">Target Location&nbsp;&nbsp;&nbsp;&nbsp;</span>'
   tags += '<textarea class="form-control" rows="3"></textarea></div>';
   //tags += '<div class="btn-group btn-group-justified">'
   //tags += '<div class="btn-group"><a href="#" class="btn btn-primary" id="save-tag"><span class="glyphicon glyphicon-floppy-disk"></span>Save</a></div>';
@@ -496,7 +531,7 @@ $scope.gridOptions.onRegisterApi = function(gridApi){
           html += '<div class="modal-dialog">';
           html += '<div class="modal-content">';
           html += '<div class="modal-header">';
-          html += '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">Ã—</button>';
+          html += '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>';
           if (b.title.length > 0) {
               html += '<h4 class="modal-title">' + b.title + "</h4>"
           }
@@ -588,7 +623,7 @@ $scope.gridOptions.onRegisterApi = function(gridApi){
   $(function(){    
       $('.assign-tag').on('click',function(){
           $('#myModal').modal('show');
-          $('#tagaction').show();
+          $('#tagaction').show();		  
           return false;        
       });    
   });
@@ -599,8 +634,13 @@ $scope.gridOptions.onRegisterApi = function(gridApi){
           $('#tagaction').hide();
           return false;        
       });    
-          });
+  });
   
+  $(function(){    
+      $('.wfl-doc_upload').on('click',function(){
+			window.open('jsp/fileUpload.jsp');
+      });    
+  });
   
   
 //  $(function(){    

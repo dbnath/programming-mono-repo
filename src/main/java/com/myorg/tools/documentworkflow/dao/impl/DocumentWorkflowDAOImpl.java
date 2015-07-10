@@ -103,6 +103,8 @@ public class DocumentWorkflowDAOImpl extends BaseJDBCTemplate implements Documen
 	 public boolean submitWorkflow(DocumentWorkflow docObj, DocumentWorkflowDetail docDetailObj) throws Exception{
 		 Integer docId = docObj.getDocId();
 		 JdbcTemplate jdbcTemplate = this.getJdbcTemplateObject();
+		 //DocWorkflowSubmitStatus wfstatus = null;
+		 Boolean isSubmitSuccess = false;
 		 
 		 if(! DocumentWorkflowToolUtility.isEmpty(docId)){
 			TransactionDefinition def = new DefaultTransactionDefinition();
@@ -117,14 +119,22 @@ public class DocumentWorkflowDAOImpl extends BaseJDBCTemplate implements Documen
 			 	 }
 				 submitWorkflowProcess(jdbcTemplate, docObj, status);
 				 this.getTransactionManager().commit(status);
-				 return Boolean.TRUE;
+				 isSubmitSuccess = true;
 			} catch (SQLException e) {
 				e.printStackTrace();
 				this.getTransactionManager().rollback(status);
-				return Boolean.FALSE;
-			}
+			} /*finally {
+				if (isSubmitSuccess) {
+					wfstatus = fetchModifiedDocWorkflowProcess(docId);
+					wfstatus.setStatusCode("SUCCESS");
+				} else {
+					wfstatus = new DocWorkflowSubmitStatus();
+					wfstatus.setStatusCode("FAILURE");
+					wfstatus.setErrorDescription("An error has occurred while saving...Please check!!!");
+				}
+			}*/
 		 }
-		 return Boolean.FALSE;
+		return isSubmitSuccess;
 	 }
 	 
 	 private void submitDocumentTagRelationship(JdbcTemplate jdbcTemplate, Integer docId, List<DocumentTagRelationship> docTagList, TransactionStatus status) throws SQLException, Exception {
@@ -184,6 +194,17 @@ public class DocumentWorkflowDAOImpl extends BaseJDBCTemplate implements Documen
 		 jdbcTemplate.update(INS_AUDIT_SQL, docObj.getDocId(), versionId+1, docObj.getWfStatusId(), docObj.getIsReworked(), docObj.getAssignedTo(), docObj.getAssignedDt(), docObj.getUserRole(), docObj.getLastUpdatedBy(), docObj.getLastUpdateDt());
 	 }
 	 
+	 /*private DocWorkflowSubmitStatus fetchModifiedDocWorkflowProcess(Integer docId) throws SQLException, Exception {
+		 DocWorkflowSubmitStatus status =  null;
+		 String SEL_SQL = DocumentWorkflowToolConstant.Doc_WKFL_Population_SQL;
+		 DocumentWorkflow docWkflow = this.getJdbcTemplateObject().queryForObject(SEL_SQL, new Object[]{docId}, new DocumentWorkflowMapper());
+		 if ( !DocumentWorkflowToolUtility.isEmpty(docWkflow)) {
+			 status = new DocWorkflowSubmitStatus();
+			 status.setDocWorkflow(docWkflow);
+		 }
+		 return status;
+	 }*/
+	 
 	 public List<DocumentWorkflow> fetchDocumentWorkflows(List<Integer> docIds) throws SQLException, Exception {
 		 String SQL = DocumentWorkflowToolConstant.FETCH_DOC_WFL_SQL + "("+DocumentWorkflowToolUtility.joinString(docIds, "?")+")";
 		 List<DocumentWorkflow> docWorkflowList = null;
@@ -221,5 +242,7 @@ public class DocumentWorkflowDAOImpl extends BaseJDBCTemplate implements Documen
 		}
 
 	}
+	
+	
 
 }

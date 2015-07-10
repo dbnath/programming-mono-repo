@@ -1,8 +1,11 @@
 package com.myorg.tools.documentworkflow.rest.resources.impl;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.ws.rs.core.Response;
 
@@ -32,6 +35,18 @@ public class DocumentWorkflowServiceImpl extends BaseResource implements Documen
 	 */
 	public void setDocumentDAO(DocumentWorkflowDAO documentDAO) {
 		this.documentDAO = documentDAO;
+	}
+	
+	private static Map<Integer, Integer> statusGroupMap = new HashMap<Integer, Integer>();
+	
+	static{
+		statusGroupMap.put(1, 1);
+		statusGroupMap.put(2, 1);
+		statusGroupMap.put(3, 2);
+		statusGroupMap.put(4, 2);
+		statusGroupMap.put(5, 3);
+		statusGroupMap.put(6, 3);
+		statusGroupMap.put(7, 1);
 	}
 	
 	public Response getAllDocuments(String userId) {
@@ -128,7 +143,7 @@ public class DocumentWorkflowServiceImpl extends BaseResource implements Documen
 			//for (DocumentWorkflow doc : docs) {
 			for (int i=0; i<docs.size(); i++) {
 				DocumentWorkflow doc = docs.get(i);
-				if (DocumentWorkflowToolUtility.areAllObjectsNull(doc.getAssignedTo(), doc.getUserRole())) {
+				if (DocumentWorkflowToolUtility.areAllObjectsNull(doc.getAssignedTo()) && (Integer.valueOf(userRoleId)==4 || statusGroupMap.get(doc.getWfStatusId())==Integer.valueOf(userRoleId))) {
 					doc.setAssignedTo(userId);
 					doc.setAssignedDt(new Date());
 					doc.setUserRole(userRoleId);

@@ -1,6 +1,13 @@
 package com.myorg.tools.documentworkflow.model;
 
-public class DocumentWorkflowProcess {
+import java.io.Serializable;
+
+public class DocumentWorkflowProcess implements Serializable {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1528488687498735668L;
 	
 	private Boolean isFinalSubmit; 
 	private DocumentWorkflow docObj; 

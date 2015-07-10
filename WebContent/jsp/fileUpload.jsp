@@ -1,6 +1,8 @@
 <html>
 <body>
 	<h1>Bulk Upload Documents for Tagging</h1>
+	
+	<div><a href="../rest/docadmin/template"> Click here to download Bulk Upload template </a></div>
  
 	<form action="../rest/docadmin/uploaddoc" method="post" enctype="multipart/form-data">
  

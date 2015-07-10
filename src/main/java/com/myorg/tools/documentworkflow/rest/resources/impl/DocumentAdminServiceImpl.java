@@ -32,6 +32,7 @@ import com.myorg.tools.documentworkflow.model.DocumentTagSubTagMapping;
 import com.myorg.tools.documentworkflow.model.DocumentType;
 import com.myorg.tools.documentworkflow.model.DocumentTypeTagMapping;
 import com.myorg.tools.documentworkflow.model.DocumentTypeTagSubTagsMap;
+import com.myorg.tools.documentworkflow.model.User;
 import com.myorg.tools.documentworkflow.rest.resources.BaseResource;
 import com.myorg.tools.documentworkflow.rest.resources.DocumentAdminService;
 import com.sun.jersey.core.header.FormDataContentDisposition;
@@ -141,7 +142,8 @@ public class DocumentAdminServiceImpl extends BaseResource implements DocumentAd
 		
 		try {
 			
-			String userId = "PRATIK"; //FIXME This is to be replaced with Logged in User Id
+			User user = getLoggedInUser();
+			String userId = user.getUserId();
 			
 			List<Document> docList = parseBulkUploadFile(uploadedInputStream);
 			documentAdminDAO.uploadDocumentInformation(docList, userId);
