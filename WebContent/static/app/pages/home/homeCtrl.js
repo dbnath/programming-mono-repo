@@ -209,7 +209,7 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
 	
 
 	
-service.getDocByUser(home.user).then(function(obj){
+service.getDocByUser(home.userId).then(function(obj){
     	
         if(obj.status == 200){
         	$scope.gridOptionsmylist.data = obj.data;
@@ -324,10 +324,10 @@ $scope.gridOptions.onRegisterApi = function(gridApi){
 			docTagRelationship.docTypeDesc =  $scope.DocumentWorkflowProcess.docObj.docTypeDesc;
 			docTagRelationship.docTagId =  tagarray[0];
 			docTagRelationship.docSubTagId =  tagarray[1];
-			docTagRelationship.lastUpdatedBy =   home.user ;
+			docTagRelationship.lastUpdatedBy =   home.userId ;
 			docTagRelationship.lastUpdatedDt =   $filter('date')(new Date(),'yyyy-MM-dd') ;
 			
-			docTagRelationship.createdBy =   home.user ;
+			docTagRelationship.createdBy =   home.userId ;
 			docTagRelationship.creationDt =   $filter('date')(new Date(),'yyyy-MM-dd') ;
 			$scope.DocumentWorkflowProcess.isFinalSubmit = false;
 			$scope.DocumentWorkflowProcess.docDetail.docTagRelationship.push(docTagRelationship);
@@ -361,10 +361,10 @@ $scope.gridOptions.onRegisterApi = function(gridApi){
 			docTagRelationship.docTypeDesc =  $scope.DocumentWorkflowProcess.docObj.docTypeDesc;
 			docTagRelationship.docTagId =  tagarray[0];
 			docTagRelationship.docSubTagId =  tagarray[1];
-			docTagRelationship.lastUpdatedBy =   home.user ;
+			docTagRelationship.lastUpdatedBy =   home.userId ;
 			docTagRelationship.lastUpdatedDt =   $filter('date')(new Date(),'yyyy-MM-dd') ;
 			
-			docTagRelationship.createdBy =   home.user ;
+			docTagRelationship.createdBy =   home.userId ;
 			docTagRelationship.creationDt =   $filter('date')(new Date(),'yyyy-MM-dd') ;
 			$scope.DocumentWorkflowProcess.isFinalSubmit = true;
 			$scope.DocumentWorkflowProcess.docDetail.docTagRelationship.push(docTagRelationship);
