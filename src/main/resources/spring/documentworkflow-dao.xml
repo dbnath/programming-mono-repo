@@ -15,21 +15,21 @@
 	<bean id="baseJDBCTemplate" 
       class=" com.myorg.tools.documentworkflow.dao.impl.BaseJDBCTemplate">
       <property name="dataSource"  ref="dataSource" />
-      <!--  property name="transactionManager"  ref="transactionManager" / -->      
+      <property name="transactionManager"  ref="transactionManager" />      
    </bean>	
 	
 	<!-- DAO configuration -->
 	<bean id="documentWorkflowDAOImpl" class=" com.myorg.tools.documentworkflow.dao.impl.DocumentWorkflowDAOImpl">
 		<property name="dataSource"  ref="dataSource" />
-		<!--  property name="transactionManager"  ref="transactionManager" /-->
+		<property name="transactionManager"  ref="transactionManager" />
 	</bean>
 	<bean id="documentAdminDAOImpl" class=" com.myorg.tools.documentworkflow.dao.impl.DocumentAdminDAOImpl">
 		<property name="dataSource"  ref="dataSource" />
-		<!--  property name="transactionManager"  ref="transactionManager" /-->
+		<property name="transactionManager"  ref="transactionManager" />
 	</bean>
 	<bean id="userAdminDAOImpl" class=" com.myorg.tools.documentworkflow.dao.impl.UserAdminDAOImpl">
 		<property name="dataSource"  ref="dataSource" />
-		<!--  property name="transactionManager"  ref="transactionManager" /-->
+		<property name="transactionManager"  ref="transactionManager" />
 	</bean>
 	
 </beans>
