@@ -219,7 +219,7 @@ service.getDocByUser(home.user).then(function(obj){
         }
       });
 
-home.changeRole() = function(roleId) {
+home.changeRole = function(roleId) {
 	console.log('New Role changed ::'+roleId);
 	$rootScope.selectedUserRole.selectedRoleId = roleId;
 }
@@ -277,6 +277,7 @@ service.assignToMe($scope.docids).then(function(obj){
 			}
 		});
 	
+});
 };
 
 
