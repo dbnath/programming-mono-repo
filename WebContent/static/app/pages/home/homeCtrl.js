@@ -1,4 +1,4 @@
-app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$templateCache','$log','uiGridConstants',function($stateParams,service,$scope,$rootScope,$templateCache,$log,uiGridConstants){
+app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$templateCache','$log','uiGridConstants',"$filter",function($stateParams,service,$scope,$rootScope,$templateCache,$log,uiGridConstants,$filter){
   console.log("Inside Home controller");
   var home = this;
   home.userId = $rootScope.selectedUserRole.userId;
