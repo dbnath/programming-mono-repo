@@ -139,7 +139,8 @@ app.factory("service",function($http,$q,$rootScope){
 	function setDocWorkflowAuthorizationId(userData) {
 		$rootScope.selectedUserRole.userId = userData.userId;
 		$rootScope.selectedUserRole.userName = userData.userName;
-		$rootScope.selectedUserRole.selectedRoleId = userData.roleId;
+		$rootScope.selectedUserRole.selectedRoleId = userData.roleId;		
+		$rootScope.selectedUserRole.selectedRoleName = userData.userRoleList[0].roleName;		
 	}
 	
 	function getDocWorkflowAuthorizationId() {

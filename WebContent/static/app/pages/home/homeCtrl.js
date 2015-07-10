@@ -348,9 +348,10 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
         }
       });*/
 
-	home.changeRole = function(roleId) {
-		console.log('New Role changed ::'+roleId);
+	home.changeRole = function(roleId, roleName) {
+		console.log('New Role changed ::'+roleId+","+roleName);
 		$rootScope.selectedUserRole.selectedRoleId = roleId;
+		$rootScope.selectedUserRole.selectedRoleName = roleName;
 	}
 
 	home.logout = function() {

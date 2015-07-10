@@ -27,7 +27,8 @@ var app = angular.module('legalrpf', [
     	$rootScope.selectedUserRole = {
 			userId : null,
 			userName : null,
-			selectedRoleId : null
+			selectedRoleId : null,
+			selectedRoleName : null
 		};
   });
   
