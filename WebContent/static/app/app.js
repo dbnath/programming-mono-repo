@@ -22,6 +22,10 @@ var app = angular.module('legalrpf', [
         url : '/home/:name',     
         controller : 'homeCtrl as hc',
         templateUrl : 'static/app/pages/home/home.html'
+    }).state('reports',{
+        url : '/reports/:name',     
+        controller : 'reportsCtrl as rc',
+        templateUrl : 'static/app/pages/reports/reports.html'
     })
   }).run(function($rootScope) {
     	$rootScope.selectedUserRole = {
