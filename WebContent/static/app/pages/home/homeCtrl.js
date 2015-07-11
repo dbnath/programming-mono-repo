@@ -98,6 +98,7 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
 								home.docdetails = obj.data;
 								$scope.DocumentWorkflowProcess.docDetail = 	home.docdetails;
 								home.tagnames = home.docdetails.docTagRelationship;
+								var selectedtag = [];
 								//alert(angular.toJson(obj.data, true));
 			        	        service.retrieveTypeTagSubTagsMap(home.docdetails.document.docTypeId).then(function(obj){
 			        	        	
@@ -126,7 +127,11 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
 						        	    	var availableTag = tagarray;  //get the tag from service for a doc type
 						        	    	var checkedTag = ''; // all save tags, for new doc its empty
 								        	createPDF(pdfLink, title, availableTag, checkedTag);
-											
+                                                angular.forEach(  home.tagnames, function(tag, key) {
+												 
+												 selectedtag.push(tag.docTagId +'-' + tag.docSubTagId);
+												  $('#example-multiple-optgroups').multiselect('select', tag.docTagId +'-' + tag.docSubTagId);
+											 });
 											$('#divLocation').hide();
 											$('#divComment').hide();
 											
@@ -219,7 +224,13 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
 			        	    	home.docdetails = obj.data;
 								$scope.DocumentWorkflowProcess.docDetail = 	home.docdetails;
 								home.tagnames = home.docdetails.docTagRelationship;
-								//alert(angular.toJson(obj.data, true));
+								var selectedtag = [];
+//								 angular.forEach(  home.tagnames, function(tag, key) {
+//									 
+//									 selectedtag.push(tag.docTagId +'-' + tag.docSubTagId);
+//									 
+//								 });
+						//		alert(angular.toJson(obj.data, true));
 			        	        service.retrieveTypeTagSubTagsMap(home.docdetails.document.docTypeId).then(function(obj){
 			        	        	
 			        	            if(obj.status == 200){
@@ -247,7 +258,12 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
 						        	    	var availableTag = tagarray;  //get the tag from service for a doc type
 						        	    	var checkedTag = ''; // all save tags, for new doc its empty
 								        	createPDF(pdfLink, title, availableTag, checkedTag);
-
+								        	 angular.forEach(  home.tagnames, function(tag, key) {
+												 
+												 selectedtag.push(tag.docTagId +'-' + tag.docSubTagId);
+												  $('#example-multiple-optgroups').multiselect('select', tag.docTagId +'-' + tag.docSubTagId);
+											 });
+								        	
 											$('#divLocation').hide();
 											$('#divComment').hide();
 											
@@ -315,7 +331,9 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
 			}
 		  });
 		service.getDocByUser(home.userId).then(function(obj){
+			//alert(home.userId);
 			if(obj.status == 200){
+			
 				$scope.gridOptionsmylist.data = obj.data;
 				home.countmylist =  ($scope.gridOptionsmylist.data.length);
 			} else {
@@ -368,11 +386,23 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
 		
 		var log = [];
 		var docIdList = [];
-		angular.forEach($scope.rows, function(row, key) {
-			docIdList.push(row.entity.docId);
-		});
-		service.assignToMe(docIdList).then(function(obj){
-		    //alert(obj.status);
+		angular.forEach( $scope.rows, function(row, key) {
+			//alert(angular.toJson(row, true));
+		//	alert(key);
+			var newrow ={};
+			 var index = $scope.gridOptions.data.indexOf(row.entity);
+			 newrow.assignedTo =  home.userId;
+			 newrow.docName  = row.entity.docName;
+			 newrow.wfStatusDesc = row.entity.wfStatusDesc;
+			 newrow.wfAssignmentGroupName = row.entity.wfAssignmentGroupName;
+			 newrow.docId = row.entity.docId;
+			 $scope.docids.push(row.entity.docId);
+			// home.countmylist =  home.countmylist+1;
+		//	 angular.extend( $scope.gridOptions.data[index], newrow);
+				$scope.gridOptionsmylist.data.push(newrow);
+			}, log);
+		service.assignToMe( $scope.docids).then(function(obj){
+		   // alert(obj.status);
 			if (obj.status == 200) {
 				home.refreshGrid(obj);
 			}
@@ -451,6 +481,7 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
   };
   
   home.submitDoc  = function(){  
+	  $scope.loading = true;
 	  $scope.DocumentWorkflowProcess.docDetail.docTagRelationship =[];
 		var  selectedtagarray = $('#example-multiple-optgroups option:selected');
   	
@@ -464,10 +495,10 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
 			//docTagRelationship.docTypeDesc =  $scope.DocumentWorkflowProcess.docObj.docTypeDesc;
 			docTagRelationship.docTagId =  tagarray[0];
 			docTagRelationship.docSubTagId =  tagarray[1];
-			docTagRelationship.lastUpdatedBy =   home.user ;
+			docTagRelationship.lastUpdatedBy =   home.userId ;
 			docTagRelationship.lastUpdatedDt =   $filter('date')(new Date(),'yyyy-MM-dd') ;
 			
-			docTagRelationship.createdBy =   home.user ;
+			docTagRelationship.createdBy =   home.userId ;
 			docTagRelationship.creationDt =   $filter('date')(new Date(),'yyyy-MM-dd') ;
 			$scope.DocumentWorkflowProcess.isFinalSubmit = true;
 			$scope.DocumentWorkflowProcess.docDetail.docTagRelationship.push(docTagRelationship);
@@ -479,11 +510,30 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
 	        if(obj.status == 200){
 	        	//alert("Success");
 				home.refreshGrid(obj);
+				
+				service.getDocDetails( $scope.DocumentWorkflowProcess.docObj.docId).then(function(obj){
+	        			        	
+	        	    if(obj.status == 200){
+	        	    
+	        	    	home.docdetails = obj.data;
+	        	    	home.docdetails.document.lastUpdatedBy =  home.userId ;
+	        	    	home.docdetails.document.lastUpdatedDt = $filter('date')(new Date(),'yyyy-MM-dd')  ;
+	        	    	home.tagnames = home.docdetails.docTagRelationship;
+	        	    	
+	        	    } else {
+	        	      alert("Error"+obj.data); 
+	        	    }
+	        	  });	
+				
+				
+				
+				
 				$('#myModal').modal('hide');
 	        } else {
 	          alert("Error"+obj.data);
 	        }
-	      });
+	        $scope.loading = false;
+		});
 		
 };
 
@@ -532,7 +582,7 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
           html += '<div class="modal-dialog">';
           html += '<div class="modal-content">';
           html += '<div class="modal-header">';
-          html += '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>';
+          html += '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">ï¿½</button>';
           if (b.title.length > 0) {
               html += '<h4 class="modal-title">' + b.title + "</h4>"
           }
