@@ -294,7 +294,7 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
 	
 	function createPDF(pdfLink, doctitle, availableTag, checkedTag) {
 		var pdf_link = pdfLink; //$(this).attr('href');
-        var iframe = '<div class="iframe-container"><iframe src="'+pdf_link+'"></iframe></div>' ;
+        var iframe = '<div class="iframe-container"><iframe src="'+pdf_link+'#zoom=90"></iframe></div>' ;
         $.createModal({
         title:doctitle,
         message: iframe,
@@ -582,7 +582,7 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
           html += '<div class="modal-dialog">';
           html += '<div class="modal-content">';
           html += '<div class="modal-header">';
-          html += '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">�</button>';
+          html += '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>';
           if (b.title.length > 0) {
               html += '<h4 class="modal-title">' + b.title + "</h4>"
           }
@@ -681,8 +681,15 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
   
   $(function(){    
       $('.view-pdf').on('click',function(){
-          $('#myModal').modal('show');
-          $('#tagaction').hide();
+         $('#myModal').modal('show');
+         $('#tagaction').hide();
+          return false;        
+      });    
+  });
+  
+  $(function(){    
+      $('.view-comment').on('click',function(){
+    	  $('#commentModal').modal('show');
           return false;        
       });    
   });
