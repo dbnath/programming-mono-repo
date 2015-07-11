@@ -1,7 +1,7 @@
 
   <!-- Fixed navbar -->
-    <nav class="navbar navbar-default navbar-fixed-top">
-      <div class="container">
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="kv-container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
             <span class="sr-only">Toggle navigation</span>
@@ -9,14 +9,14 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Docflow</a>
+          <span class="navbar-brand" href="#" style="margin-top: -10px;"><img src="static/assets/images/kservices.png" alt="">Docflow</span>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
             <li class="active"><a href="#"><span class="glyphicon glyphicon-home"></span>&nbsp;Home</a></li>            
             <li class="dropdown" ng-show="mappedRoles.length > 1" >              
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-              <span class="glyphicon glyphicon-user">&nbsp;{{selectedUserRole.selectedRoleName}}<span class="caret"></span></a>
+              <span class="glyphicon glyphicon-user"></span>&nbsp;{{selectedUserRole.selectedRoleName}}<span class="caret"></span></a>
               <ul class="dropdown-menu">
 				<li ng-repeat="arole in mappedRoles">
 					<a href="#" ng-click="hc.changeRole(arole.roleId,arole.roleName)">{{arole.roleName}}</a>
@@ -24,8 +24,8 @@
               </ul>
             </li>
             <li ng-show="mappedRoles.length == 1"><a href="#"><span class="glyphicon glyphicon-user">{{selectedUserRole.selectedRoleName}}</span></a></li>
-           	<li><a href="#task/{{hc.userId}}"><span class="glyphicon glyphicon-list-alt">Task</a></li>
-            <li><a href="#contact"><span class="fa fa-pie-chart">Reports</a></li>
+           	<li><a href="#task/{{hc.userId}}"><span class="glyphicon glyphicon-list-alt"></span>&nbsp;Task</a></li>
+            <li><a href="#contact"><span class="fa fa-pie-chart"></span>&nbsp;Reports</a></li>
             <li><a href="#" class="wfl-doc_upload" id="doc_upload" style="display:none" >Bulk Upload Documents</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
@@ -119,15 +119,15 @@
 					<div class="btn-group">
 						<a class="btn btn-default view-pdf" href="http://www.irs.gov/pub/irs-pdf/f1065.pdf">
 							<i class="fa fa-link"></i>
-							View  
+							View Document
 						</a>
 					</div>
-					<!-- <div class="btn-group">
-						<button class="btn btn-default">
-							<i class="fa fa-star""></i>
-							Favorite  
+					<div class="btn-group">
+						<button class="btn btn-default view-comment">
+							<i class="fa fa-comment""></i>
+							View Comment  
 						</button>
-					</div> -->
+					</div>
 					<div class="btn-group" >
 						<a class="btn btn-default assign-tag">
 							<i class="fa fa-tags"></i>
@@ -152,14 +152,7 @@
 </div> <!-- end of row -->
 </div> <!-- end of main container -->
 
-	<!-- fixed tabbed footer -->
-	<div class="navbar navbar-default navbar-fixed-bottom">
-		<div class="container">
-			<div class="bootcards-desktop-footer clearfix">
-				<p class="pull-left">Docflow v1.1.0 &copy; cognizant.com</p>
-			</div>			
-		</div>
-	</div> 
+	
 
   <!-- Bootstrap & jQuery core JavaScript
     ================================================== -->
@@ -186,3 +179,68 @@
 			</div>
   
 
+
+<div class="modal fade" id="commentModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        		<div class="titleBox">
+				    <label>Comments</label>
+				  </div>
+      </div>
+      <div class="modal-body">
+        <div class="detailBox">
+				  
+				  <div class="commentBox">
+				
+				    <p class="taskDescription">Comment details for {{hc.docdetails.document.docName}}</p>
+				  </div>
+				  <div class="actionBox">
+				    <ul class="commentList">
+				      <li>
+				        <div class="commenterImage">
+				          <img src="static/assets/images/user-48.png" />
+				        </div>
+				        <div class="commentText">
+				          <p class="">Hello this is a test comment.</p> <span class="date sub-text">on March 5th, 2015</span>
+				
+				        </div>
+				      </li>
+				      <li>
+				        <div class="commenterImage">
+				          <img src="static/assets/images/user-alt-48.png" />
+				        </div>
+				        <div class="commentText">
+				          <p class="">Hello this is a test comment and this comment is particularly very long and it goes on and on and on.</p> <span class="date sub-text">on March 5th, 2015</span>
+				
+				        </div>
+				      </li>
+				      <li>
+				        <div class="commenterImage">
+				          <img src="static/assets/images/user-48.png" />
+				        </div>
+				        <div class="commentText">
+				          <p class="">Hello this is a test comment.</p> <span class="date sub-text">on March 5th, 2015</span>
+				
+				        </div>
+				      </li>
+				    </ul>
+				    <form class="form-inline" role="form">
+				      <div class="form-group">
+				        <input class="form-control" type="text" placeholder="Your comments" />
+				      </div>
+				      <div class="form-group">
+				        <button class="btn btn-default">Add</button>
+				      </div>
+				    </form>
+				  </div>
+				</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
