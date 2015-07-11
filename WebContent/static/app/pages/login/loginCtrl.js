@@ -3,6 +3,7 @@ app.controller("loginCtrl",['service', '$scope','$rootScope',function(service, $
   var login = this;
   login.user = {};
   login.loginErrorMessage = "";
+  document.title = 'Docflow::Login';
   
   login.signIn=function(){
     window.location.href = '/#/userhome'
