@@ -115,8 +115,10 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
 			        	            	    	subtag.label = subrow.docSubTagDesc;
 			        	            	    	
 			        	            	    	subtag.value = row.docTagId +'-' + subrow.docSubTagId;
-			        	            	    	
-			        	            	    	
+			        	            	    	//disabled after QA reviewed or closed
+			        	            	    	if(documentWorkflow.wfStatusId == 7 || documentWorkflow.wfStatusId == 8) {
+			        	            	    		subtag.disabled = 'true';
+			        	            	    	}
 			        	            	    	tag.children.push(subtag);
 			        	            	    });
 			        	            	    tagarray.push(tag);  
@@ -126,7 +128,7 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
 						        	    	var title = row.entity.docName;
 						        	    	var availableTag = tagarray;  //get the tag from service for a doc type
 						        	    	var checkedTag = ''; // all save tags, for new doc its empty
-								        	createPDF(pdfLink, title, availableTag, checkedTag);
+								        	createPDF(pdfLink, title, availableTag, checkedTag, home.roleId, documentWorkflow.wfStatusId);
                                                 angular.forEach(  home.tagnames, function(tag, key) {
 												 
 												 selectedtag.push(tag.docTagId +'-' + tag.docSubTagId);
@@ -142,7 +144,7 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
 											if(home.roleId == 1 && home.wfStatusId == 7){
 												$('#divLocation').show();
 												$('#divComment').show();
-												$('#divComment').disabled();
+												//$('#divComment').disabled();
 											}
 											
 											
@@ -246,7 +248,10 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
 			        	            	    	subtag.label = subrow.docSubTagDesc;
 			        	            	    	
 			        	            	    	subtag.value = row.docTagId +'-' + subrow.docSubTagId;
-			        	            	    	
+			        	            	    	//disabled after QA reviewed or closed
+			        	            	    	if(documentWorkflow.wfStatusId == 7 || documentWorkflow.wfStatusId == 8) {
+			        	            	    		subtag.disabled = 'true';
+			        	            	    	}
 			        	            	    	
 			        	            	    	tag.children.push(subtag);
 			        	            	    });
@@ -257,7 +262,7 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
 						        	    	var title = row.entity.docName;
 						        	    	var availableTag = tagarray;  //get the tag from service for a doc type
 						        	    	var checkedTag = ''; // all save tags, for new doc its empty
-								        	createPDF(pdfLink, title, availableTag, checkedTag);
+								        	createPDF(pdfLink, title, availableTag, checkedTag, home.roleId, documentWorkflow.wfStatusId);
 								        	 angular.forEach(  home.tagnames, function(tag, key) {
 												 
 												 selectedtag.push(tag.docTagId +'-' + tag.docSubTagId);
@@ -292,7 +297,7 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
 			    }
 	}
 	
-	function createPDF(pdfLink, doctitle, availableTag, checkedTag) {
+	function createPDF(pdfLink, doctitle, availableTag, checkedTag, userrole, docstatus) {
 		var pdf_link = pdfLink; //$(this).attr('href');
         var iframe = '<div class="iframe-container"><iframe src="'+pdf_link+'#zoom=90"></iframe></div>' ;
         $.createModal({
@@ -302,7 +307,43 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
         scrollable:false,
         tag:availableTag
         });
+        handleAssignTag(userrole, docstatus);
 	}
+	
+	function handleAssignTag(userrole, docstatus) {
+		//alert(userrole);
+		//alert(docstatus);
+		$('.assign-tag').addClass('disabled'); //default
+		if(docstatus == 1 || docstatus == 3 || docstatus == 5 || docstatus == 8) { //document is new, ...  status , assign me first
+        	$('.assign-tag').addClass('disabled');
+        }
+		else if(docstatus == 2 && userrole == 1) { //Assigned to Analyst and logged user is  analyst
+			$('.assign-tag').removeClass('disabled');
+		}
+		else if(docstatus == 4 && userrole == 2) { //Assigned to Attorney and logged useris attorney
+			$('.assign-tag').removeClass('disabled');
+		}
+		else if(docstatus == 6 && userrole == 3) { //Assigned to QA and logged user is QA
+			$('.assign-tag').removeClass('disabled');
+		}
+		else if(docstatus == 7 && userrole == 1) { //QA Reviewed and logged user is Analyst
+			$('.assign-tag').removeClass('disabled');
+		}
+	}
+	
+	// Extended disable function
+	jQuery.fn.extend({
+	    disable: function(state) {
+	        return this.each(function() {
+	            var $this = $(this);
+	            if($this.is('input, button'))
+	              this.disabled = state;
+	            else
+	              $this.toggleClass('disabled', state);
+	        });
+	    }
+	});
+
 	
 	service.retrieveUserDetais(home.userId).then(function(obj){
 	    if(obj.status == 200){
@@ -405,6 +446,7 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
 		   // alert(obj.status);
 			if (obj.status == 200) {
 				home.refreshGrid(obj);
+				home.appState ="hide";
 			}
 		});
 	};
@@ -413,8 +455,14 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
 	home.inithome = function(obj){
 		//alert('home');
 		//alert($rootScope.selectedUserRole.selectedRoleId);
-		home.refreshGrid(obj);
-		home.setupMenu();
+		//Debasish da please fix root scope issue, untill then redrect to login -- mnl
+		if(home.userId == null) {
+			window.location.href = '#/login';
+		}
+		else {
+			home.refreshGrid(obj);
+			home.setupMenu();
+		}
 	}
 
 
@@ -524,11 +572,9 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
 	        	      alert("Error"+obj.data); 
 	        	    }
 	        	  });	
-				
-				
-				
-				
+				home.refreshGrid(obj);
 				$('#myModal').modal('hide');
+				home.appState ="hide";
 	        } else {
 	          alert("Error"+obj.data);
 	        }
@@ -557,10 +603,10 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
 
   var tags = '<div class="input-group"><span class="input-group-addon" id="basic-addon1">Assign Tags</span>';
   tags += '<select id="example-multiple-optgroups" multiple="multiple">' +'</select></div><br>';
-  tags += '<div class="input-group" id="divComment"><span class="input-group-addon" id="basic-addon1">Comment&nbsp;&nbsp;&nbsp;&nbsp;</span>'
-  tags += '<textarea class="form-control" rows="3"></textarea></div>';
-  tags += '<div class="input-group" id="divLocation"><span class="input-group-addon" id="basic-addon1">Target Location&nbsp;&nbsp;&nbsp;&nbsp;</span>'
-  tags += '<textarea class="form-control" rows="3"></textarea></div>';
+  tags += '<div class="input-group" id="divComment"><span class="input-group-addon" id="basic-addon2">Comment&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>'
+  tags += '<textarea class="form-control" rows="3" id="usercomment"></textarea></div>';
+  tags += '<div class="input-group" id="divLocation"><span class="input-group-addon" id="basic-addon3">Target Location</span>'
+  tags += '<textarea class="form-control" rows="3" id="targetloc"></textarea></div>';
   //tags += '<div class="btn-group btn-group-justified">'
   //tags += '<div class="btn-group"><a href="#" class="btn btn-primary" id="save-tag"><span class="glyphicon glyphicon-floppy-disk"></span>Save</a></div>';
   //tags += '<div class="btn-group" id="b_sub"></div>';
