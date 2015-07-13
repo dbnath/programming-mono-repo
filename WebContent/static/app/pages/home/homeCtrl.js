@@ -1,6 +1,7 @@
-app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$templateCache','$log','uiGridConstants',"$filter",function($stateParams,service,$scope,$rootScope,$templateCache,$log,uiGridConstants,$filter){
+app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$templateCache','$log','uiGridConstants',"$filter","ngDialog",function($stateParams,service,$scope,$rootScope,$templateCache,$log,uiGridConstants,$filter,ngDialog){
   console.log("Inside Home controller");
   var home = this;
+  $rootScope.theme = 'ngdialog-theme-plain';
   home.userId = $rootScope.selectedUserRole.userId;
   home.userName = $rootScope.selectedUserRole.userName;
   home.roleId = $rootScope.selectedUserRole.selectedRoleId;
@@ -149,13 +150,21 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
 											
 											
 			        	            } else {
-			        	              alert("Error"+obj.data);
+			        	            	 ngDialog.open({
+			    	    	                 template: 'firstDialogId',
+			    	    	                 data: {Message: "Error in retrive document"},
+			    	    	                 className: 'ngdialog-theme-default'
+			    	    	             });
 			        	            }
 			        	          });
 			        	    	//send below parameter from service
 			        	    	
 			        	    } else {
-			        	      alert("Error"+obj.data); 
+			        	   	 ngDialog.open({
+    	    	                 template: 'firstDialogId',
+    	    	                 data: {Message: "Error in Retrive document"},
+    	    	                 className: 'ngdialog-theme-default'
+    	    	             });
 			        	    }
 			        	  });
 
@@ -283,13 +292,21 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
 											}
 											
 			        	            } else {
-			        	              alert("Error"+obj.data);
+			        	           	 ngDialog.open({
+		    	    	                 template: 'firstDialogId',
+		    	    	                 data: {Message: "Error in retrive document"},
+		    	    	                 className: 'ngdialog-theme-default'
+		    	    	             });
 			        	            }
 			        	          });
 			        	    	//send below parameter from service
 			        	    	
 			        	    } else {
-			        	      alert("Error"+obj.data); 
+			        	      	 ngDialog.open({
+	    	    	                 template: 'firstDialogId',
+	    	    	                 data: {Message: "Error in retrive document"},
+	    	    	                 className: 'ngdialog-theme-default'
+	    	    	             });
 			        	    }
 			        	  });
 
@@ -368,7 +385,11 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
 				$scope.gridOptions.data = obj.data;
 				home.count =  ($scope.gridOptions.data.length);
 			} else {
-			  alert("Error"+obj.data);
+			   	 ngDialog.open({
+	                 template: 'firstDialogId',
+	                 data: {Message: "Error in retrive document"},
+	                 className: 'ngdialog-theme-default'
+	             });
 			}
 		  });
 		service.getDocByUser(home.userId).then(function(obj){
@@ -378,7 +399,11 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
 				$scope.gridOptionsmylist.data = obj.data;
 				home.countmylist =  ($scope.gridOptionsmylist.data.length);
 			} else {
-				alert("Error"+obj.data);
+			   	 ngDialog.open({
+	                 template: 'firstDialogId',
+	                 data: {Message: "Error in retrive document"},
+	                 className: 'ngdialog-theme-default'
+	             });
 			}
 		});
 	  };
@@ -418,39 +443,82 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
 			  if(obj.status == 200){
 				  window.location.href = '#/login'
 			  } else {
-				  alert("Error:"+obj.data)
+				   	 ngDialog.open({
+    	                 template: 'firstDialogId',
+    	                 data: {Message: "Error in retrive document"},
+    	                 className: 'ngdialog-theme-default'
+    	             });
 			  }
 		  });
 	}
 
 	home.assignMe = function(){
-		
-		var log = [];
-		var docIdList = [];
-		angular.forEach( $scope.rows, function(row, key) {
-			//alert(angular.toJson(row, true));
-		//	alert(key);
-			var newrow ={};
-			 var index = $scope.gridOptions.data.indexOf(row.entity);
-			 newrow.assignedTo =  home.userId;
-			 newrow.docName  = row.entity.docName;
-			 newrow.wfStatusDesc = row.entity.wfStatusDesc;
-			 newrow.wfAssignmentGroupName = row.entity.wfAssignmentGroupName;
-			 newrow.docId = row.entity.docId;
-			 $scope.docids.push(row.entity.docId);
-			// home.countmylist =  home.countmylist+1;
-		//	 angular.extend( $scope.gridOptions.data[index], newrow);
-				$scope.gridOptionsmylist.data.push(newrow);
-			}, log);
-		service.assignToMe( $scope.docids).then(function(obj){
-		   // alert(obj.status);
-			if (obj.status == 200) {
-				home.refreshGrid(obj);
-				home.appState ="hide";
-			}
-		});
-	};
-
+		  
+		  var log = [];
+		  var docIdList = [];
+		  var msg = '';
+		  var validassign = true;
+		  angular.forEach( $scope.rows, function(row, key) {
+		   //alert(angular.toJson(row, true));
+		  // alert(key);
+		   validassign = validateAssignMe(home.roleId, row.entity.wfStatusId);
+		   if(!validassign) {
+		    msg = "can not assign Document "  + row.entity.docName + " to " + home.userId + " as dcoument status is " + row.entity.wfStatusDesc;
+		    return false //break loop
+		   }   
+		   var newrow ={};
+		    var index = $scope.gridOptions.data.indexOf(row.entity);
+		    newrow.assignedTo =  home.userId;
+		    newrow.docName  = row.entity.docName;
+		    newrow.wfStatusDesc = row.entity.wfStatusDesc;
+		    newrow.wfAssignmentGroupName = row.entity.wfAssignmentGroupName;
+		    newrow.docId = row.entity.docId;
+		    $scope.docids.push(row.entity.docId);
+		   // home.countmylist =  home.countmylist+1;
+		  //  angular.extend( $scope.gridOptions.data[index], newrow);
+		    $scope.gridOptionsmylist.data.push(newrow);
+		   }, log);
+		   //end of for each
+		   
+		 
+		   if(validassign) {
+		 
+		    service.assignToMe( $scope.docids).then(function(obj){
+		       // alert(obj.status);
+		     if (obj.status == 200) {
+		      home.refreshGrid(obj);
+		      home.appState ="hide";
+		      ngDialog.open({
+	                 template: 'firstDialogId',
+	                 data: {Message: "Assignment Successfull"},
+	                 className: 'ngdialog-theme-default'
+	             });
+				
+		     }
+		    });
+		   }
+		   else {
+			   ngDialog.open({
+	                 template: 'firstDialogId',
+	                 data: {Message: "Can't be Assign"},
+	                 className: 'ngdialog-theme-default'
+	             });
+				
+		   }
+		  };
+	function validateAssignMe(userrole, docstatus) {
+		  var ret = false;
+		  if((docstatus == 1 ||  docstatus == 2) && userrole == 1) { //Assigned to Analyst and logged user is  analyst
+		   ret = true;
+		  }
+		  else if((docstatus == 3 || docstatus == 4) && userrole == 2) { //Assigned to Attorney and logged useris attorney
+		   ret = true;
+		  }
+		  else if((docstatus == 5 || docstatus == 6) && userrole == 3) { //Assigned to QA and logged user is QA
+		   ret = true;
+		  }
+		  return ret;
+		 };
 
 	home.inithome = function(obj){
 		//alert('home');
@@ -463,32 +531,34 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
 			home.refreshGrid(obj);
 			home.setupMenu();
 		}
-	}
-
+	};
 
 	$scope.gridOptions.onRegisterApi = function(gridApi){
-		//set gridApi on scope
-		$scope.gridApi = gridApi;
-		$scope.rows = [];
-		gridApi.selection.on.rowSelectionChanged($scope,function(row){
-		  var msg = 'row selected ' + row.isSelected;
-		  if(row.isSelected){
-			 
-			  $scope.rows.push(row);
-			 
-		  }
-		 
-		  $log.log(msg);
-	   
-		});
+		  //set gridApi on scope
+		  $scope.gridApi = gridApi;
+		  $scope.rows = [];
+		  gridApi.selection.on.rowSelectionChanged($scope,function(row){
+		    var msg = 'row selected ' + row.isSelected;
+		    if(row.isSelected){    
+		     $scope.rows.push(row);    
+		    }
+		    else {
+		     $scope.rows = jQuery.grep($scope.rows, function(value) {
+		      return value != row;
+		    });
+		    }
+		   
+		    $log.log(msg);
+		    
+		  });
 
-    gridApi.selection.on.rowSelectionChangedBatch($scope,function(rows){
-      var msg = 'rows changed ' + rows.length;
-      
-      $scope.rows =  rows;
-      $log.log(msg);
-    });
-  };
+		    gridApi.selection.on.rowSelectionChangedBatch($scope,function(rows){
+		      var msg = 'rows changed ' + rows.length;
+		      
+		      $scope.rows =  rows;
+		      $log.log(msg);
+		    });
+		  };
 
   home.saveDoc = function(){  
 		$scope.DocumentWorkflowProcess.docDetail.docTagRelationship =[];
@@ -516,13 +586,29 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
 		
 		// alert(angular.toJson($scope.DocumentWorkflowProcess, true));
 		service.submitWorkflow($scope.DocumentWorkflowProcess).then(function(obj){
+			 ngDialog.open({
+                 template: '<h2>Notice that there is no overlay!</h2>',
+                 className: 'ngdialog-theme-default',
+                 plain: true,
+                 overlay: false
+             });
 	    	//alert(obj.status);
 	        if(obj.status == 200){
 	        	//alert("Success");
+	        	 ngDialog.open({
+	                 template: 'firstDialogId',
+	                 data: {Message: "Save Successfull"},
+	                 className: 'ngdialog-theme-default'
+	             });
 				home.refreshGrid(obj);
 				$('#myModal').modal('hide');
+			
 	        } else {
-	          alert("Error"+obj.data);
+	        	 ngDialog.open({
+	                 template: 'firstDialogId',
+	                 data: {Message: "WorkFlow error fails"},
+	                 className: 'ngdialog-theme-default'
+	             });
 	        }
 	      });
 		
@@ -551,7 +637,17 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
 			$scope.DocumentWorkflowProcess.isFinalSubmit = true;
 			$scope.DocumentWorkflowProcess.docDetail.docTagRelationship.push(docTagRelationship);
 		});
+		if( (home.roleId == 1 && home.wfStatusId == 7)){
+			   var target = $('#targetloc').val();
 		
+		$scope.DocumentWorkflowProcess.docDetail.targetDocLocation = target;
+		}
+		
+		if( (home.roleId == 1 && home.wfStatusId == 7)){
+			   var text = $('#usercomment').val();
+		
+		$scope.DocumentWorkflowProcess.docDetail.tagOverrideReason = text;
+		}
 		// alert(angular.toJson($scope.DocumentWorkflowProcess, true));
 		service.submitWorkflow($scope.DocumentWorkflowProcess).then(function(obj){
 	    	//alert(obj.status);
@@ -562,21 +658,33 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
 				service.getDocDetails( $scope.DocumentWorkflowProcess.docObj.docId).then(function(obj){
 	        			        	
 	        	    if(obj.status == 200){
-	        	    
+	        	    	 ngDialog.open({
+	    	                 template: 'firstDialogId',
+	    	                 data: {Message: "Work Flow submit Successfull"},
+	    	                 className: 'ngdialog-theme-default'
+	    	             });
 	        	    	home.docdetails = obj.data;
 	        	    	home.docdetails.document.lastUpdatedBy =  home.userId ;
 	        	    	home.docdetails.document.lastUpdatedDt = $filter('date')(new Date(),'yyyy-MM-dd')  ;
 	        	    	home.tagnames = home.docdetails.docTagRelationship;
 	        	    	
 	        	    } else {
-	        	      alert("Error"+obj.data); 
+	        	    	 ngDialog.open({
+	    	                 template: 'firstDialogId',
+	    	                 data: {Message: "Work Flow submit fails"},
+	    	                 className: 'ngdialog-theme-default'
+	    	             });
 	        	    }
 	        	  });	
 				home.refreshGrid(obj);
 				$('#myModal').modal('hide');
 				home.appState ="hide";
 	        } else {
-	          alert("Error"+obj.data);
+	        	 ngDialog.open({
+	                 template: 'firstDialogId',
+	                 data: {Message: "Work Flow submit fails"},
+	                 className: 'ngdialog-theme-default'
+	             });
 	        }
 	        $scope.loading = false;
 		});
@@ -747,17 +855,18 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
   });
   
   
-//  $(function(){    
-////      $('.submit-tag').on('click',function(){
-////    	  alert('submit tag here');      
-////          return false;        
-////      });    
-//  });
+  $(function(){    
+      $('.submit-tag').on('click',function(){
+    	
+    	  home.submitDoc();     
+          return false;        
+      });    
+ });
   
   $(function(){    
       $('.save-tag').on('click',function(){
     	  $('#example-multiple-optgroups').multiselect('refresh');
-    
+    	  home.saveDoc();
 //    	  var selectedtag =  $('#example-multiple-optgroups').multiselect('getSelects');
 //    	  alert(selectedtag);
 //    	  alert(selectedtag[0]);   
