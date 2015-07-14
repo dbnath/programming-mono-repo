@@ -49,8 +49,8 @@
 	
 		<div class="col-sm-5">
 			<ul class="nav nav-tabs" id="myTabs">
-				<li role="presentation" class="active"><a href="#home"><span class="glyphicon glyphicon-tags"></span>&nbspTeam View <span class="badge">{{hc.count}}</span></a></li>
-				<li role="presentation"><a href="#profile"><span class="glyphicon glyphicon-tag"></span>&nbsp;My View <span class="badge">{{hc.countmylist}}</span></a></li>
+				<li role="presentation" class="active"><a href="#home"><span class="glyphicon glyphicon-tags"></span>&nbspGlobal Inbox <span class="badge">{{hc.count}}</span></a></li>
+				<li role="presentation"><a href="#profile"><span class="glyphicon glyphicon-tag"></span>&nbsp;My Inbox <span class="badge">{{hc.countmylist}}</span></a></li>
 			</ul>
  
 	 
@@ -137,7 +137,7 @@
 				</div>
 			</div>
 			<div class="panel-footer">
-				<small class="pull-left">Assigned to {{hc.roleName}} - {{hc.userName}}</small>
+				<small class="pull-left">Assigned to {{hc.roleName}} - {{hc.assignedToName}}</small>
 				<!-- <a class="btn btn-link btn-xs pull-right"
 									href="#"
 									data-toggle="modal"
@@ -251,12 +251,12 @@
             <p ng-show="theme">{{ngDialogData.Message}}</code></p>
             
         </div>
-        <div class="ngdialog-buttons">
+        <!--<div class="ngdialog-buttons">
             <button type="button" class="ngdialog-button ngdialog-button-secondary"
                 ng-dialog="secondDialogId"
                 ng-dialog-class="ngdialog-theme-default"
                 ng-dialog-controller="SecondModalCtrl"
                 ng-dialog-close-previous>Close</button>
            
-        </div>
+        </div>-->
     </script>
