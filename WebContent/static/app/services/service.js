@@ -152,7 +152,7 @@ app.factory("service",function($http,$q,$rootScope){
 	    $http({
 	      method : method,
 	      headers : headers,
-	      url : url,
+	      url : url + '?nd=' + Date.now(),
 	      data : data,
 	      params :params
 	      
