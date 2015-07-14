@@ -6,6 +6,7 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
   home.userName = $rootScope.selectedUserRole.userName;
   home.roleId = $rootScope.selectedUserRole.selectedRoleId;
   home.roleName = '';
+  home.assignedToName = '';
   home.docdetails = {};
   document.title = 'Docflow::Home';
   home.appState ="hide";
@@ -51,7 +52,7 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
 			            	 cellTemplate: '<div ng-class="{green: COL_FIELD == Rejected}"><div class="ngCellText">{{row.entity.wfStatusDesc}}</div></div>'},
 			            	 {field: "assignedTo", displayName: "Assigned To"},
 			            	 {field: "wfAssignmentGroupName", displayName: "GroupName"},
-			            	 {field: "docId", displayName: "ID"},
+			            	 {field: "docId", displayName: "ID", width: 60},
 			             ],
 			enableCellEdit: true,
 			enableColumnResize: true,
@@ -91,6 +92,7 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
 			        		documentWorkflow.lastUpdateDt = row.entity.lastUpdateDt;
 							home.roleName = row.entity.wfAssignmentGroupName;
 							home.wfStatusId = row.entity.wfStatusId;
+							home.assignedToName = row.entity.assignedTo;
 			        	
 			        		$scope.DocumentWorkflowProcess.docObj = documentWorkflow;
 							
@@ -188,7 +190,7 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
 			            	 cellTemplate: '<div ng-class="{green: COL_FIELD == Rejected}"><div class="ngCellText">{{row.entity.wfStatusDesc}}</div></div>'},
 			            	 {field: "assignedTo", displayName: "Assigned To"},
 			            	 {field: "wfAssignmentGroupName", displayName: "GroupName"},
-			            	 {field: "docId", displayName: "ID"},
+			            	 {field: "docId", displayName: "ID", width: 60},
 			             ],
 			enableCellEdit: true,
 			enableColumnResize: true,
@@ -227,6 +229,7 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
 			        		documentWorkflow.lastUpdateDt = row.entity.lastUpdateDt;
 							home.roleName = row.entity.wfAssignmentGroupName;
 							home.wfStatusId = row.entity.wfStatusId;
+							home.assignedToName = row.entity.assignedTo;
 			        	
 			        		$scope.DocumentWorkflowProcess.docObj = documentWorkflow;
 			        		
@@ -383,6 +386,7 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
 		service.getAllDoc().then(function(obj){
 			if(obj.status == 200){
 				$scope.gridOptions.data = obj.data;
+				$scope.gridApi.core.refresh();
 				home.count =  ($scope.gridOptions.data.length);
 			} else {
 			   	 ngDialog.open({
@@ -397,7 +401,8 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
 			if(obj.status == 200){
 			
 				$scope.gridOptionsmylist.data = obj.data;
-				home.countmylist =  ($scope.gridOptionsmylist.data.length);
+				$scope.gridApi.core.refresh();
+				home.countmylist =  ($scope.gridOptionsmylist.data.length);				
 			} else {
 			   	 ngDialog.open({
 	                 template: 'firstDialogId',
@@ -459,53 +464,36 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
 		  var msg = '';
 		  var validassign = true;
 		  angular.forEach( $scope.rows, function(row, key) {
-		   //alert(angular.toJson(row, true));
-		  // alert(key);
-		   validassign = validateAssignMe(home.roleId, row.entity.wfStatusId);
-		   if(!validassign) {
-		    msg = "can not assign Document "  + row.entity.docName + " to " + home.userId + " as dcoument status is " + row.entity.wfStatusDesc;
-		    return false //break loop
-		   }   
-		   var newrow ={};
-		    var index = $scope.gridOptions.data.indexOf(row.entity);
-		    newrow.assignedTo =  home.userId;
-		    newrow.docName  = row.entity.docName;
-		    newrow.wfStatusDesc = row.entity.wfStatusDesc;
-		    newrow.wfAssignmentGroupName = row.entity.wfAssignmentGroupName;
-		    newrow.docId = row.entity.docId;
-		    $scope.docids.push(row.entity.docId);
-		   // home.countmylist =  home.countmylist+1;
-		  //  angular.extend( $scope.gridOptions.data[index], newrow);
-		    $scope.gridOptionsmylist.data.push(newrow);
-		   }, log);
-		   //end of for each
-		   
+		  	validassign = validateAssignMe(home.roleId, row.entity.wfStatusId);
+		  	if(!validassign) {
+		    	msg = "can not assign Document "  + row.entity.docName + " to " + home.userId + " as dcoument status is " + row.entity.wfStatusDesc;
+		    	return false //break loop
+		   	}   
+		    docIdList.push(row.entity.docId);
+		  }, log);
+		  //end of for each
+		  if(validassign) {
 		 
-		   if(validassign) {
-		 
-		    service.assignToMe( $scope.docids).then(function(obj){
-		       // alert(obj.status);
-		     if (obj.status == 200) {
-		      home.refreshGrid(obj);
-		      home.appState ="hide";
-		      ngDialog.open({
-	                 template: 'firstDialogId',
-	                 data: {Message: "Assignment Successfull"},
-	                 className: 'ngdialog-theme-default'
-	             });
-				
-		     }
+		   	service.assignToMe(docIdList).then(function(obj){
+		    	if (obj.status == 200) {
+		      		home.refreshGrid(obj);
+		      		home.appState ="hide";
+		      		ngDialog.open({
+	                	template: 'firstDialogId',
+	                 	data: {Message: "Assignment Successful"},
+	                 	className: 'ngdialog-theme-default'
+	             	});
+		     	}
 		    });
-		   }
-		   else {
+		  } else {
 			   ngDialog.open({
 	                 template: 'firstDialogId',
-	                 data: {Message: "Can't be Assign"},
+	                 data: {Message: msg},
 	                 className: 'ngdialog-theme-default'
-	             });
-				
-		   }
-		  };
+	            });
+		  }
+	};
+		  
 	function validateAssignMe(userrole, docstatus) {
 		  var ret = false;
 		  if((docstatus == 1 ||  docstatus == 2) && userrole == 1) { //Assigned to Analyst and logged user is  analyst
