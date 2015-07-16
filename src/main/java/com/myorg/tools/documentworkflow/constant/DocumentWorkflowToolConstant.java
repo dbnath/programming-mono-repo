@@ -39,6 +39,10 @@ public class DocumentWorkflowToolConstant {
 	
 	public static String FETCH_DOC_WFL_SQL = "select * from doc_workflow_process where ID_DOC in ";
 	
+	public static String FETCH_CLOSED_DOC_TAGS = "select a.ID_DOC, e.NM_DOC, c.TX_DOC_TAG, d.TX_DOC_SUB_TAG from DOC_WORKFLOW_PROCESS a, DOC_TAG_REL b, DOC_TAG_INFO c, DOC_SUB_TAG_INFO d, DOCUMENT e where a.ID_DOC = b.ID_DOC AND a.ID_WF_STATUS = 9 AND a.ID_DOC = e.ID_DOC AND b.ID_DOC_TAG = c.ID_DOC_TAG AND b.ID_DOC_SUB_TAG = d.ID_DOC_SUB_TAG";
+	
+	public static String COMPLETION_STATUS_RPT_SQL = "select COUNT(a.ID_DOC) DOC_CNT, MAX(d.NM_WF_GRP) QNAME from doc_workflow_process a, doc_wf_status b, wf_grp_activity_map c, doc_wf_grp d where a.ID_WF_STATUS = b.ID_WF_STATUS and b.ID_WF_STATUS = c.ID_WF_STATUS and c.ID_WF_GRP = d.ID_WF_GRP GROUP BY d.ID_WF_GRP UNION SELECT COUNT(a.ID_DOC), 'Completed' QNAME FROM doc_workflow_process a where a.ID_WF_STATUS = (select ID_WF_STATUS from DOC_WF_STATUS where NM_WF_STATUS = 'CLOSE');";
+	
 	//public static String UPD_DOC_WFL_ASGN_SQL = "update doc_workflow_process set ASSIGNED_TO= ?, ASSIGNED_DT=?,ID_ROLE=?,LAST_UPDATED_BY=?,LAST_UPDATE_DT=?,IS_REWORKED=? where ";
 	
 	

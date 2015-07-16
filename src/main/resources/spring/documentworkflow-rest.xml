@@ -23,5 +23,9 @@
 	<bean id="userResourceImpl" class="com.myorg.tools.documentworkflow.rest.resources.impl.UserServiceImpl" scope="request" parent="baseResource">
 		<property name="userAdminDAO" ref="userAdminDAOImpl" />
     </bean>
+    
+	<bean id="documentRptSvcImpl" class="com.myorg.tools.documentworkflow.rest.resources.impl.DocumentReportServiceImpl" scope="request" parent="baseResource">
+		<property name="documentReportDAO" ref="documentReportDAOImpl" />
+	</bean>    
 	
 </beans>

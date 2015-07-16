@@ -18,6 +18,7 @@ import com.myorg.tools.documentworkflow.model.Document;
 import com.myorg.tools.documentworkflow.model.DocumentRepository;
 import com.myorg.tools.documentworkflow.model.DocumentSubTagValues;
 import com.myorg.tools.documentworkflow.model.DocumentTag;
+import com.myorg.tools.documentworkflow.model.DocumentTagReport;
 import com.myorg.tools.documentworkflow.model.DocumentTagSubTagMapping;
 import com.myorg.tools.documentworkflow.model.DocumentType;
 import com.myorg.tools.documentworkflow.model.DocumentTypeTagMapping;
@@ -244,5 +245,15 @@ public class DocumentAdminDAOImpl extends BaseJDBCTemplate implements DocumentAd
 		Map<String, Object> out = jdbcCall.execute(in);
 	}
 	
+	public List<DocumentTagReport> extractDocTagInfo() throws SQLException, Exception {
+		String SQL = DocumentWorkflowToolConstant.FETCH_CLOSED_DOC_TAGS;
+		List<DocumentTagReport> docRepoList = null;
+		try{
+			docRepoList = this.getJdbcTemplateObject().query(SQL, new DocumentDumpMapper());
+		} catch(EmptyResultDataAccessException e) {
+			docRepoList = null;
+		}
+		return docRepoList;
+	}
 	
 }

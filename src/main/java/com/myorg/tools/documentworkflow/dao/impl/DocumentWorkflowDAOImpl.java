@@ -100,7 +100,7 @@ public class DocumentWorkflowDAOImpl extends BaseJDBCTemplate implements Documen
 	  * @param docDetailObj
 	  * @return true if workflow can be done successfully, false if not
 	  */
-	 public boolean submitWorkflow(DocumentWorkflow docObj, DocumentWorkflowDetail docDetailObj) throws Exception{
+	 public boolean submitWorkflow(DocumentWorkflow docObj, DocumentWorkflowDetail docDetailObj, Boolean isFinalSubmit) throws Exception{
 		 Integer docId = docObj.getDocId();
 		 JdbcTemplate jdbcTemplate = this.getJdbcTemplateObject();
 		 //DocWorkflowSubmitStatus wfstatus = null;
@@ -110,14 +110,14 @@ public class DocumentWorkflowDAOImpl extends BaseJDBCTemplate implements Documen
 			TransactionDefinition def = new DefaultTransactionDefinition();
 			TransactionStatus status = this.getTransactionManager().getTransaction(def);
 			 try {
-				 submitDocumentTagRelationship(jdbcTemplate, docId, docDetailObj.getDocTagRelationship(), status);
+				 submitDocumentTagRelationship(jdbcTemplate, docId, docDetailObj.getDocTagRelationship(), status, isFinalSubmit);
 				 if (! DocumentWorkflowToolUtility.isEmpty(docDetailObj.getDocument())) {
-					 submitDocument(jdbcTemplate, docDetailObj.getDocument(), status);
+					 submitDocument(jdbcTemplate, docDetailObj.getDocument(), status, isFinalSubmit);
 				 }
 				 if (! DocumentWorkflowToolUtility.isEmpty(docDetailObj.getTagOverrideReason()) || ! DocumentWorkflowToolUtility.isEmpty(docDetailObj.getTargetDocLocation())) {
-					 submitDocWorkflowDetail(jdbcTemplate, docDetailObj, status);
+					 submitDocWorkflowDetail(jdbcTemplate, docDetailObj, status, isFinalSubmit);
 			 	 }
-				 submitWorkflowProcess(jdbcTemplate, docObj, status);
+				 submitWorkflowProcess(jdbcTemplate, docObj, status, isFinalSubmit);
 				 this.getTransactionManager().commit(status);
 				 isSubmitSuccess = true;
 			} catch (SQLException e) {
@@ -137,61 +137,74 @@ public class DocumentWorkflowDAOImpl extends BaseJDBCTemplate implements Documen
 		return isSubmitSuccess;
 	 }
 	 
-	 private void submitDocumentTagRelationship(JdbcTemplate jdbcTemplate, Integer docId, List<DocumentTagRelationship> docTagList, TransactionStatus status) throws SQLException, Exception {
+	 private void submitDocumentTagRelationship(JdbcTemplate jdbcTemplate, Integer docId, List<DocumentTagRelationship> docTagList, TransactionStatus status, Boolean isFinalSubmit) throws SQLException, Exception {
 		 String DEL_SQL = DocumentWorkflowToolConstant.DEL_DOC_TAG_REL_SQL;
 		 String INS_SQL = DocumentWorkflowToolConstant.INS_DOC_TAG_REL_SQL;
 		 String INS_AUDIT_SQL = DocumentWorkflowToolConstant.INS_DOC_TAG_REL_AUDIT_SQL;
 		 String SEL_VER_AUDIT_SQL = DocumentWorkflowToolConstant.SEL_VER_DOC_TAG_REL_AUDIT_SQL;
-		 if (isTagAssociatedWithDocument(docId)) {
+		 //if (isTagAssociatedWithDocument(docId)) {
 			 jdbcTemplate.update(DEL_SQL, docId);
-		 }
-		 Integer versionId = jdbcTemplate.queryForObject(SEL_VER_AUDIT_SQL, Integer.class, docId);
+		 //}
 		 if (! DocumentWorkflowToolUtility.isEmptyList(docTagList)) {
+			 Integer versionId = jdbcTemplate.queryForObject(SEL_VER_AUDIT_SQL, Integer.class, docId);
+			 if(versionId == null){
+				 versionId = 0;
+			 }		 					 
 			 for (DocumentTagRelationship docTag : docTagList) {
 				 jdbcTemplate.update(INS_SQL, docTag.getDocId(), docTag.getDocTypeId(), docTag.getDocTagId(), docTag.getDocSubTagId(), docTag.getCreatedBy(), docTag.getCreationDt(), docTag.getLastUpdatedBy(), docTag.getLastUpdatedDt());
-				 jdbcTemplate.update(INS_AUDIT_SQL, docTag.getDocId(), versionId+1, docTag.getDocTypeId(), docTag.getDocTagId(), docTag.getDocSubTagId(), docTag.getCreatedBy(), docTag.getCreationDt(), docTag.getLastUpdatedBy(), docTag.getLastUpdatedDt());
+				 if(isFinalSubmit){
+					 jdbcTemplate.update(INS_AUDIT_SQL, docTag.getDocId(), versionId+1, docTag.getDocTypeId(), docTag.getDocTagId(), docTag.getDocSubTagId(), docTag.getCreatedBy(), docTag.getCreationDt(), docTag.getLastUpdatedBy(), docTag.getLastUpdatedDt());
+				 }
 			 }
 		 }
 	 }
 	 
-	 private void submitDocument(JdbcTemplate jdbcTemplate, Document document, TransactionStatus status) throws SQLException, Exception {
+	 private void submitDocument(JdbcTemplate jdbcTemplate, Document document, TransactionStatus status, Boolean isFinalSubmit) throws SQLException, Exception {
 		 String UPD_SQL = DocumentWorkflowToolConstant.UPD_DOCUMENT_BAD_LINK_SQL;
 		 jdbcTemplate.update(UPD_SQL, document.getIsBadLinkReported(), document.getDocId());
-		 String SEL_VER_AUDIT_SQL = DocumentWorkflowToolConstant.SEL_VER_DOCUMENT_AUDIT_SQL;
-		 Integer versionId = jdbcTemplate.queryForObject(SEL_VER_AUDIT_SQL, Integer.class, document.getDocId());
-		 if(versionId == null){
-			 versionId = 0;
+		 
+		 if(isFinalSubmit){
+			 String SEL_VER_AUDIT_SQL = DocumentWorkflowToolConstant.SEL_VER_DOCUMENT_AUDIT_SQL;
+			 Integer versionId = jdbcTemplate.queryForObject(SEL_VER_AUDIT_SQL, Integer.class, document.getDocId());
+			 if(versionId == null){
+				 versionId = 0;
+			 }
+			 String INS_AUDIT_SQL = DocumentWorkflowToolConstant.INS_DOCUMENT_AUDIT_SQL;
+			 jdbcTemplate.update(INS_AUDIT_SQL, document.getDocId(), versionId+1, document.getDocName(), document.getDocTypeId(), document.getDocRepoId(), document.getDocHyperlink(), document.getDocLocation(), document.getIsDeleted(), document.getIsBadLinkReported(), document.getCreatedBy(), document.getCreationDt(), document.getLastUpdatedBy(), document.getLastUpdatedDt());
 		 }
-		 String INS_AUDIT_SQL = DocumentWorkflowToolConstant.INS_DOCUMENT_AUDIT_SQL;
-		 jdbcTemplate.update(INS_AUDIT_SQL, document.getDocId(), versionId+1, document.getDocName(), document.getDocTypeId(), document.getDocRepoId(), document.getDocHyperlink(), document.getDocLocation(), document.getIsDeleted(), document.getIsBadLinkReported(), document.getCreatedBy(), document.getCreationDt(), document.getLastUpdatedBy(), document.getLastUpdatedDt());
 	 }
 	 
-	 private void submitDocWorkflowDetail(JdbcTemplate jdbcTemplate, DocumentWorkflowDetail docDetailObj, TransactionStatus status) throws SQLException, Exception {
+	 private void submitDocWorkflowDetail(JdbcTemplate jdbcTemplate, DocumentWorkflowDetail docDetailObj, TransactionStatus status, Boolean isFinalSubmit) throws SQLException, Exception {
 		 String DEL_SQL = DocumentWorkflowToolConstant.DEL_DOC_WFL_DTL_SQL;
 		 jdbcTemplate.update(DEL_SQL, docDetailObj.getDocId());
 		 String INS_SQL = DocumentWorkflowToolConstant.INS_DOC_WFL_DTL_SQL;
 		 jdbcTemplate.update(INS_SQL, docDetailObj.getDocId(), docDetailObj.getTagOverrideReason(), docDetailObj.getTargetDocLocation(), docDetailObj.getLastUpdatedBy(), docDetailObj.getLastUpdatedDt());
-		 String SEL_VER_AUDIT_SQL = DocumentWorkflowToolConstant.SEL_VER_DOC_WFL_DTL_AUDIT_SQL;
-		 Integer versionId = jdbcTemplate.queryForObject(SEL_VER_AUDIT_SQL, Integer.class, docDetailObj.getDocId());
-		 if(versionId == null){
-			 versionId = 0;
+		 
+		 if(isFinalSubmit){
+			 String SEL_VER_AUDIT_SQL = DocumentWorkflowToolConstant.SEL_VER_DOC_WFL_DTL_AUDIT_SQL;
+			 Integer versionId = jdbcTemplate.queryForObject(SEL_VER_AUDIT_SQL, Integer.class, docDetailObj.getDocId());
+			 if(versionId == null){
+				 versionId = 0;
+			 }
+			 String INS_AUDIT_SQL = DocumentWorkflowToolConstant.INS_DOC_WFL_DTL_AUDIT_SQL;
+			 jdbcTemplate.update(INS_AUDIT_SQL, docDetailObj.getDocId(), versionId+1, docDetailObj.getTagOverrideReason(), docDetailObj.getTargetDocLocation(), docDetailObj.getLastUpdatedBy(), docDetailObj.getLastUpdatedDt());
 		 }
-		 String INS_AUDIT_SQL = DocumentWorkflowToolConstant.INS_DOC_WFL_DTL_AUDIT_SQL;
-		 jdbcTemplate.update(INS_AUDIT_SQL, docDetailObj.getDocId(), versionId+1, docDetailObj.getTagOverrideReason(), docDetailObj.getTargetDocLocation(), docDetailObj.getLastUpdatedBy(), docDetailObj.getLastUpdatedDt());
 	 }
 	 
-	 private void submitWorkflowProcess(JdbcTemplate jdbcTemplate, DocumentWorkflow docObj, TransactionStatus status) throws SQLException, Exception {
+	 private void submitWorkflowProcess(JdbcTemplate jdbcTemplate, DocumentWorkflow docObj, TransactionStatus status, Boolean isFinalSubmit) throws SQLException, Exception {
 		 String DEL_SQL = DocumentWorkflowToolConstant.DEL_DOC_WFL_PROCESS_SQL;
 		 jdbcTemplate.update(DEL_SQL, docObj.getDocId());
 		 String INS_SQL = DocumentWorkflowToolConstant.INS_DOC_WFL_PROCESS_SQL;
 		 jdbcTemplate.update(INS_SQL, docObj.getDocId(), docObj.getWfStatusId(), docObj.getIsReworked(), docObj.getAssignedTo(), docObj.getAssignedDt(), docObj.getUserRole(), docObj.getLastUpdatedBy(), docObj.getLastUpdateDt());
-		 String SEL_VER_AUDIT_SQL = DocumentWorkflowToolConstant.SEL_VER_DOC_WFL_PROCESS_AUDIT_SQL;
-		 Integer versionId = jdbcTemplate.queryForObject(SEL_VER_AUDIT_SQL, Integer.class, docObj.getDocId());
-		 if(versionId == null){
-			 versionId = 0;
+		 if(isFinalSubmit){
+			 String SEL_VER_AUDIT_SQL = DocumentWorkflowToolConstant.SEL_VER_DOC_WFL_PROCESS_AUDIT_SQL;
+			 Integer versionId = jdbcTemplate.queryForObject(SEL_VER_AUDIT_SQL, Integer.class, docObj.getDocId());
+			 if(versionId == null){
+				 versionId = 0;
+			 }			 
+			 String INS_AUDIT_SQL = DocumentWorkflowToolConstant.INS_DOC_WFL_PROCESS_AUDIT_SQL;
+			 jdbcTemplate.update(INS_AUDIT_SQL, docObj.getDocId(), versionId+1, docObj.getWfStatusId(), docObj.getIsReworked(), docObj.getAssignedTo(), docObj.getAssignedDt(), docObj.getUserRole(), docObj.getLastUpdatedBy(), docObj.getLastUpdateDt());
 		 }
-		 String INS_AUDIT_SQL = DocumentWorkflowToolConstant.INS_DOC_WFL_PROCESS_AUDIT_SQL;
-		 jdbcTemplate.update(INS_AUDIT_SQL, docObj.getDocId(), versionId+1, docObj.getWfStatusId(), docObj.getIsReworked(), docObj.getAssignedTo(), docObj.getAssignedDt(), docObj.getUserRole(), docObj.getLastUpdatedBy(), docObj.getLastUpdateDt());
 	 }
 	 
 	 /*private DocWorkflowSubmitStatus fetchModifiedDocWorkflowProcess(Integer docId) throws SQLException, Exception {
@@ -231,7 +244,7 @@ public class DocumentWorkflowDAOImpl extends BaseJDBCTemplate implements Documen
 
 		try {
 			for (DocumentWorkflow doc : docIds) {
-				submitWorkflowProcess(jdbcTemplate, doc, status);
+				submitWorkflowProcess(jdbcTemplate, doc, status, true);//Assign Workflow always triggers an audit trail and therefore isFinalSubmit is true
 			}
 			this.getTransactionManager().commit(status);
 			return Boolean.TRUE;

@@ -28,7 +28,8 @@ app.factory("service",function($http,$q,$rootScope){
 	    uploadDocument : uploadDocument,
 	    downloadDocTemplate : downloadDocTemplate,
 	    setDocWorkflowAuthorizationId : setDocWorkflowAuthorizationId,
-	    getDocWorkflowAuthorizationId : getDocWorkflowAuthorizationId
+	    getDocWorkflowAuthorizationId : getDocWorkflowAuthorizationId,
+		fetchCompletionReportData : fetchCompletionReportData
 	 };
 	 return data;
 
@@ -146,6 +147,10 @@ app.factory("service",function($http,$q,$rootScope){
 	function getDocWorkflowAuthorizationId() {
 		return $rootScope.selectedUserRole.userId+"|"+$rootScope.selectedUserRole.selectedRoleId;
 	}
+	
+	function fetchCompletionReportData() {
+		 return request('GET','rest/report/completion',{'x-docwrkflow-auth' : getDocWorkflowAuthorizationId()});
+	}	
 
   	function request(method,url,headers,data,params){
 	    var deferred = $q.defer();

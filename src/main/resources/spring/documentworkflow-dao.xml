@@ -31,5 +31,8 @@
 		<property name="dataSource"  ref="dataSource" />
 		<property name="transactionManager"  ref="transactionManager" />
 	</bean>
-	
+	<bean id="documentReportDAOImpl" class=" com.myorg.tools.documentworkflow.dao.impl.DocumentReportDAOImpl">
+		<property name="dataSource"  ref="dataSource" />
+		<property name="transactionManager"  ref="transactionManager" />
+	</bean>	
 </beans>

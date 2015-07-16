@@ -7,20 +7,29 @@ app.controller("reportsCtrl",['$stateParams','service','$scope','$rootScope','$t
 	reports.roleId = $rootScope.selectedUserRole.selectedRoleId;
 	
 	reports.initReports = function(obj){
+		alert('###### Reports');
 		drawCharts();
 	};
 	
 	var drawCharts = function() {
 	    $("#barChart").empty();
-	    Morris.Donut({
-	    	  element: 'barChart',
-	    	  data: [
-	    	    {label: "Analyst Queue", value: 12},
-	    	    {label: "Legal Queue", value: 30},
-	    	    {label: "QA Queue", value: 20},
-	    	    {label: "Completed", value: 9}
-	    	  ]
-	    	});
+		var completionRptData = [];
+		service.fetchCompletionReportData().then(function(obj){
+		
+			if(obj.status == 200){
+				completionRptData = obj.data;
+				Morris.Donut({
+				  element: 'barChart',
+				  /*data: [
+					{label: "Analyst Queue", value: 12},
+					{label: "Legal Queue", value: 30},
+					{label: "QA Queue", value: 20},
+					{label: "Completed", value: 9}
+				  ]*/
+				  data : completionRptData
+				});
+			}			
+		});
 	    
 	    $("#dailychart").empty();
 	    var day_data = [
@@ -43,7 +52,7 @@ app.controller("reportsCtrl",['$stateParams','service','$scope','$rootScope','$t
             labels: ['Completed', 'Pending in Queue']
           });
           
-	  }
+	  };
 	  
 	
 }]);

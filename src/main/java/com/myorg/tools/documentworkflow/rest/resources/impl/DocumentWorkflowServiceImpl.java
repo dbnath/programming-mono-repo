@@ -47,6 +47,7 @@ public class DocumentWorkflowServiceImpl extends BaseResource implements Documen
 		statusGroupMap.put(5, 3);
 		statusGroupMap.put(6, 3);
 		statusGroupMap.put(7, 1);
+		statusGroupMap.put(8, 1);
 	}
 	
 	public Response getAllDocuments(String userId) {
@@ -83,10 +84,6 @@ public class DocumentWorkflowServiceImpl extends BaseResource implements Documen
 				DocumentWorkflow docObj = docWorkflowProcess.getDocObj();
 				DocumentWorkflowDetail docDetailObj = docWorkflowProcess.getDocDetail();
 				
-				System.out.println("###### isFinalSubmit "+isFinalSubmit);
-				System.out.println("###### docObj "+docObj);
-				System.out.println("###### docDetailObj "+docDetailObj);
-				
 				if(isFinalSubmit){
 					docObj.setAssignedTo(null);
 					docObj.setAssignedDt(null);
@@ -99,8 +96,13 @@ public class DocumentWorkflowServiceImpl extends BaseResource implements Documen
 				
 				docDetailObj.setLastUpdatedBy(userId);
 				docDetailObj.setLastUpdatedDt(new Date());
-				
-				documentDAO.submitWorkflow(docObj, docDetailObj);
+
+				System.out.println("###### isFinalSubmit "+isFinalSubmit);
+				System.out.println("###### docObj "+docObj);
+				System.out.println("###### docDetailObj "+docDetailObj);
+				System.out.println("###### Submitting workflow for DocID "+docObj.getDocId()+",Doc Type "+docObj.getDocTypeId()+", Status "+docObj.getWfStatusId());
+				documentDAO.submitWorkflow(docObj, docDetailObj, isFinalSubmit);
+				System.out.println("###### Completed workflow for DocID "+docObj.getDocId()+",Doc Type "+docObj.getDocTypeId()+", Status "+docObj.getWfStatusId());
 			}
 			
 			return Response.ok().entity(Boolean.TRUE).build();

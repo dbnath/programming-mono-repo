@@ -76,8 +76,8 @@ public interface DocumentAdminService {
 	   @POST
 	   @Path("/uploaddoc")
 	   @Consumes(MediaType.MULTIPART_FORM_DATA)
-	   @Produces(MediaType.APPLICATION_JSON)	   
-	   public Response uploadDocuments(@FormDataParam("file") InputStream uploadedInputStream,  @FormDataParam("file") FormDataContentDisposition fileDetail, @FormDataParam("path") String path);
+	   @Produces(MediaType.TEXT_HTML)	   
+	   public Response uploadDocuments(@FormDataParam("file") InputStream uploadedInputStream,  @FormDataParam("file") FormDataContentDisposition fileDetail, @FormDataParam("path") String path, @FormDataParam("userId") String userId);
 	   
 	   @GET
 	   @Path("/template")
@@ -85,6 +85,12 @@ public interface DocumentAdminService {
 	   public Response getTemplate();
 	   
 
+	   @GET
+	   @Path("/dump")
+	   @Produces("application/vnd.ms-excel")	   
+	   public Response getDocTagDump();
+
+	   
 	   /*@POST
 	   @Path("/updatedoctypes")
 	   @Consumes(MediaType.APPLICATION_JSON)

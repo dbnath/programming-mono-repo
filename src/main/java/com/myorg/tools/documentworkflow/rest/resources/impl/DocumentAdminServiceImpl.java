@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
 import org.apache.poi.ss.usermodel.DataValidation;
@@ -28,6 +29,7 @@ import com.myorg.tools.documentworkflow.model.Document;
 import com.myorg.tools.documentworkflow.model.DocumentRepository;
 import com.myorg.tools.documentworkflow.model.DocumentSubTagValues;
 import com.myorg.tools.documentworkflow.model.DocumentTag;
+import com.myorg.tools.documentworkflow.model.DocumentTagReport;
 import com.myorg.tools.documentworkflow.model.DocumentTagSubTagMapping;
 import com.myorg.tools.documentworkflow.model.DocumentType;
 import com.myorg.tools.documentworkflow.model.DocumentTypeTagMapping;
@@ -138,17 +140,17 @@ public class DocumentAdminServiceImpl extends BaseResource implements DocumentAd
 		}
 	}
 	
-	public Response uploadDocuments(@FormDataParam("file") InputStream uploadedInputStream,  @FormDataParam("file") FormDataContentDisposition fileDetail, @FormDataParam("path") String path){
+	public Response uploadDocuments(@FormDataParam("file") InputStream uploadedInputStream,  @FormDataParam("file") FormDataContentDisposition fileDetail, @FormDataParam("path") String path, @FormDataParam("userId") String userId){
 		
 		try {
 			
-			User user = getLoggedInUser();
-			String userId = user.getUserId();
+			/*User user = getLoggedInUser();
+			String userId = user.getUserId();*/
 			
 			List<Document> docList = parseBulkUploadFile(uploadedInputStream);
 			documentAdminDAO.uploadDocumentInformation(docList, userId);
 			
-			return Response.ok().entity("Documents uploaded successfully").build();
+			return Response.ok().entity("<html><head><script>function refreshParent(){window.close();}</script></head><body><div>Document Uploaded Successfully</div><input type=\"Button\" value=\"Close Window\" onclick=\"refreshParent()\" /></body></html>").build();
 			
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -336,7 +338,107 @@ public class DocumentAdminServiceImpl extends BaseResource implements DocumentAd
         dataValidation.setShowErrorBox(true);
         sheet.addValidationData(dataValidation); 		
 		return;
+	}
+	/* (non-Javadoc)
+	 * @see com.myorg.tools.documentworkflow.rest.resources.DocumentAdminService#getDocTagDump()
+	 */
+	@Override
+	public Response getDocTagDump() {
+		
+		try {
+			List<DocumentTagReport> docTagList = documentAdminDAO.extractDocTagInfo();
+			
+			XSSFWorkbook wb = new XSSFWorkbook();			
+			XSSFSheet sheet = wb.createSheet();
+			XSSFCellStyle headerStyle = wb.createCellStyle();
+			
+			Font headerFont = wb.createFont();
+			headerFont.setBold(true);
+			
+			createExcelReportHeader(sheet, headerFont, headerStyle);
+			createExcelReportBody(sheet, docTagList);
+			
+			File file = new File(this.getAppConfig().getTempFileLocation()+"/report"+System.currentTimeMillis()+".xlsx");
+			
+			FileOutputStream baos = new FileOutputStream(file);
+			wb.write(baos);
+			baos.close();
+			
+			return Response.ok(file).header("Content-Disposition", "attachment; filename=\"Document_Tag_Dump.xlsx\"").build();			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return null;
 	}	
+	
+	
+	private void createExcelReportHeader(XSSFSheet sheet, Font headerFont, XSSFCellStyle headerStyle) {
+
+		XSSFRow headerRow = sheet.createRow(0);
+
+		XSSFColor headerColor = new XSSFColor(Color.DARK_GRAY);
+		headerStyle.setFillBackgroundColor(headerColor);
+		headerStyle.setFont(headerFont);
+
+		for (int i = 0; i < 4; i++) {
+			XSSFCell cell = headerRow.createCell(i);
+			cell.setCellStyle(headerStyle);
+
+			switch (i) {
+			case 0:
+				cell.setCellValue("Document ID");
+				break;
+			case 1:
+				cell.setCellValue("Document Name");
+				break;
+			case 2:
+				cell.setCellValue("Document Tag");
+				break;
+			case 3:
+				cell.setCellValue("Document SubTag");
+				break;
+			}
+		}
+		return;
+	}
+	
+	private void createExcelReportBody(XSSFSheet sheet, List<DocumentTagReport> docTagList) {
+
+		if(docTagList != null){
+			int i = 1;
+			for(DocumentTagReport r : docTagList){
+				XSSFRow row = sheet.createRow(i);
+				
+				for(int j=0; j<4; j++){
+					XSSFCell cell = row.createCell(j);
+					
+					switch (j) {
+					case 0:
+						cell.setCellValue(r.getDocId());
+						break;
+					case 1:
+						cell.setCellValue(r.getDocName());
+						break;
+					case 2:
+						cell.setCellValue(r.getDocTagDesc());
+						break;
+					case 3:
+						cell.setCellValue(r.getDocSubTagDesc());
+						break;
+					}
+				}
+				i++;
+			}
+		}
+	
+		return;
+	}	
+	
+	
 	
 	
 	/*public Response updateDocTypes(List<DocumentType> docTypeList){

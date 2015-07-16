@@ -28,7 +28,7 @@ public interface DocumentWorkflowDAO {
 	  * @param docDetailObj
 	  * @return true if workflow can be done successfully, false if not
 	  */
-	 public boolean submitWorkflow(DocumentWorkflow docObj, DocumentWorkflowDetail docDetailObj) throws SQLException, Exception;
+	 public boolean submitWorkflow(DocumentWorkflow docObj, DocumentWorkflowDetail docDetailObj, Boolean isFinalSubmit) throws SQLException, Exception;
 	 
 	 /**
 	  * 

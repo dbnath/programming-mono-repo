@@ -1,3 +1,9 @@
+<%
+	String userId = request.getParameter("userId");	
+	System.out.println("###### userId in JSP "+userId);
+	response.setHeader("x-docwrkflow-auth",userId+"|1");
+%>
+
 <html>
 <body>
 	<h1>Bulk Upload Documents for Tagging</h1>
@@ -9,6 +15,7 @@
 	   <p>
 		Select file to Bulk Upload : <input type="file" name="file" size="45" />
 	   </p>
+	   <input type="hidden" name="userId" value="<%=userId%>" />
  
 	   <input type="submit" value="Upload It" />
 	</form>
