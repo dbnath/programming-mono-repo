@@ -119,7 +119,7 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
 			        	            	    	
 			        	            	    	subtag.value = row.docTagId +'-' + subrow.docSubTagId;
 			        	            	    	//disabled after QA reviewed or closed
-			        	            	    	if(documentWorkflow.wfStatusId == 7 || documentWorkflow.wfStatusId == 8) {
+			        	            	    	if(documentWorkflow.wfStatusId == 7 || documentWorkflow.wfStatusId == 8 || documentWorkflow.wfStatusId == 9) {
 			        	            	    		subtag.disabled = 'true';
 			        	            	    	}
 			        	            	    	tag.children.push(subtag);
@@ -144,7 +144,7 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
 												$('#divLocation').hide();
 												$('#divComment').show();
 											}
-											if(home.roleId == 1 && home.wfStatusId == 7){
+											if(home.roleId == 1 && home.wfStatusId == 8){
 												$('#divLocation').show();
 												$('#divComment').show();
 												//$('#divComment').disabled();
@@ -190,7 +190,7 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
 			            	 cellTemplate: '<div ng-class="{green: COL_FIELD == Rejected}"><div class="ngCellText">{{row.entity.wfStatusDesc}}</div></div>'},
 			            	 {field: "assignedTo", displayName: "Assigned To"},
 			            	 {field: "wfAssignmentGroupName", displayName: "GroupName"},
-			            	 {field: "docId", displayName: "ID", width: 60},
+			            	 {field: "docId", displayName: "ID"},
 			             ],
 			enableCellEdit: true,
 			enableColumnResize: true,
@@ -261,7 +261,7 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
 			        	            	    	
 			        	            	    	subtag.value = row.docTagId +'-' + subrow.docSubTagId;
 			        	            	    	//disabled after QA reviewed or closed
-			        	            	    	if(documentWorkflow.wfStatusId == 7 || documentWorkflow.wfStatusId == 8) {
+			        	            	    	if(documentWorkflow.wfStatusId == 7 || documentWorkflow.wfStatusId == 8 || documentWorkflow.wfStatusId == 9) {
 			        	            	    		subtag.disabled = 'true';
 			        	            	    	}
 			        	            	    	
@@ -288,7 +288,7 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
 												$('#divLocation').hide();
 												$('#divComment').show();
 											}
-											if(home.roleId == 1 && home.wfStatusId == 7){
+											if(home.roleId == 1 && home.wfStatusId == 8){
 												$('#divLocation').show();
 												$('#divComment').show();
 												$('#divComment').disabled();
@@ -334,7 +334,7 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
 		//alert(userrole);
 		//alert(docstatus);
 		$('.assign-tag').addClass('disabled'); //default
-		if(docstatus == 1 || docstatus == 3 || docstatus == 5 || docstatus == 8) { //document is new, ...  status , assign me first
+		if(docstatus == 1 || docstatus == 3 || docstatus == 5 || docstatus == 7 || docstatus == 9) { //document is new, ...  status , assign me first
         	$('.assign-tag').addClass('disabled');
         }
 		else if(docstatus == 2 && userrole == 1) { //Assigned to Analyst and logged user is  analyst
@@ -346,7 +346,7 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
 		else if(docstatus == 6 && userrole == 3) { //Assigned to QA and logged user is QA
 			$('.assign-tag').removeClass('disabled');
 		}
-		else if(docstatus == 7 && userrole == 1) { //QA Reviewed and logged user is Analyst
+		else if(docstatus == 8 && userrole == 1) { //QA Reviewed and logged user is Analyst
 			$('.assign-tag').removeClass('disabled');
 		}
 	}
@@ -386,7 +386,6 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
 		service.getAllDoc().then(function(obj){
 			if(obj.status == 200){
 				$scope.gridOptions.data = obj.data;
-				$scope.gridApi.core.refresh();
 				home.count =  ($scope.gridOptions.data.length);
 			} else {
 			   	 ngDialog.open({
@@ -401,8 +400,7 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
 			if(obj.status == 200){
 			
 				$scope.gridOptionsmylist.data = obj.data;
-				$scope.gridApi.core.refresh();
-				home.countmylist =  ($scope.gridOptionsmylist.data.length);				
+				home.countmylist =  ($scope.gridOptionsmylist.data.length);
 			} else {
 			   	 ngDialog.open({
 	                 template: 'firstDialogId',
@@ -496,7 +494,7 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
 		  
 	function validateAssignMe(userrole, docstatus) {
 		  var ret = false;
-		  if((docstatus == 1 ||  docstatus == 2) && userrole == 1) { //Assigned to Analyst and logged user is  analyst
+		  if((docstatus == 1 ||  docstatus == 2 || docstatus == 7) && userrole == 1) { //Assigned to Analyst and logged user is  analyst
 		   ret = true;
 		  }
 		  else if((docstatus == 3 || docstatus == 4) && userrole == 2) { //Assigned to Attorney and logged useris attorney
@@ -574,18 +572,18 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
 		
 		// alert(angular.toJson($scope.DocumentWorkflowProcess, true));
 		service.submitWorkflow($scope.DocumentWorkflowProcess).then(function(obj){
-			 ngDialog.open({
+			 /*ngDialog.open({
                  template: '<h2>Notice that there is no overlay!</h2>',
                  className: 'ngdialog-theme-default',
                  plain: true,
                  overlay: false
-             });
+             });*/
 	    	//alert(obj.status);
 	        if(obj.status == 200){
 	        	//alert("Success");
 	        	 ngDialog.open({
 	                 template: 'firstDialogId',
-	                 data: {Message: "Save Successfull"},
+	                 data: {Message: "Save Successful"},
 	                 className: 'ngdialog-theme-default'
 	             });
 				home.refreshGrid(obj);
@@ -594,10 +592,11 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
 	        } else {
 	        	 ngDialog.open({
 	                 template: 'firstDialogId',
-	                 data: {Message: "WorkFlow error fails"},
+	                 data: {Message: "Workflow Save failed !!!!"},
 	                 className: 'ngdialog-theme-default'
 	             });
 	        }
+			 $scope.loading = false;
 	      });
 		
   };
@@ -636,14 +635,21 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
 		
 		$scope.DocumentWorkflowProcess.docDetail.tagOverrideReason = text;
 		}
-		// alert(angular.toJson($scope.DocumentWorkflowProcess, true));
+		//alert(angular.toJson($scope.DocumentWorkflowProcess, true));
+				
 		service.submitWorkflow($scope.DocumentWorkflowProcess).then(function(obj){
 	    	//alert(obj.status);
 	        if(obj.status == 200){
 	        	//alert("Success");
-				home.refreshGrid(obj);
+				//home.refreshGrid(obj);
+				 ngDialog.open({
+					 template: 'firstDialogId',
+					 data: {Message: "Workflow submit Successful"},
+					 className: 'ngdialog-theme-default'
+				 });
 				
-				service.getDocDetails( $scope.DocumentWorkflowProcess.docObj.docId).then(function(obj){
+				
+/*				service.getDocDetails( $scope.DocumentWorkflowProcess.docObj.docId).then(function(obj){
 	        			        	
 	        	    if(obj.status == 200){
 	        	    	 ngDialog.open({
@@ -663,18 +669,19 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
 	    	                 className: 'ngdialog-theme-default'
 	    	             });
 	        	    }
-	        	  });	
+	        	  });	*/
 				home.refreshGrid(obj);
 				$('#myModal').modal('hide');
 				home.appState ="hide";
 	        } else {
 	        	 ngDialog.open({
 	                 template: 'firstDialogId',
-	                 data: {Message: "Work Flow submit fails"},
+	                 data: {Message: "Workflow submit failed !!!"},
 	                 className: 'ngdialog-theme-default'
 	             });
 	        }
 	        $scope.loading = false;
+			//$scope.DocumentWorkflowProcess ={};
 		});
 		
 };
@@ -838,22 +845,25 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
   
   $(function(){    
       $('.wfl-doc_upload').on('click',function(){
-			window.open('jsp/fileUpload.jsp');
+			window.open('jsp/fileUpload.jsp?userId='+home.userId);
       });    
   });
   
-  
-  $(function(){    
-      $('.submit-tag').on('click',function(){
-    	
-    	  home.submitDoc();     
+  $(function(){  
+	  $( ".submit-tag").unbind( "click" );
+	  $('.submit-tag').on('click',function(){
+     	  home.submitDoc();
+	  		//alert('hi');
           return false;        
       });    
- });
+  });
   
-  $(function(){    
+ //});
+  
+  $(function(){
+	  $( ".save-tag").unbind( "click" );
       $('.save-tag').on('click',function(){
-    	  $('#example-multiple-optgroups').multiselect('refresh');
+    	 // $('#example-multiple-optgroups').multiselect('refresh');
     	  home.saveDoc();
 //    	  var selectedtag =  $('#example-multiple-optgroups').multiselect('getSelects');
 //    	  alert(selectedtag);
@@ -861,6 +871,7 @@ app.controller("homeCtrl",['$stateParams','service','$scope','$rootScope','$temp
           return false;        
       });    
   });
+  
   
   /*$(document).on("click", "#save-tag", function(event){
     	  e.preventDefault();   

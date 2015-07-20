@@ -45,6 +45,17 @@
   
   <div class="container bootcards-container" id="main" ng-init="hc.inithome();">
     
+			  <a class="btn btn-primary" href="#" ng-click="hc.refreshGrid()" >
+				<i class="glyphicon glyphicon-refresh"></i> 
+				<span>Reload Documents</span>
+			  </a>
+			  <a class="btn btn-primary" href="rest/docadmin/dump">
+				<i class="glyphicon glyphicon-refresh"></i> 
+				<span>Export Completed Document Workflow List</span>
+			  </a><br><br>			  
+			  
+
+
 	<div class="row">
 	
 		<div class="col-sm-5">
@@ -164,7 +175,7 @@
 	<div class="panel-footer clearfix" id="savepanel" style="display:none">
 				<div class="btn-group btn-group-justified">					
 					<div class="btn-group" >
-						<a class="btn btn-default save-tag" href ng-click="hc.saveDoc()">
+						<a class="btn btn-default save-tag" ><!--save-tag-->
 							<i class="glyphicon glyphicon-floppy-disk"></i>
 							Save
 						</a>
