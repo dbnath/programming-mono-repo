@@ -29,6 +29,7 @@
 		<logback.ext.version>0.1.1</logback.ext.version>
 		<servlet.version>3.0.1</servlet.version>
 		<slf4j.version>1.7.6</slf4j.version>
+		<httpclient.version>4.5.1</httpclient.version>
 		<spring.version>4.0.3.RELEASE</spring.version>
 	</properties>
 	
@@ -357,7 +358,7 @@
 		<dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
-            <version>4.5.1</version>
+            <version>${httpclient.version}</version>
         </dependency>
 		<dependency>
 			<groupId>commons-cli</groupId>
