@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.myorg.tools.documentworkflow.dto.BaseDTO;
+import com.myorg.tools.documentworkflow.model.Response;
 import com.myorg.tools.documentworkflow.model.ReverseMappable;
 
 public class DocumentWorkflowToolUtility {
@@ -118,5 +120,14 @@ public class DocumentWorkflowToolUtility {
 		}
 		return (! isEmptyValue(sb.toString())) ? sb.toString().substring(0, sb.toString().lastIndexOf(", ")) : null;
 	}
+	
+	public static <T extends BaseDTO> T setResponse(T dto, String responseCode, String responseMessage){
+		Response response = new Response();
+		response.setResponseCode(responseCode);
+		response.setResponseMessage(responseMessage);
+		dto.setResponse(response);
+		return dto;
+	}
+	
 	
 }

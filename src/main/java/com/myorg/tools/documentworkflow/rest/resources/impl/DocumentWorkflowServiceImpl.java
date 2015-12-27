@@ -1,7 +1,6 @@
 package com.myorg.tools.documentworkflow.rest.resources.impl;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -9,7 +8,9 @@ import java.util.Map;
 
 import javax.ws.rs.core.Response;
 
+import com.myorg.tools.documentworkflow.constant.Constants;
 import com.myorg.tools.documentworkflow.dao.DocumentWorkflowDAO;
+import com.myorg.tools.documentworkflow.dto.DocumentDTO;
 import com.myorg.tools.documentworkflow.model.DocumentWorkflow;
 import com.myorg.tools.documentworkflow.model.DocumentWorkflowDetail;
 import com.myorg.tools.documentworkflow.model.DocumentWorkflowProcess;
@@ -159,9 +160,87 @@ public class DocumentWorkflowServiceImpl extends BaseResource implements Documen
 			}
 			documentDAO.assignWorkflow(docs);
 			return Response.ok().entity(Boolean.TRUE).build();
-		} catch (Exception e) {
+		
+          } catch (Exception e) {
 			e.printStackTrace();
 			return Response.serverError().build();
 		}
+	}
+
+	@Override
+	public DocumentDTO getDocumentsForAllMakers(DocumentDTO documentDTO) {
+		try {
+			documentDTO = documentDAO.getDocumentsForAllMakers(documentDTO);
+			DocumentWorkflowToolUtility.setResponse(documentDTO, Constants.SUCCESS_CODE, Constants.SUCCESS_MESSAGE);
+		} catch (Exception e) {
+			e.printStackTrace();
+			DocumentWorkflowToolUtility.setResponse(documentDTO, Constants.FAILURE_CODE, e.getMessage());
+		}
+		return documentDTO;
+	}
+
+	@Override
+	public DocumentDTO getDocumentsForMaker(DocumentDTO documentDTO) {
+		try {
+			documentDTO = documentDAO.getDocumentsForMaker(documentDTO);
+			DocumentWorkflowToolUtility.setResponse(documentDTO, Constants.SUCCESS_CODE, Constants.SUCCESS_MESSAGE);
+		} catch (Exception e) {
+			e.printStackTrace();
+			DocumentWorkflowToolUtility.setResponse(documentDTO, Constants.FAILURE_CODE, e.getMessage());
+		}
+		return documentDTO;
+	}
+
+	@Override
+	public DocumentDTO getDocumentsForAllCheckers(DocumentDTO documentDTO) {
+		try {
+			documentDTO = documentDAO.getDocumentsForAllCheckers(documentDTO);
+			DocumentWorkflowToolUtility.setResponse(documentDTO, Constants.SUCCESS_CODE, Constants.SUCCESS_MESSAGE);
+		} catch (Exception e) {
+			e.printStackTrace();
+			DocumentWorkflowToolUtility.setResponse(documentDTO, Constants.FAILURE_CODE, e.getMessage());
+		}
+		return documentDTO;
+	}
+
+	@Override
+	public DocumentDTO getDocumentsForChecker(DocumentDTO documentDTO) {
+		try {
+			documentDTO = documentDAO.getDocumentsForChecker(documentDTO);
+			DocumentWorkflowToolUtility.setResponse(documentDTO, Constants.SUCCESS_CODE, Constants.SUCCESS_MESSAGE);
+		} catch (Exception e) {
+			e.printStackTrace();
+			DocumentWorkflowToolUtility.setResponse(documentDTO, Constants.FAILURE_CODE, e.getMessage());
+		}
+		return documentDTO;
+	}
+	
+	@Override
+	public DocumentDTO getDocumentsForAllSMEs(DocumentDTO documentDTO) {
+		try {
+			documentDTO = documentDAO.getDocumentsForAllSMEs(documentDTO);
+			DocumentWorkflowToolUtility.setResponse(documentDTO, Constants.SUCCESS_CODE, Constants.SUCCESS_MESSAGE);
+		} catch (Exception e) {
+			e.printStackTrace();
+			DocumentWorkflowToolUtility.setResponse(documentDTO, Constants.FAILURE_CODE, e.getMessage());
+		}
+		return documentDTO;
+	}
+
+	@Override
+	public DocumentDTO getDocumentsForSME(DocumentDTO documentDTO) {
+		try {
+			documentDTO = documentDAO.getDocumentsForSME(documentDTO);
+			DocumentWorkflowToolUtility.setResponse(documentDTO, Constants.SUCCESS_CODE, Constants.SUCCESS_MESSAGE);
+		} catch (Exception e) {
+			e.printStackTrace();
+			DocumentWorkflowToolUtility.setResponse(documentDTO, Constants.FAILURE_CODE, e.getMessage());
+		}
+		return documentDTO;
+	}
+
+	@Override
+	public String ping() {
+		return "Success";
 	}
 }

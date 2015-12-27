@@ -46,4 +46,17 @@ public class DocumentWorkflowToolConstant {
 	//public static String UPD_DOC_WFL_ASGN_SQL = "update doc_workflow_process set ASSIGNED_TO= ?, ASSIGNED_DT=?,ID_ROLE=?,LAST_UPDATED_BY=?,LAST_UPDATE_DT=?,IS_REWORKED=? where ";
 	
 	
+	
+	public static String FETCH_ALL_MAKERS_DOCS_SQL = "select * from WF_PROCESS";
+	
+	public static String FETCH_MAKER_DOCS_SQL = "select * from WF_PROCESS where ASSIGNED_TO=?";
+	
+	public static String FETCH_ALL_CHECKERS_DOCS_SQL = "";
+	
+	public static String FETCH_CHECKER_DOCS_SQL = "select * from WF_PROCESS where ASSIGNED_TO=?";
+	
+	public static String FETCH_ALL_ONLINE_SMES_DOCS_SQL = "";
+	
+	public static String FETCH_ONLINE_SME_DOCS_SQL = "select * from WF_PROCESS where ASSIGNED_TO=?";
+	
 }

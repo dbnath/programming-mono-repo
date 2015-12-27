@@ -12,6 +12,9 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import com.myorg.tools.documentworkflow.constant.DocumentWorkflowToolConstant;
 import com.myorg.tools.documentworkflow.dao.DocumentWorkflowDAO;
+import com.myorg.tools.documentworkflow.dto.DocumentDTO;
+import com.myorg.tools.documentworkflow.mapper.DocWkflwMapper;
+import com.myorg.tools.documentworkflow.model.DocWkflwProcess;
 import com.myorg.tools.documentworkflow.model.Document;
 import com.myorg.tools.documentworkflow.model.DocumentTagRelationship;
 import com.myorg.tools.documentworkflow.model.DocumentWorkflow;
@@ -255,7 +258,82 @@ public class DocumentWorkflowDAOImpl extends BaseJDBCTemplate implements Documen
 		}
 
 	}
-	
-	
 
+	@Override
+	public DocumentDTO getDocumentsForAllMakers(DocumentDTO documentDTO) throws SQLException, Exception {
+		List <DocWkflwProcess> docList = null;
+		String docStatus = documentDTO.getDocStatus();
+	    String SQL = DocumentWorkflowToolConstant.FETCH_ALL_MAKERS_DOCS_SQL;
+	    Object[] inputParameters = new Object[]{docStatus};
+	    DocWkflwMapper mapper = new DocWkflwMapper();
+	    docList = this.getJdbcTemplateObject().query(SQL, mapper);
+	    documentDTO.setDocList(docList);
+		return documentDTO;
+	}
+
+	@Override
+	public DocumentDTO getDocumentsForMaker(DocumentDTO documentDTO) throws SQLException, Exception {
+		List <DocWkflwProcess> docList = null;
+		if(documentDTO.getUser() != null){
+			String userName = documentDTO.getUser().getUserName();
+		    String SQL = DocumentWorkflowToolConstant.FETCH_MAKER_DOCS_SQL;
+		    Object[] inputParameters = new Object[]{userName};
+		    DocWkflwMapper mapper = new DocWkflwMapper();
+		    docList = this.getJdbcTemplateObject().query(SQL, inputParameters, mapper);
+		    documentDTO.setDocList(docList);
+		}
+		return documentDTO;
+	}
+
+	@Override
+	public DocumentDTO getDocumentsForAllCheckers(DocumentDTO documentDTO) throws SQLException, Exception {
+		List <DocWkflwProcess> docList = null;
+		String docStatus = documentDTO.getDocStatus();
+	    String SQL = DocumentWorkflowToolConstant.FETCH_ALL_CHECKERS_DOCS_SQL;
+	    Object[] inputParameters = new Object[]{docStatus};
+	    DocWkflwMapper mapper = new DocWkflwMapper();
+	    docList = this.getJdbcTemplateObject().query(SQL, inputParameters, mapper);
+	    documentDTO.setDocList(docList);
+		return documentDTO;
+	}
+
+	@Override
+	public DocumentDTO getDocumentsForChecker(DocumentDTO documentDTO) throws SQLException, Exception {
+		List <DocWkflwProcess> docList = null;
+		if(documentDTO.getUser() != null){
+			String userName = documentDTO.getUser().getUserName();
+		    String SQL = DocumentWorkflowToolConstant.FETCH_CHECKER_DOCS_SQL;
+		    Object[] inputParameters = new Object[]{userName};
+		    DocWkflwMapper mapper = new DocWkflwMapper();
+		    docList = this.getJdbcTemplateObject().query(SQL, inputParameters, mapper);
+		    documentDTO.setDocList(docList);
+				
+		}
+		return documentDTO;
+	}
+
+	@Override
+	public DocumentDTO getDocumentsForAllSMEs(DocumentDTO documentDTO) throws SQLException, Exception {
+		List <DocWkflwProcess> docList = null;
+		String docStatus = documentDTO.getDocStatus();
+	    String SQL = DocumentWorkflowToolConstant.FETCH_ALL_ONLINE_SMES_DOCS_SQL;
+	    Object[] inputParameters = new Object[]{docStatus};
+	    DocWkflwMapper mapper = new DocWkflwMapper();
+	    docList = this.getJdbcTemplateObject().query(SQL, inputParameters, mapper);
+	    documentDTO.setDocList(docList);
+		return documentDTO;
+	}
+
+	@Override
+	public DocumentDTO getDocumentsForSME(DocumentDTO documentDTO) throws SQLException, Exception {
+		List <DocWkflwProcess> docList = null;
+		String docStatus = documentDTO.getDocStatus();
+	    String SQL = DocumentWorkflowToolConstant.FETCH_ONLINE_SME_DOCS_SQL;
+	    Object[] inputParameters = new Object[]{docStatus};
+	    DocWkflwMapper mapper = new DocWkflwMapper();
+	    docList = this.getJdbcTemplateObject().query(SQL, inputParameters, mapper);
+	    documentDTO.setDocList(docList);
+		return documentDTO;
+	}
+	
 }
