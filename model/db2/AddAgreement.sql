@@ -1,8 +1,8 @@
-USE test
+USE TEST;
 
 DELIMITER $$ 
-DROP PROCEDURE IF EXISTS test.AddAgreement $$
-CREATE PROCEDURE test.AddAgreement (
+DROP PROCEDURE IF EXISTS TEST.AddAgreement $$
+CREATE PROCEDURE TEST.AddAgreement (
 	IN IN_ID_AGRMT varchar(20),
 	IN ID_AGREEMENT_TYPE int,
 	IN LOB varchar(10),
@@ -12,7 +12,7 @@ CREATE PROCEDURE test.AddAgreement (
 	IN CREATED_DT datetime,
 	IN LAST_UPDATED_BY varchar(10),
 	IN LAST_UPDATE_DT datetime )
--- grant execute on test.* to ''@'localhost'; Run as root after proc creation mysql -u root -p
+-- grant execute on TEST.* to ''@'localhost'; Run as root after proc creation mysql -u root -p
 BEGIN
 
 	/*DECLARE exit handler for sqlexception
