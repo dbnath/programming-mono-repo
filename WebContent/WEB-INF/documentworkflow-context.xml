@@ -17,9 +17,9 @@
 	<bean id="dataSource" 
 		class="org.apache.commons.dbcp.BasicDataSource">
 	   <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
-	   <property name="url" value="jdbc:mysql://localhost:3306/TEST"/>
-	   <!--<property name="username" value="root"/>
-	   <property name="password" value="password"/>-->
+	   <property name="url" value="jdbc:mysql://104.154.113.102:3306/TEST"/>
+	   <property name="username" value="docworkflowuser"/>
+	   <property name="password" value="Test1234"/>
 	</bean>
 	
 	<bean id="transactionManager" 
