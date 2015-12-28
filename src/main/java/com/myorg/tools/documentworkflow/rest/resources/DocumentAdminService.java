@@ -79,10 +79,27 @@ public interface DocumentAdminService {
 	   @Produces(MediaType.TEXT_HTML)	   
 	   public Response uploadDocuments(@FormDataParam("file") InputStream uploadedInputStream,  @FormDataParam("file") FormDataContentDisposition fileDetail, @FormDataParam("path") String path, @FormDataParam("userId") String userId);
 	   
+	   @POST
+	   @Path("/uploaderr")
+	   @Consumes(MediaType.MULTIPART_FORM_DATA)
+	   @Produces(MediaType.TEXT_HTML)	   
+	   public Response uploadErrReasons(@FormDataParam("file") InputStream uploadedInputStream,  @FormDataParam("file") FormDataContentDisposition fileDetail, @FormDataParam("path") String path, @FormDataParam("userId") String userId);
+
+	   
 	   @GET
 	   @Path("/template")
 	   @Produces("application/vnd.ms-excel")	   
 	   public Response getTemplate();
+	   
+	   @GET
+	   @Path("/doctemplate")
+	   @Produces("application/vnd.ms-excel")	   
+	   public Response getDocUploadTemplate();	 
+	   
+	   @GET
+	   @Path("/errtemplate")
+	   @Produces("application/vnd.ms-excel")	   
+	   public Response getErrTypeUploadTemplate();	   
 	   
 
 	   @GET

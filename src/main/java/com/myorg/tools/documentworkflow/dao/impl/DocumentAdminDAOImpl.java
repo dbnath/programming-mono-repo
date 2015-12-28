@@ -9,11 +9,19 @@ import java.util.Map;
 import java.util.Set;
 
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import com.myorg.tools.documentworkflow.constant.DocumentWorkflowToolConstant;
 import com.myorg.tools.documentworkflow.dao.DocumentAdminDAO;
+import com.myorg.tools.documentworkflow.model.AgreementErrorType;
+import com.myorg.tools.documentworkflow.model.AgreementStatus;
+import com.myorg.tools.documentworkflow.model.AgreementType;
+import com.myorg.tools.documentworkflow.model.AgreementWorkflow;
 import com.myorg.tools.documentworkflow.model.Document;
 import com.myorg.tools.documentworkflow.model.DocumentRepository;
 import com.myorg.tools.documentworkflow.model.DocumentSubTagValues;
@@ -38,6 +46,39 @@ public class DocumentAdminDAOImpl extends BaseJDBCTemplate implements DocumentAd
 		}
 		return docTypeList;
 	}
+	
+	public List<AgreementType> populateAgreementTypes() throws SQLException, Exception {
+		String SQL = DocumentWorkflowToolConstant.AGR_TYPE_POPULATE_SQL;
+		List<AgreementType> docTypeList = null;
+		try{
+			docTypeList = this.getJdbcTemplateObject().query(SQL, new AgreementTypeMapper());
+		} catch(EmptyResultDataAccessException e) {
+			docTypeList = null;
+		}
+		return docTypeList;
+	}	
+	
+	public List<AgreementErrorType> populateErrorTypes() throws SQLException, Exception {
+		String SQL = DocumentWorkflowToolConstant.ERR_TYPE_POPULATE_SQL;
+		List<AgreementErrorType> docTypeList = null;
+		try{
+			docTypeList = this.getJdbcTemplateObject().query(SQL, new AgreementErrorTypeMapper());
+		} catch(EmptyResultDataAccessException e) {
+			docTypeList = null;
+		}
+		return docTypeList;
+	}	
+	
+	public List<AgreementStatus> populateAgreementStatus() throws SQLException, Exception {
+		String SQL = DocumentWorkflowToolConstant.AGR_STATUS_POPULATE_SQL;
+		List<AgreementStatus> docTypeList = null;
+		try{
+			docTypeList = this.getJdbcTemplateObject().query(SQL, new AgreementStatusMapper());
+		} catch(EmptyResultDataAccessException e) {
+			docTypeList = null;
+		}
+		return docTypeList;
+	}	
 	
 	public List<DocumentRepository> populateDocumentRepos() throws SQLException, Exception {
 		String SQL = DocumentWorkflowToolConstant.DOC_REPO_POPULATE_SQL;
@@ -244,6 +285,131 @@ public class DocumentAdminDAOImpl extends BaseJDBCTemplate implements DocumentAd
 		@SuppressWarnings("unused")
 		Map<String, Object> out = jdbcCall.execute(in);
 	}
+	
+	/* (non-Javadoc)
+	 * @see com.myorg.tools.documentworkflow.dao.DocumentAdminDAO#uploadDocumentInformation(java.util.List)
+	 */
+	@Override
+	public boolean uploadAgreementInformation(List<AgreementWorkflow> docList, String userId) throws SQLException, Exception {
+		
+		if(docList != null){
+			
+			HashMap<String, Integer> typeMap = DocumentWorkflowToolUtility.mapByValue(new ArrayList<ReverseMappable>(populateAgreementTypes()));
+			HashMap<String, Integer> statusMap = DocumentWorkflowToolUtility.mapByValue(new ArrayList<ReverseMappable>(populateAgreementStatus()));
+			
+			System.out.println("###### typeMap "+typeMap);
+			System.out.println("###### statusMap "+statusMap);
+			
+			SimpleJdbcCall jdbcCall = new SimpleJdbcCall(this.getDataSource()).withProcedureName("addAgreement");
+			
+			
+			try {
+				for(AgreementWorkflow doc : docList){
+					if(doc != null){
+						doc.setAgreementTypeId(typeMap.get(doc.getAgreementTypeDesc()));
+						doc.setWfStatusId(statusMap.get(DocumentWorkflowToolUtility.isEmpty(doc.getWfStatusDesc())?"New":doc.getWfStatusDesc()));
+						doc.setCreatedBy(userId);
+						doc.setLastUpdatedBy(userId);
+						doc.setCreatedDt(new java.util.Date());
+						doc.setLastUpdateDt(doc.getCreatedDt());
+						doc.setAssignedDt(doc.getCreatedDt());
+						
+						insertAgreementIntoDataBase(jdbcCall, doc);
+					}
+				}
+				return true;
+			} catch (SQLException e) {
+				e.printStackTrace();
+				return false;
+			}			
+		}
+		return false;
+	}
+	
+	private boolean insertAgreementIntoDataBase(SimpleJdbcCall jdbcCall, AgreementWorkflow doc) throws SQLException{
+		
+		Set<String> params = new HashSet<String>();		
+		params.add("IN_ID_AGRMT");
+		params.add("ID_AGREEMENT_TYPE");
+		params.add("LOB");
+		params.add("ID_WF_STATUS");
+		params.add("ASSIGNED_TO");
+		params.add("CREATED_BY");
+		params.add("CREATED_DT");
+		params.add("LAST_UPDATED_BY");
+		params.add("LAST_UPDATE_DT");
+		
+		jdbcCall.setInParameterNames(params);
+		
+		MapSqlParameterSource in = new MapSqlParameterSource();
+		in.addValue("IN_ID_AGRMT",doc.getAgreementId());
+		in.addValue("ID_AGREEMENT_TYPE", doc.getAgreementTypeId());		
+		in.addValue("LOB", doc.getLob());
+		in.addValue("ID_WF_STATUS", doc.getWfStatusId());
+		in.addValue("ASSIGNED_TO", doc.getAssignedTo());
+		in.addValue("CREATED_BY", doc.getCreatedBy());
+		in.addValue("CREATED_DT", doc.getCreatedDt());
+		in.addValue("LAST_UPDATED_BY", doc.getLastUpdatedBy());
+		in.addValue("LAST_UPDATE_DT", doc.getLastUpdateDt());
+		
+		@SuppressWarnings("unused")
+		Map<String, Object> out = jdbcCall.execute(in);
+		
+		return false;
+	}
+	
+	/* (non-Javadoc)
+	 * @see com.myorg.tools.documentworkflow.dao.DocumentAdminDAO#uploadDocumentInformation(java.util.List)
+	 */
+	@Override
+	public boolean uploadErrorReasons(List<AgreementErrorType> docList, String userId) throws SQLException, Exception {
+		
+		if(docList != null){
+			JdbcTemplate jdbcTemplate = this.getJdbcTemplateObject();
+			TransactionDefinition def = new DefaultTransactionDefinition();
+			TransactionStatus status = this.getTransactionManager().getTransaction(def);
+			int counter = 0;
+			try {
+				for(AgreementErrorType doc : docList){
+					counter++;
+					if(doc != null){
+						if(!DocumentWorkflowToolUtility.isEmptyValue(doc.getErrorTypeId())){
+							System.out.println("###### Updating row "+counter);
+							updateErrorReason(doc, jdbcTemplate);
+						} else {
+							System.out.println("###### Inserting row "+counter);
+							insertErrorReason(doc, jdbcTemplate);
+						}
+					}
+				}
+				this.getTransactionManager().commit(status);
+				return true;
+			} catch (SQLException e) {
+				System.err.println("Error occurred while processing entry "+(counter+1));
+				e.printStackTrace();
+				this.getTransactionManager().rollback(status);
+				return false;
+			}			
+		}
+		return false;
+	}
+	
+	
+	private void updateErrorReason(AgreementErrorType type,JdbcTemplate jdbcTemplate ) throws SQLException, Exception{
+		String UPD_SQL = DocumentWorkflowToolConstant.UPD_ERR_REASON;
+		jdbcTemplate.update(UPD_SQL, type.getErrorTypeCode(),type.getErrorTypeName(),type.getErrorTypeId());
+	}
+	
+	private void insertErrorReason(AgreementErrorType type,JdbcTemplate jdbcTemplate ) throws SQLException, Exception{
+		String INS_SQL = DocumentWorkflowToolConstant.INS_ERR_REASON;
+		String SEL_SQL = DocumentWorkflowToolConstant.SEL_ERR_REASON_CD;
+		
+		Integer errTypId = jdbcTemplate.queryForInt(SEL_SQL);
+		
+		if(errTypId != null) {
+			jdbcTemplate.update(INS_SQL, errTypId +1, type.getErrorTypeCode(),type.getErrorTypeName());
+		}
+	}	
 	
 	public List<DocumentTagReport> extractDocTagInfo() throws SQLException, Exception {
 		String SQL = DocumentWorkflowToolConstant.FETCH_CLOSED_DOC_TAGS;

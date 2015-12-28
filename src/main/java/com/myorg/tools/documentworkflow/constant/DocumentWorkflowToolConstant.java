@@ -45,18 +45,30 @@ public class DocumentWorkflowToolConstant {
 	
 	//public static String UPD_DOC_WFL_ASGN_SQL = "update doc_workflow_process set ASSIGNED_TO= ?, ASSIGNED_DT=?,ID_ROLE=?,LAST_UPDATED_BY=?,LAST_UPDATE_DT=?,IS_REWORKED=? where ";
 	
+	public static String AGR_TYPE_POPULATE_SQL = "select * from AGREEMENT_TYPE";
 	
 	
 	public static String FETCH_ALL_MAKERS_DOCS_SQL = "select * from WF_PROCESS";
 	
-	public static String FETCH_MAKER_DOCS_SQL = "select * from WF_PROCESS where ASSIGNED_TO=?";
+	public static String FETCH_AGREEMENTS_SQL = "select a.ID_AGRMT, a.LOB, a.ID_AGREEMENT_TYPE, a.ASSIGNED_TO, b.TX_AGREEMENT_TYPE, a.ID_WF_STATUS, c.TX_WF_STATUS, a.CREATED_BY, a.CREATED_DT, a.LAST_UPDATED_BY, a.LAST_UPDATE_DT from WF_PROCESS a, AGREEMENT_TYPE b, WF_STATUS c where a.ASSIGNED_TO=? AND a.ID_AGREEMENT_TYPE = b.ID_AGREEMENT_TYPE and c.ID_WF_STATUS = a.ID_WF_STATUS";
 	
 	public static String FETCH_ALL_CHECKERS_DOCS_SQL = "";
 	
-	public static String FETCH_CHECKER_DOCS_SQL = "select * from WF_PROCESS where ASSIGNED_TO=?";
-	
 	public static String FETCH_ALL_ONLINE_SMES_DOCS_SQL = "";
 	
-	public static String FETCH_ONLINE_SME_DOCS_SQL = "select * from WF_PROCESS where ASSIGNED_TO=?";
+	public static String FETCH_ALL_COMMENTS_ERRCODES = "SELECT M.ID_AGRMT, M.COMMENTS, M.ID_ERR_REASON, T.TX_ERR_REASON FROM  WF_COMMENT_AUDIT M, ERR_REASON T WHERE M.ID_ROLE = ? AND M.ID_ERR_REASON = T.ID_ERR_REASON";
+	
+	public static String FETCH_SPECIFIC_COMMENTS_ERRCODES = "SELECT M.ID_AGRMT, M.ID_ROLE, M.COMMENTS, M.ID_ERR_REASON, T.TX_ERR_REASON FROM  WF_COMMENT_AUDIT M, ERR_REASON T WHERE M.ID_AGRMT = ? AND M.ID_ROLE = ? AND M.ID_ERR_REASON = T.ID_ERR_REASON ORDER BY ID_AGRMT, ID_ROLE";
+	
+	public static String AGR_STATUS_POPULATE_SQL = "select * from WF_STATUS";
+	
+	public static String ERR_TYPE_POPULATE_SQL = "select * from ERR_REASON";
+	
+	public static String UPD_ERR_REASON = "UPDATE ERR_REASON SET NM_ERR_REASON = ?, TX_ERR_REASON = ? WHERE ID_ERR_REASON = ?";
+	public static String INS_ERR_REASON = "INSERT INTO ERR_REASON (ID_ERR_REASON, NM_ERR_REASON, TX_ERR_REASON) VALUES (?,?,?)";
+	public static String SEL_ERR_REASON_CD = "SELECT MAX(ID_ERR_REASON) FROM ERR_REASON";	
+	
+	
+	
 	
 }

@@ -6,11 +6,11 @@
 
 <html>
 <body>
-	<h1>Bulk Upload Documents and Assign to Makers</h1>
+	<h1>Bulk Upload Error Reasons</h1>
 	
-	<div><a href="../rest/docadmin/doctemplate"> Click here to download Bulk Upload template </a></div>
+	<div><a href="../rest/docadmin/errtemplate"> Click here to download template with existing error codes</a></div>
  
-	<form action="../rest/docadmin/uploaddoc" method="post" enctype="multipart/form-data">
+	<form action="../rest/docadmin/uploaderr" method="post" enctype="multipart/form-data">
  
 	   <p>
 		Select file to Bulk Upload : <input type="file" name="file" size="45" />

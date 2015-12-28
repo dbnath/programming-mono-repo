@@ -32,8 +32,9 @@ app.controller("loginCtrl",['service', '$scope','$rootScope',function(service, $
     	  service.setDocWorkflowAuthorizationId(obj.data);
     	  console.log("The user role set :"+service.getDocWorkflowAuthorizationId());
     	  console.log("Selected User-Role in rootscope: "+$rootScope.selectedUserRole.selectedRoleId);
-    	  if(login.user.role === 'System Admin'){        
-    		  window.location.href = '#/setting';
+    	  //if(login.user.role === 'System Admin'){        
+		  if($rootScope.selectedUserRole.selectedRoleId == 4){
+    		  window.location.href = '#/adminHome/'+$rootScope.selectedUserRole.userId;
     	  } else {
     		  window.location.href = '#/home/'+$rootScope.selectedUserRole.userId;
     	  }    	  

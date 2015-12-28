@@ -61,14 +61,14 @@ public interface DocumentWorkflowService {
 	   @Path("/getDocumentsForAllMakers")
 	   @Consumes(MediaType.APPLICATION_JSON)
 	   @Produces(MediaType.APPLICATION_JSON)	   
-	   public DocumentDTO getDocumentsForAllMakers(DocumentDTO documentDTO);
+	   public Response getDocumentsForAllMakers(DocumentDTO documentDTO);
 	   
 
 	   @POST
 	   @Path("/getDocumentsForMaker")
 	   @Consumes(MediaType.APPLICATION_JSON)
 	   @Produces(MediaType.APPLICATION_JSON)	   
-	   public DocumentDTO getDocumentsForMaker(DocumentDTO documentDTO);
+	   public Response getDocumentsForMaker(DocumentDTO documentDTO);
 	   
 
 	   @POST

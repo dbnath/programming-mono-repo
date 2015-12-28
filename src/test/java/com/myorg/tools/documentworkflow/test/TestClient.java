@@ -14,23 +14,32 @@ import org.codehaus.jackson.map.ObjectMapper;
 
 import com.myorg.tools.documentworkflow.dto.BaseDTO;
 import com.myorg.tools.documentworkflow.dto.DocumentDTO;
+import com.myorg.tools.documentworkflow.model.User;
 
 public class TestClient {
 	private static String url = "http://localhost:8080/documentworkflow/rest/WflService/";
 
 	public static void main(String[] args) throws Exception {
-		getDocumentsForAllMakers();
+		getDocumentsForAMaker();
 	}
 
-	private static void getDocumentsForAllMakers() throws Exception {
-		DocumentDTO documentDTO = new DocumentDTO();
+	private static void getDocumentsForAllMakers() throws Exception { 
+		DocumentDTO documentDTO = new DocumentDTO(); 
 		documentDTO.setDocStatus("New");
-		documentDTO = callRESTService(documentDTO, "getDocumentsForAllMakers");
+		String s = callRESTService(documentDTO, "getDocumentsForAllMakers");
 		System.out.println("List size :: " + documentDTO.getDocList() != null ? documentDTO
 				.getDocList().size() : null);
 	}
+	
+	private static void getDocumentsForAMaker() throws Exception {
+		DocumentDTO documentDTO = new DocumentDTO();
+		documentDTO.setUser(new User("ARDHENDU","ARDHENDU","1"));
+		String responseString = callRESTService(documentDTO, "getDocumentsForMaker");
+		//System.out.println("List size :: " + documentDTO.getDocList() != null ? documentDTO.getDocList().size() : 0);
+		System.out.println("###### REsponse "+responseString);
+	}	
 
-	private static <T extends BaseDTO> T callRESTService(T dto, String method)
+	private static String callRESTService(DocumentDTO dto, String method)
 			throws Exception {
 		ObjectMapper mapper = new ObjectMapper();
 		String inputJsonString = mapper.writeValueAsString(dto);
@@ -50,10 +59,10 @@ public class TestClient {
 				(response.getEntity().getContent())));
 
 		String readLine = br.readLine();
-		if (readLine != null) {
+		/*if (readLine != null) {
 			dto = (T) new ObjectMapper().readValue(readLine, dto.getClass());
-		}
-		return dto;
+		}*/
+		return readLine;
 	}
 
 }

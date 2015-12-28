@@ -168,7 +168,7 @@ public class DocumentWorkflowServiceImpl extends BaseResource implements Documen
 	}
 
 	@Override
-	public DocumentDTO getDocumentsForAllMakers(DocumentDTO documentDTO) {
+	public Response getDocumentsForAllMakers(DocumentDTO documentDTO) {
 		try {
 			documentDTO = documentDAO.getDocumentsForAllMakers(documentDTO);
 			DocumentWorkflowToolUtility.setResponse(documentDTO, Constants.SUCCESS_CODE, Constants.SUCCESS_MESSAGE);
@@ -176,11 +176,11 @@ public class DocumentWorkflowServiceImpl extends BaseResource implements Documen
 			e.printStackTrace();
 			DocumentWorkflowToolUtility.setResponse(documentDTO, Constants.FAILURE_CODE, e.getMessage());
 		}
-		return documentDTO;
+		return Response.ok(documentDTO).build();
 	}
 
 	@Override
-	public DocumentDTO getDocumentsForMaker(DocumentDTO documentDTO) {
+	public Response getDocumentsForMaker(DocumentDTO documentDTO) {
 		try {
 			documentDTO = documentDAO.getDocumentsForMaker(documentDTO);
 			DocumentWorkflowToolUtility.setResponse(documentDTO, Constants.SUCCESS_CODE, Constants.SUCCESS_MESSAGE);
@@ -188,7 +188,7 @@ public class DocumentWorkflowServiceImpl extends BaseResource implements Documen
 			e.printStackTrace();
 			DocumentWorkflowToolUtility.setResponse(documentDTO, Constants.FAILURE_CODE, e.getMessage());
 		}
-		return documentDTO;
+		return Response.ok(documentDTO).build();
 	}
 
 	@Override

@@ -9,7 +9,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
 import org.apache.poi.ss.usermodel.DataValidation;
@@ -25,7 +24,9 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.myorg.tools.documentworkflow.dao.DocumentAdminDAO;
-import com.myorg.tools.documentworkflow.model.Document;
+import com.myorg.tools.documentworkflow.model.AgreementErrorType;
+import com.myorg.tools.documentworkflow.model.AgreementType;
+import com.myorg.tools.documentworkflow.model.AgreementWorkflow;
 import com.myorg.tools.documentworkflow.model.DocumentRepository;
 import com.myorg.tools.documentworkflow.model.DocumentSubTagValues;
 import com.myorg.tools.documentworkflow.model.DocumentTag;
@@ -34,9 +35,10 @@ import com.myorg.tools.documentworkflow.model.DocumentTagSubTagMapping;
 import com.myorg.tools.documentworkflow.model.DocumentType;
 import com.myorg.tools.documentworkflow.model.DocumentTypeTagMapping;
 import com.myorg.tools.documentworkflow.model.DocumentTypeTagSubTagsMap;
-import com.myorg.tools.documentworkflow.model.User;
 import com.myorg.tools.documentworkflow.rest.resources.BaseResource;
 import com.myorg.tools.documentworkflow.rest.resources.DocumentAdminService;
+import com.myorg.tools.documentworkflow.util.DocumentWorkflowToolUtility;
+import com.myorg.tools.documentworkflow.util.ExcelUtil;
 import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataParam;
 
@@ -147,8 +149,9 @@ public class DocumentAdminServiceImpl extends BaseResource implements DocumentAd
 			/*User user = getLoggedInUser();
 			String userId = user.getUserId();*/
 			
-			List<Document> docList = parseBulkUploadFile(uploadedInputStream);
-			documentAdminDAO.uploadDocumentInformation(docList, userId);
+			List<AgreementWorkflow> docList = parseBulkUploadFile(uploadedInputStream);
+			//documentAdminDAO.uploadDocumentInformation(docList, userId);
+			documentAdminDAO.uploadAgreementInformation(docList, userId);
 			
 			return Response.ok().entity("<html><head><script>function refreshParent(){window.close();}</script></head><body><div>Document Uploaded Successfully</div><input type=\"Button\" value=\"Close Window\" onclick=\"refreshParent()\" /></body></html>").build();
 			
@@ -162,56 +165,165 @@ public class DocumentAdminServiceImpl extends BaseResource implements DocumentAd
 		
 	}
 	
-	private List<Document> parseBulkUploadFile(InputStream stream) throws IOException {
+	public Response uploadErrReasons(@FormDataParam("file") InputStream uploadedInputStream,  @FormDataParam("file") FormDataContentDisposition fileDetail, @FormDataParam("path") String path, @FormDataParam("userId") String userId){
+		
+		try {
+			ExcelUtil util = new ExcelUtil();
+			List<AgreementErrorType> docList = util.parseErrReasonUploadFile(uploadedInputStream);
+			documentAdminDAO.uploadErrorReasons(docList, userId);
+			
+			return Response.ok().entity("<html><head><script>function refreshParent(){window.close();}</script></head><body><div>Document Uploaded Successfully</div><input type=\"Button\" value=\"Close Window\" onclick=\"refreshParent()\" /></body></html>").build();
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+			return Response.serverError().entity("Documents failed to upload").build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.serverError().entity("Documents failed to upload").build();
+		}
+	}
+	
+	
+	private List<AgreementWorkflow> parseBulkUploadFile(InputStream stream) throws IOException {
 
-		List<Document> docList = new ArrayList<Document>();
+		List<AgreementWorkflow> docList = new ArrayList<AgreementWorkflow>();
 		if (stream != null) {
 			XSSFWorkbook wb = new XSSFWorkbook(stream);
 
 			XSSFSheet sheet = wb.getSheetAt(0);
-			
+
 			for (int i = 1; i <= sheet.getLastRowNum(); i++) {
 
 				XSSFRow row = sheet.getRow(i);
 
 				if (row != null) {
 
-					Document doc = new Document();
+					AgreementWorkflow doc = new AgreementWorkflow();
 
 					for (int j = 0; j < 5; j++) {
 						XSSFCell cell = row.getCell(j);
 
-						int colNum = cell.getColumnIndex();
+						if (cell != null) {
+							int colNum = cell.getColumnIndex();
 
-						String s = cell.getRichStringCellValue().getString();
+							int cellType = cell.getCellType();
 
-						switch (colNum) {
-						case 0:
-							doc.setDocName(s);
-							break;
-						case 1:
-							doc.setDocTypeDesc(s);
-							break;
-						case 2:
-							doc.setDocRepoDesc(s);
-							break;
-						case 3:
-							doc.setDocHyperlink(s);
-							break;
-						case 4:
-							doc.setDocLocation(s);
-							break;
+							String s = "";
+
+							switch (cellType) {
+							case XSSFCell.CELL_TYPE_STRING:
+								s = cell.getRichStringCellValue().getString();
+								break;
+							case XSSFCell.CELL_TYPE_NUMERIC:
+								s = String.valueOf(cell.getNumericCellValue());
+								break;
+							case XSSFCell.CELL_TYPE_BOOLEAN:
+								s = String.valueOf(cell.getBooleanCellValue());
+								break;
+							case XSSFCell.CELL_TYPE_FORMULA:
+								s = String.valueOf(cell.getCellFormula());
+								break;
+							case XSSFCell.CELL_TYPE_ERROR:
+								s = cell.getErrorCellString();
+								break;
+
+							}
+							 
+
+							//String s = cell.getStringCellValue(); // cell.getRichStringCellValue().getString();
+
+							switch (colNum) {
+							case 0:
+								doc.setAgreementId(s);
+								System.out.println("###### agreemen id "+s);
+								break;
+							case 1:
+								doc.setAgreementTypeDesc(s);
+								System.out.println("###### agreemen type "+s);
+								break;
+							case 2:
+								doc.setLob(s);
+								System.out.println("###### lob "+s);
+								break;
+							case 3:
+								doc.setWfStatusDesc(DocumentWorkflowToolUtility.isEmpty(s) ? "New" : s);
+								System.out.println("###### status id "+s);
+								break;
+							case 4:
+								doc.setAssignedTo(s);
+								System.out.println("###### assigned to "+s);
+								break;
+							}
+
 						}
-
+						
 					}
 					docList.add(doc);
 				}
 
 			}
 		}
-		
+
 		return docList;
 	}
+	
+	/* (non-Javadoc)
+	 * @see com.myorg.tools.documentworkflow.rest.resources.DocumentAdminService#getTemplate()
+	 */
+	@Override
+	public Response getDocUploadTemplate() {
+		
+		try {
+			List<AgreementType> agrTypList = documentAdminDAO.populateAgreementTypes();
+			ExcelUtil util = new ExcelUtil();
+			XSSFWorkbook wb = util.generateDocUploadTemplate(agrTypList);
+			
+			File file = new File(this.getAppConfig().getTempFileLocation()+"/AgreementUploadTemplate"+System.currentTimeMillis()+".xlsx");
+			
+			FileOutputStream baos = new FileOutputStream(file);
+			wb.write(baos);
+			baos.close();			
+			
+			return Response.ok(file).header("Content-Disposition", "attachment; filename=\"AgreementUploadTemplate.xlsx\"").build();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return Response.status(404).entity("Template Not Available: ").type("text/plain").build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(404).entity("Template Not Available: ").type("text/plain").build();
+		}
+		
+	}
+	
+	/* (non-Javadoc)
+	 * @see com.myorg.tools.documentworkflow.rest.resources.DocumentAdminService#getTemplate()
+	 */
+	@Override
+	public Response getErrTypeUploadTemplate() {
+		
+		try {
+			List<AgreementErrorType> agrTypList = documentAdminDAO.populateErrorTypes();
+			ExcelUtil util = new ExcelUtil();
+			XSSFWorkbook wb = util.generateErrTypeUploadTemplate(agrTypList);
+			
+			File file = new File(this.getAppConfig().getTempFileLocation()+"/ErrorTypeUploadTemplate"+System.currentTimeMillis()+".xlsx");
+			
+			FileOutputStream baos = new FileOutputStream(file);
+			wb.write(baos);
+			baos.close();			
+			
+			return Response.ok(file).header("Content-Disposition", "attachment; filename=\"ErrorTypeUploadTemplate.xlsx\"").build();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return Response.status(404).entity("Template Not Available: ").type("text/plain").build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(404).entity("Template Not Available: ").type("text/plain").build();
+		}
+		
+	}	
 
 	/* (non-Javadoc)
 	 * @see com.myorg.tools.documentworkflow.rest.resources.DocumentAdminService#getTemplate()

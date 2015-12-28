@@ -2,16 +2,23 @@ package com.myorg.tools.documentworkflow.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 public class DocWkflwProcess implements Serializable{
+	
+	private static final long serialVersionUID = 1518388687498835566L;
 	
 	private Integer agreementId;
 	
 	private Integer agreementTypeCode;
 	
+	private String agreementTypeDesc;
+	
 	private String lob;
 	
 	private Integer statusCode;
+	
+	private String statusDescription;
 	
 	private String createdBy;
 	
@@ -22,6 +29,13 @@ public class DocWkflwProcess implements Serializable{
 	private String lastUpdatedBy;
 	
 	private Date lastUpdationDate;
+	
+	private String makerComments;
+	private String checkerComments;
+	private String smeComments;
+	private Integer errorReasonCd;
+	private String errorReason;
+	
 
 	public Integer getAgreementId() {
 		return agreementId;
@@ -93,6 +107,62 @@ public class DocWkflwProcess implements Serializable{
 
 	public void setLastUpdationDate(Date lastUpdationDate) {
 		this.lastUpdationDate = lastUpdationDate;
+	}
+
+	public String getAgreementTypeDesc() {
+		return agreementTypeDesc;
+	}
+
+	public void setAgreementTypeDesc(String agreementTypeDesc) {
+		this.agreementTypeDesc = agreementTypeDesc;
+	}
+
+	public String getStatusDescription() {
+		return statusDescription;
+	}
+
+	public void setStatusDescription(String statusDescription) {
+		this.statusDescription = statusDescription;
+	}
+
+	public String getMakerComments() {
+		return makerComments;
+	}
+
+	public void setMakerComments(String makerComments) {
+		this.makerComments = makerComments;
+	}
+
+	public String getCheckerComments() {
+		return checkerComments;
+	}
+
+	public void setCheckerComments(String checkerComments) {
+		this.checkerComments = checkerComments;
+	}
+
+	public String getSmeComments() {
+		return smeComments;
+	}
+
+	public void setSmeComments(String smeComments) {
+		this.smeComments = smeComments;
+	}
+
+	public Integer getErrorReasonCd() {
+		return errorReasonCd;
+	}
+
+	public void setErrorReasonCd(Integer errorReasonCd) {
+		this.errorReasonCd = errorReasonCd;
+	}
+
+	public String getErrorReason() {
+		return errorReason;
+	}
+
+	public void setErrorReason(String errorReason) {
+		this.errorReason = errorReason;
 	}
 	
 	

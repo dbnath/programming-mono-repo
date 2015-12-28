@@ -276,10 +276,24 @@ public class DocumentWorkflowDAOImpl extends BaseJDBCTemplate implements Documen
 		List <DocWkflwProcess> docList = null;
 		if(documentDTO.getUser() != null){
 			String userName = documentDTO.getUser().getUserName();
-		    String SQL = DocumentWorkflowToolConstant.FETCH_MAKER_DOCS_SQL;
+		    String SQL = DocumentWorkflowToolConstant.FETCH_AGREEMENTS_SQL;
 		    Object[] inputParameters = new Object[]{userName};
 		    DocWkflwMapper mapper = new DocWkflwMapper();
 		    docList = this.getJdbcTemplateObject().query(SQL, inputParameters, mapper);
+		    
+		    //FIXME This is for demo purpose only
+		    if(!DocumentWorkflowToolUtility.isEmptyList(docList)){
+		    	
+		    	for(int i=0; i< docList.size(); i++){
+		    		DocWkflwProcess doc = docList.get(i);
+		    		doc.setMakerComments("I am a MAKER");
+		    		/*doc.setCheckerComments("I am a CHECKER");
+		    		doc.setSmeComments("I am Onshore SME");
+		    		doc.setErrorReasonCd(1);
+		    		doc.setErrorReason("Trade Agreement");*/
+		    	}
+		    	
+		    }
 		    documentDTO.setDocList(docList);
 		}
 		return documentDTO;
@@ -302,10 +316,27 @@ public class DocumentWorkflowDAOImpl extends BaseJDBCTemplate implements Documen
 		List <DocWkflwProcess> docList = null;
 		if(documentDTO.getUser() != null){
 			String userName = documentDTO.getUser().getUserName();
-		    String SQL = DocumentWorkflowToolConstant.FETCH_CHECKER_DOCS_SQL;
+		    String SQL = DocumentWorkflowToolConstant.FETCH_AGREEMENTS_SQL;
 		    Object[] inputParameters = new Object[]{userName};
 		    DocWkflwMapper mapper = new DocWkflwMapper();
 		    docList = this.getJdbcTemplateObject().query(SQL, inputParameters, mapper);
+		    
+		    
+		    //FIXME This is for demo purpose only
+		    if(!DocumentWorkflowToolUtility.isEmptyList(docList)){
+		    	
+		    	for(int i=0; i< docList.size(); i++){
+		    		DocWkflwProcess doc = docList.get(i);
+		    		doc.setMakerComments("I am a MAKER");
+		    		doc.setCheckerComments("I am a CHECKER");
+		    		//doc.setSmeComments("I am Onshore SME");
+		    		doc.setErrorReasonCd(1);
+		    		doc.setErrorReason("Trade Agreement");
+		    	}
+		    	
+		    }
+		    
+		    
 		    documentDTO.setDocList(docList);
 				
 		}
@@ -328,10 +359,25 @@ public class DocumentWorkflowDAOImpl extends BaseJDBCTemplate implements Documen
 	public DocumentDTO getDocumentsForSME(DocumentDTO documentDTO) throws SQLException, Exception {
 		List <DocWkflwProcess> docList = null;
 		String docStatus = documentDTO.getDocStatus();
-	    String SQL = DocumentWorkflowToolConstant.FETCH_ONLINE_SME_DOCS_SQL;
+	    String SQL = DocumentWorkflowToolConstant.FETCH_AGREEMENTS_SQL;
 	    Object[] inputParameters = new Object[]{docStatus};
 	    DocWkflwMapper mapper = new DocWkflwMapper();
 	    docList = this.getJdbcTemplateObject().query(SQL, inputParameters, mapper);
+	    
+	    //FIXME This is for demo purpose only
+	    if(!DocumentWorkflowToolUtility.isEmptyList(docList)){
+	    	
+	    	for(int i=0; i< docList.size(); i++){
+	    		DocWkflwProcess doc = docList.get(i);
+	    		doc.setMakerComments("I am a MAKER");
+	    		doc.setCheckerComments("I am a CHECKER");
+	    		doc.setSmeComments("I am Onshore SME");
+	    		doc.setErrorReasonCd(1);
+	    		doc.setErrorReason("Trade Agreement");
+	    	}
+	    	
+	    }	    
+	    
 	    documentDTO.setDocList(docList);
 		return documentDTO;
 	}

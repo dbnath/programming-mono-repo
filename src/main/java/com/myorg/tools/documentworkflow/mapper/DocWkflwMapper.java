@@ -14,7 +14,9 @@ public class DocWkflwMapper implements RowMapper<DocWkflwProcess> {
 		if (!DocumentWorkflowToolUtility.isEmpty(rs)) {
 			docWorkflow.setAgreementId(rs.getInt("ID_AGRMT"));
 			docWorkflow.setAgreementTypeCode(rs.getInt("ID_AGREEMENT_TYPE"));
+			docWorkflow.setAgreementTypeDesc(rs.getString("TX_AGREEMENT_TYPE"));
 			docWorkflow.setStatusCode(rs.getInt("ID_WF_STATUS"));
+			docWorkflow.setStatusDescription(rs.getString("TX_WF_STATUS"));
 			docWorkflow.setLob(rs.getString("LOB"));
 		    docWorkflow.setAssignedTo(rs.getString("ASSIGNED_TO"));
 		    docWorkflow.setCreatedBy(rs.getString("CREATED_BY"));
