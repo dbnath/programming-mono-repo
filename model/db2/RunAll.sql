@@ -6,3 +6,4 @@
 \. D:\Account\Docflowtool\trunk\model\db2\INS_USER.sql
 \. D:\Account\Docflowtool\trunk\model\db2\INS_USER_ROLE_MAP.sql
 \. D:\Account\Docflowtool\trunk\model\db2\INS_ROLE_STATUS_MAPPING.sql
+\. D:\Account\Docflowtool\trunk\model\db2\AddAgreement.sql

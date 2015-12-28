@@ -184,8 +184,8 @@ CREATE TABLE WF_STATUS
 	ID_WF_STATUS int NOT NULL,
 	NM_WF_STATUS varchar(25),
 	TX_WF_STATUS varchar(250),
-	IS_CLOCK_START char(1),
-	IS_CLOCK_STOP char(1),
+	IS_CLOCK_START char(1) DEFAULT 'N',
+	IS_CLOCK_STOP char(1) DEFAULT 'N',
 	PRIMARY KEY (ID_WF_STATUS)
 );
 
@@ -201,7 +201,7 @@ CREATE TABLE ERR_REASON
 CREATE TABLE WF_PROCESS
 (
 	-- Agreement ID
-	ID_AGRMT bigint NOT NULL COMMENT 'Agreement ID',
+	ID_AGRMT varchar(20) NOT NULL COMMENT 'Agreement ID',
 	-- Agreement Type
 	ID_AGREEMENT_TYPE int NOT NULL COMMENT 'Agreement Type',
 	-- LOB
@@ -225,7 +225,7 @@ CREATE TABLE WF_PROCESS
 CREATE TABLE WF_PROCESS_AUDIT
 (
 	-- Agreement ID
-	ID_AGRMT bigint NOT NULL COMMENT 'Agreement ID',
+	ID_AGRMT varchar(20) NOT NULL COMMENT 'Agreement ID',
 	-- Version ID
 	ID_VER int NOT NULL COMMENT 'Version Id',
 	-- Agreement Type
@@ -250,26 +250,26 @@ CREATE TABLE WF_PROCESS_AUDIT
 CREATE TABLE WF_COMMENT
 (
 	-- Agreement ID
-	ID_AGRMT bigint NOT NULL COMMENT 'Agreement ID',
+	ID_AGRMT varchar(20) NOT NULL COMMENT 'Agreement ID',
 	-- User Comments
-	COMMENTS varchar(255) NULL COMMENT 'User Comments',
+	COMMENTS varchar(1000) NULL COMMENT 'User Comments',
 	-- User Role
 	ID_ROLE int NOT NULL COMMENT 'User Role' ,
 	-- Error REason
-	ID_ERR_REASON int NOT NULL COMMENT 'Error Reason',
+	ID_ERR_REASON int NULL COMMENT 'Error Reason',
 	-- Workflow Status ID
 	ID_WF_STATUS int COMMENT 'Workflow Status ID',
 	-- Last Updated by
 	LAST_UPDATED_BY varchar(10) COMMENT 'Last Updated by',
 	-- Last Updated Timestamp
 	LAST_UPDATE_DT datetime COMMENT 'Last Updated Timestamp',
-	PRIMARY KEY (ID_AGRMT)
+	--PRIMARY KEY (ID_AGRMT)
 );
 
 CREATE TABLE WF_COMMENT_AUDIT
 (
 	-- Agreement ID
-	ID_AGRMT bigint NOT NULL COMMENT 'Agreement ID',
+	ID_AGRMT varchar(20) NOT NULL COMMENT 'Agreement ID',
 	-- Version ID
 	ID_VER int NOT NULL COMMENT 'Version Id',	
 	-- User Comments
@@ -277,7 +277,7 @@ CREATE TABLE WF_COMMENT_AUDIT
 	-- User Role
 	ID_ROLE int NOT NULL COMMENT 'User Role' ,
 	-- Error REason
-	ID_ERR_REASON int NOT NULL COMMENT 'Error Reason',
+	ID_ERR_REASON int NULL COMMENT 'Error Reason',
 	-- Workflow Status ID
 	ID_WF_STATUS int COMMENT 'Workflow Status ID',
 	-- Last Updated by
