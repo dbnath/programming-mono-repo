@@ -30,6 +30,10 @@ var app = angular.module('legalrpf', [
         url : '/adminHome/:name',     
         controller : 'adminCtrl as ahc',
         templateUrl : 'static/app/pages/admin/adminHome.html'
+    }).state('adminUpdateAgreement',{
+        url : '/adminUpdateAgreement/:name',     
+        controller : 'adminUpdateAgreementCtrl as admupdctrl',
+        templateUrl : 'static/app/pages/admin/updateAgreement.html'
     })
   }).run(function($rootScope) {
     	$rootScope.selectedUserRole = {

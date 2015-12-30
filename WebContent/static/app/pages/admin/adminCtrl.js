@@ -1,5 +1,5 @@
 app.controller("adminCtrl",['$stateParams','service','$scope','$rootScope','$templateCache','$log','uiGridConstants',"$filter","ngDialog",function($stateParams,service,$scope,$rootScope,$templateCache,$log,uiGridConstants,$filter,ngDialog){
-  console.log("Inside Home controller");
+  console.log("Inside Admin Home controller");
   var home = this;
   $rootScope.theme = 'ngdialog-theme-plain';
   home.userId = $rootScope.selectedUserRole.userId;
@@ -34,7 +34,13 @@ app.controller("adminCtrl",['$stateParams','service','$scope','$rootScope','$tem
 	home.logout = function() {
 		  service.logout().then(function(obj){
 			  if(obj.status == 200){
-				  $window.location.href = '#/login'
+				  $rootScope.selectedUserRole = {
+					userId : null,
+					userName : null,
+					selectedRoleId : null,
+					selectedRoleName : null
+				  };
+				  window.location.href = '#/logout';
 			  } else {
 				   	 ngDialog.open({
     	                 template: 'firstDialogId',
@@ -54,10 +60,7 @@ app.controller("adminCtrl",['$stateParams','service','$scope','$rootScope','$tem
 		if(home.userId == null) {
 			window.location.href = '#/login';
 		}
-		else {
-			home.refreshGrid(obj);
-			home.setupMenu();
-		}
+		
 	};
 
   
