@@ -218,6 +218,7 @@ CREATE TABLE WF_PROCESS
 	LAST_UPDATED_BY varchar(10) COMMENT 'Last Updated by',
 	-- Last Updated Timestamp
 	LAST_UPDATE_DT datetime COMMENT 'Last Updated Timestamp',
+	ID_ROLE int,
 	PRIMARY KEY (ID_AGRMT)
 );
 
@@ -244,10 +245,11 @@ CREATE TABLE WF_PROCESS_AUDIT
 	LAST_UPDATED_BY varchar(10) COMMENT 'Last Updated by',
 	-- Last Updated Timestamp
 	LAST_UPDATE_DT datetime COMMENT 'Last Updated Timestamp',
+	ID_ROLE int,
 	PRIMARY KEY (ID_AGRMT,ID_VER)
 );
 
-CREATE TABLE WF_COMMENT
+/*CREATE TABLE WF_COMMENT
 (
 	-- Agreement ID
 	ID_AGRMT varchar(20) NOT NULL COMMENT 'Agreement ID',
@@ -264,7 +266,7 @@ CREATE TABLE WF_COMMENT
 	-- Last Updated Timestamp
 	LAST_UPDATE_DT datetime COMMENT 'Last Updated Timestamp',
 	--PRIMARY KEY (ID_AGRMT)
-);
+);*/
 
 CREATE TABLE WF_COMMENT_AUDIT
 (

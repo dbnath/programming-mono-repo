@@ -11,6 +11,7 @@ import javax.ws.rs.core.Response;
 import com.myorg.tools.documentworkflow.constant.Constants;
 import com.myorg.tools.documentworkflow.dao.DocumentWorkflowDAO;
 import com.myorg.tools.documentworkflow.dto.DocumentDTO;
+import com.myorg.tools.documentworkflow.model.DocWkflwProcess;
 import com.myorg.tools.documentworkflow.model.DocumentWorkflow;
 import com.myorg.tools.documentworkflow.model.DocumentWorkflowDetail;
 import com.myorg.tools.documentworkflow.model.DocumentWorkflowProcess;
@@ -135,7 +136,7 @@ public class DocumentWorkflowServiceImpl extends BaseResource implements Documen
 			e.printStackTrace();
 			return Response.serverError().build();
 		}
-	}*/
+	}
 
 	public Response assignDocumentsTo(List<Integer> docIds) {
 		try {
@@ -165,7 +166,7 @@ public class DocumentWorkflowServiceImpl extends BaseResource implements Documen
 			e.printStackTrace();
 			return Response.serverError().build();
 		}
-	}
+	}*/
 
 	@Override
 	public Response getDocumentsForAllMakers(DocumentDTO documentDTO) {
@@ -242,5 +243,74 @@ public class DocumentWorkflowServiceImpl extends BaseResource implements Documen
 	@Override
 	public String ping() {
 		return "Success";
+	}
+
+	@Override
+	public Response startProcess(DocumentDTO documentDTO) {
+		Boolean bool = null;
+		try {
+			//FIXME Grab logged in User id
+			bool = documentDAO.startProcess(documentDTO);
+			if(bool == Boolean.TRUE){
+				DocumentWorkflowToolUtility.setResponse(documentDTO, Constants.SUCCESS_CODE, Constants.SUCCESS_MESSAGE);
+			}else {
+				DocumentWorkflowToolUtility.setResponse(documentDTO, Constants.FAILURE_CODE, "Failure");
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			DocumentWorkflowToolUtility.setResponse(documentDTO, Constants.FAILURE_CODE, e.getMessage());
+		}
+		return Response.ok(documentDTO).build();
+	}
+
+	@Override
+	public Response completeProcess(DocumentDTO documentDTO) {
+		Boolean bool = null;
+		try {
+			//FIXME Grab logged in User id
+			bool = documentDAO.completeProcess(documentDTO);
+			if(bool == Boolean.TRUE){
+				DocumentWorkflowToolUtility.setResponse(documentDTO, Constants.SUCCESS_CODE, Constants.SUCCESS_MESSAGE);
+			}else {
+				DocumentWorkflowToolUtility.setResponse(documentDTO, Constants.FAILURE_CODE, "Failure");
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			DocumentWorkflowToolUtility.setResponse(documentDTO, Constants.FAILURE_CODE, e.getMessage());
+		}
+		return Response.ok(documentDTO).build();
+	}
+
+	@Override
+	public Response holdProcess(DocumentDTO documentDTO) {
+		Boolean bool = null;
+		try {
+			bool = documentDAO.holdProcess(documentDTO);
+			if(bool == Boolean.TRUE){
+				DocumentWorkflowToolUtility.setResponse(documentDTO, Constants.SUCCESS_CODE, Constants.SUCCESS_MESSAGE);
+			}else {
+				DocumentWorkflowToolUtility.setResponse(documentDTO, Constants.FAILURE_CODE, "Failure");
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			DocumentWorkflowToolUtility.setResponse(documentDTO, Constants.FAILURE_CODE, e.getMessage());
+		}
+		return Response.ok(documentDTO).build();
+	}
+	
+	public Response assignWorkflows(List<Integer> docIds) {
+		try {
+			List<DocWkflwProcess> docs = documentDAO.fetchDocumentWorkflows(docIds);
+			User user = getLoggedInUser();
+			documentDAO.assignWorkflow(docs,user);
+			return Response.ok().entity(Boolean.TRUE).build();
+		
+          } catch (Exception e) {
+			e.printStackTrace();
+			return Response.serverError().build();
+		}
 	}
 }

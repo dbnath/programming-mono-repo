@@ -3,15 +3,11 @@ package com.myorg.tools.documentworkflow.dao;
 import java.sql.SQLException;
 import java.util.List;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
 import com.myorg.tools.documentworkflow.dto.DocumentDTO;
+import com.myorg.tools.documentworkflow.model.DocWkflwProcess;
 import com.myorg.tools.documentworkflow.model.DocumentWorkflow;
 import com.myorg.tools.documentworkflow.model.DocumentWorkflowDetail;
+import com.myorg.tools.documentworkflow.model.User;
 
 public interface DocumentWorkflowDAO {
 	
@@ -43,7 +39,7 @@ public interface DocumentWorkflowDAO {
 	  * @param docIds
 	  * @return true if assignment can be done successfully, else false
 	  */
-	 public List<DocumentWorkflow> fetchDocumentWorkflows(List<Integer> docIds) throws SQLException, Exception;
+	 public List<DocWkflwProcess> fetchDocumentWorkflows(List<Integer> docIds) throws SQLException, Exception;
 	 
 	 /**
 	  * 
@@ -51,7 +47,7 @@ public interface DocumentWorkflowDAO {
 	  * @param docIds
 	  * @return true if assignment can be done successfully, else false
 	  */
-	 public boolean assignWorkflow(List<DocumentWorkflow> docIds) throws SQLException, Exception;
+	 public boolean assignWorkflow(List<DocWkflwProcess> docIds, User user) throws SQLException, Exception;
 	 
 	 public DocumentDTO getDocumentsForAllMakers(DocumentDTO documentDTO) throws SQLException, Exception;
 	   
@@ -64,5 +60,11 @@ public interface DocumentWorkflowDAO {
 	 public DocumentDTO getDocumentsForAllSMEs(DocumentDTO documentDTO) throws SQLException, Exception;
 
 	 public DocumentDTO getDocumentsForSME(DocumentDTO documentDTO) throws SQLException, Exception;
+	 
+	 public Boolean startProcess(DocumentDTO documentDTO) throws SQLException, Exception;
+	 
+	 public Boolean completeProcess(DocumentDTO documentDTO) throws SQLException, Exception;
+	 
+	 public Boolean holdProcess(DocumentDTO documentDTO) throws SQLException, Exception;
 
 }

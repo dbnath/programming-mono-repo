@@ -4,10 +4,9 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.myorg.tools.documentworkflow.model.DocWkflwProcess;
-import com.myorg.tools.documentworkflow.model.DocumentWorkflow;
 import com.myorg.tools.documentworkflow.model.User;
 
-public class DocumentDTO extends BaseDTO implements Serializable {
+public class DocumentDTO extends BaseDTO implements Serializable { 
 	
 	/**
 	 * 
@@ -16,7 +15,17 @@ public class DocumentDTO extends BaseDTO implements Serializable {
 
 	private User user;
 	
+	private Integer statusCode;
+	
+	private Integer agreementId;
+	
 	private String docStatus;
+	
+	private String comment;
+	
+	private Integer errorReasonCode;
+	
+	private Integer roleId;
 	
 	private List<DocWkflwProcess> docList;
 
@@ -28,14 +37,6 @@ public class DocumentDTO extends BaseDTO implements Serializable {
 		this.user = user;
 	}
 
-	public String getDocStatus() {
-		return docStatus;
-	}
-
-	public void setDocStatus(String docStatus) {
-		this.docStatus = docStatus;
-	}
-
 	public List<DocWkflwProcess> getDocList() {
 		return docList;
 	}
@@ -44,5 +45,52 @@ public class DocumentDTO extends BaseDTO implements Serializable {
 		this.docList = docList;
 	}
 
+	public Integer getStatusCode() {
+		return statusCode;
+	}
+
+	public void setStatusCode(Integer statusCode) {
+		this.statusCode = statusCode;
+	}
+
+	public Integer getAgreementId() {
+		return agreementId;
+	}
+
+	public void setAgreementId(Integer agreementId) {
+		this.agreementId = agreementId;
+	}
+
+	public String getDocStatus() {
+		return docStatus;
+	}
+
+	public void setDocStatus(String docStatus) {
+		this.docStatus = docStatus;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+
+	public Integer getErrorReasonCode() {
+		return errorReasonCode;
+	}
+
+	public void setErrorReasonCode(Integer errorReasonCode) {
+		this.errorReasonCode = errorReasonCode;
+	}
+
+	public Integer getRoleId() {
+		return roleId;
+	}
+
+	public void setRoleId(Integer roleId) {
+		this.roleId = roleId;
+	}
 	
 }

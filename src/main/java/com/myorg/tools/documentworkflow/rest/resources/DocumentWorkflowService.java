@@ -52,10 +52,10 @@ public interface DocumentWorkflowService {
 
 	
 	   @POST
-	   @Path("/assigndocto")
+	   @Path("/assignWorkflows")
 	   @Consumes(MediaType.APPLICATION_JSON)
 	   @Produces(MediaType.APPLICATION_JSON)	   
-	   public Response assignDocumentsTo(List<Integer> docIds);
+	   public Response assignWorkflows(List<Integer> docIds);
 	   
 	   @POST
 	   @Path("/getDocumentsForAllMakers")
@@ -94,5 +94,23 @@ public interface DocumentWorkflowService {
 	   @Consumes(MediaType.APPLICATION_JSON)
 	   @Produces(MediaType.APPLICATION_JSON)	   
 	   public DocumentDTO getDocumentsForSME(DocumentDTO documentDTO);
+	   
+	   @POST
+	   @Path("/startProcess")
+	   @Consumes(MediaType.APPLICATION_JSON)
+	   @Produces(MediaType.APPLICATION_JSON)	   
+	   public Response startProcess(DocumentDTO documentDTO);
+	   
+	   @POST
+	   @Path("/completeProcess")
+	   @Consumes(MediaType.APPLICATION_JSON)
+	   @Produces(MediaType.APPLICATION_JSON)	   
+	   public Response completeProcess(DocumentDTO documentDTO);
+	   
+	   @POST
+	   @Path("/holdProcess")
+	   @Consumes(MediaType.APPLICATION_JSON)
+	   @Produces(MediaType.APPLICATION_JSON)	   
+	   public Response holdProcess(DocumentDTO documentDTO);
 
 }

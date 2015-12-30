@@ -2,6 +2,8 @@ package com.myorg.tools.documentworkflow.dao.impl;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -13,12 +15,15 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
 import com.myorg.tools.documentworkflow.constant.DocumentWorkflowToolConstant;
 import com.myorg.tools.documentworkflow.dao.DocumentWorkflowDAO;
 import com.myorg.tools.documentworkflow.dto.DocumentDTO;
-import com.myorg.tools.documentworkflow.mapper.DocWkflwMapper;
+import com.myorg.tools.documentworkflow.mapper.CheckerAgreementWorkflowMapper;
+import com.myorg.tools.documentworkflow.mapper.MakerAgreementWkflwMapper;
+import com.myorg.tools.documentworkflow.mapper.OnshoreSMEAgreementWorkflowMapper;
 import com.myorg.tools.documentworkflow.model.DocWkflwProcess;
 import com.myorg.tools.documentworkflow.model.Document;
 import com.myorg.tools.documentworkflow.model.DocumentTagRelationship;
 import com.myorg.tools.documentworkflow.model.DocumentWorkflow;
 import com.myorg.tools.documentworkflow.model.DocumentWorkflowDetail;
+import com.myorg.tools.documentworkflow.model.User;
 import com.myorg.tools.documentworkflow.util.DocumentWorkflowToolUtility;
 
 public class DocumentWorkflowDAOImpl extends BaseJDBCTemplate implements DocumentWorkflowDAO {
@@ -120,7 +125,7 @@ public class DocumentWorkflowDAOImpl extends BaseJDBCTemplate implements Documen
 				 if (! DocumentWorkflowToolUtility.isEmpty(docDetailObj.getTagOverrideReason()) || ! DocumentWorkflowToolUtility.isEmpty(docDetailObj.getTargetDocLocation())) {
 					 submitDocWorkflowDetail(jdbcTemplate, docDetailObj, status, isFinalSubmit);
 			 	 }
-				 submitWorkflowProcess(jdbcTemplate, docObj, status, isFinalSubmit);
+				 //assignWorkflowProcess(jdbcTemplate, docObj, status, isFinalSubmit);
 				 this.getTransactionManager().commit(status);
 				 isSubmitSuccess = true;
 			} catch (SQLException e) {
@@ -194,21 +199,7 @@ public class DocumentWorkflowDAOImpl extends BaseJDBCTemplate implements Documen
 		 }
 	 }
 	 
-	 private void submitWorkflowProcess(JdbcTemplate jdbcTemplate, DocumentWorkflow docObj, TransactionStatus status, Boolean isFinalSubmit) throws SQLException, Exception {
-		 String DEL_SQL = DocumentWorkflowToolConstant.DEL_DOC_WFL_PROCESS_SQL;
-		 jdbcTemplate.update(DEL_SQL, docObj.getDocId());
-		 String INS_SQL = DocumentWorkflowToolConstant.INS_DOC_WFL_PROCESS_SQL;
-		 jdbcTemplate.update(INS_SQL, docObj.getDocId(), docObj.getWfStatusId(), docObj.getIsReworked(), docObj.getAssignedTo(), docObj.getAssignedDt(), docObj.getUserRole(), docObj.getLastUpdatedBy(), docObj.getLastUpdateDt());
-		 if(isFinalSubmit){
-			 String SEL_VER_AUDIT_SQL = DocumentWorkflowToolConstant.SEL_VER_DOC_WFL_PROCESS_AUDIT_SQL;
-			 Integer versionId = jdbcTemplate.queryForObject(SEL_VER_AUDIT_SQL, Integer.class, docObj.getDocId());
-			 if(versionId == null){
-				 versionId = 0;
-			 }			 
-			 String INS_AUDIT_SQL = DocumentWorkflowToolConstant.INS_DOC_WFL_PROCESS_AUDIT_SQL;
-			 jdbcTemplate.update(INS_AUDIT_SQL, docObj.getDocId(), versionId+1, docObj.getWfStatusId(), docObj.getIsReworked(), docObj.getAssignedTo(), docObj.getAssignedDt(), docObj.getUserRole(), docObj.getLastUpdatedBy(), docObj.getLastUpdateDt());
-		 }
-	 }
+
 	 
 	 /*private DocWorkflowSubmitStatus fetchModifiedDocWorkflowProcess(Integer docId) throws SQLException, Exception {
 		 DocWorkflowSubmitStatus status =  null;
@@ -221,13 +212,13 @@ public class DocumentWorkflowDAOImpl extends BaseJDBCTemplate implements Documen
 		 return status;
 	 }*/
 	 
-	 public List<DocumentWorkflow> fetchDocumentWorkflows(List<Integer> docIds) throws SQLException, Exception {
+	 public List<DocWkflwProcess> fetchDocumentWorkflows(List<Integer> docIds) throws SQLException, Exception {
 		 String SQL = DocumentWorkflowToolConstant.FETCH_DOC_WFL_SQL + "("+DocumentWorkflowToolUtility.joinString(docIds, "?")+")";
-		 List<DocumentWorkflow> docWorkflowList = null;
+		 List<DocWkflwProcess> docWorkflowList = null;
 		 if (! DocumentWorkflowToolUtility.isEmptyList(docIds)){
-			 docWorkflowList = new ArrayList<DocumentWorkflow>();
+			 docWorkflowList = new ArrayList<DocWkflwProcess>();
 			 Object[] documentIds = docIds.toArray();
-			 docWorkflowList = this.getJdbcTemplateObject().query(SQL, documentIds, new DocWorkflowMapper());
+			 docWorkflowList = this.getJdbcTemplateObject().query(SQL, documentIds, new MakerAgreementWkflwMapper());
 		 }
 		 return docWorkflowList;
 	 }
@@ -238,16 +229,15 @@ public class DocumentWorkflowDAOImpl extends BaseJDBCTemplate implements Documen
 	  * @param docIds
 	  * @return true if assignment can be done successfully, else false
 	  */
-	public boolean assignWorkflow(List<DocumentWorkflow> docIds)	throws Exception {
+	public boolean assignWorkflow(List<DocWkflwProcess> docIds, User user)	throws Exception {
 
 		JdbcTemplate jdbcTemplate = this.getJdbcTemplateObject();
-		System.out.println("###### getTransactionManager "+this.getTransactionManager());
 		TransactionDefinition def = new DefaultTransactionDefinition();
 		TransactionStatus status = this.getTransactionManager().getTransaction(def);
 
 		try {
-			for (DocumentWorkflow doc : docIds) {
-				submitWorkflowProcess(jdbcTemplate, doc, status, true);//Assign Workflow always triggers an audit trail and therefore isFinalSubmit is true
+			for (DocWkflwProcess doc : docIds) {
+				assignWorkflowProcess(jdbcTemplate, doc, status, user);
 			}
 			this.getTransactionManager().commit(status);
 			return Boolean.TRUE;
@@ -265,7 +255,7 @@ public class DocumentWorkflowDAOImpl extends BaseJDBCTemplate implements Documen
 		String docStatus = documentDTO.getDocStatus();
 	    String SQL = DocumentWorkflowToolConstant.FETCH_ALL_MAKERS_DOCS_SQL;
 	    Object[] inputParameters = new Object[]{docStatus};
-	    DocWkflwMapper mapper = new DocWkflwMapper();
+	    MakerAgreementWkflwMapper mapper = new MakerAgreementWkflwMapper();
 	    docList = this.getJdbcTemplateObject().query(SQL, mapper);
 	    documentDTO.setDocList(docList);
 		return documentDTO;
@@ -275,25 +265,11 @@ public class DocumentWorkflowDAOImpl extends BaseJDBCTemplate implements Documen
 	public DocumentDTO getDocumentsForMaker(DocumentDTO documentDTO) throws SQLException, Exception {
 		List <DocWkflwProcess> docList = null;
 		if(documentDTO.getUser() != null){
-			String userName = documentDTO.getUser().getUserName();
-		    String SQL = DocumentWorkflowToolConstant.FETCH_AGREEMENTS_SQL;
-		    Object[] inputParameters = new Object[]{userName};
-		    DocWkflwMapper mapper = new DocWkflwMapper();
+			String userId = documentDTO.getUser().getUserId();
+		    String SQL = DocumentWorkflowToolConstant.FETCH_MAKER_AGREEMENTS_SQL;
+		    Object[] inputParameters = new Object[]{userId};
+		    MakerAgreementWkflwMapper mapper = new MakerAgreementWkflwMapper();
 		    docList = this.getJdbcTemplateObject().query(SQL, inputParameters, mapper);
-		    
-		    //FIXME This is for demo purpose only
-		    if(!DocumentWorkflowToolUtility.isEmptyList(docList)){
-		    	
-		    	for(int i=0; i< docList.size(); i++){
-		    		DocWkflwProcess doc = docList.get(i);
-		    		doc.setMakerComments("I am a MAKER");
-		    		/*doc.setCheckerComments("I am a CHECKER");
-		    		doc.setSmeComments("I am Onshore SME");
-		    		doc.setErrorReasonCd(1);
-		    		doc.setErrorReason("Trade Agreement");*/
-		    	}
-		    	
-		    }
 		    documentDTO.setDocList(docList);
 		}
 		return documentDTO;
@@ -302,11 +278,9 @@ public class DocumentWorkflowDAOImpl extends BaseJDBCTemplate implements Documen
 	@Override
 	public DocumentDTO getDocumentsForAllCheckers(DocumentDTO documentDTO) throws SQLException, Exception {
 		List <DocWkflwProcess> docList = null;
-		String docStatus = documentDTO.getDocStatus();
-	    String SQL = DocumentWorkflowToolConstant.FETCH_ALL_CHECKERS_DOCS_SQL;
-	    Object[] inputParameters = new Object[]{docStatus};
-	    DocWkflwMapper mapper = new DocWkflwMapper();
-	    docList = this.getJdbcTemplateObject().query(SQL, inputParameters, mapper);
+	    String SQL = DocumentWorkflowToolConstant.FETCH_ALL_CHECKERS_AGREEMENT_SQL;
+	    CheckerAgreementWorkflowMapper mapper = new CheckerAgreementWorkflowMapper();
+	    docList = this.getJdbcTemplateObject().query(SQL, mapper);
 	    documentDTO.setDocList(docList);
 		return documentDTO;
 	}
@@ -315,28 +289,11 @@ public class DocumentWorkflowDAOImpl extends BaseJDBCTemplate implements Documen
 	public DocumentDTO getDocumentsForChecker(DocumentDTO documentDTO) throws SQLException, Exception {
 		List <DocWkflwProcess> docList = null;
 		if(documentDTO.getUser() != null){
-			String userName = documentDTO.getUser().getUserName();
-		    String SQL = DocumentWorkflowToolConstant.FETCH_AGREEMENTS_SQL;
-		    Object[] inputParameters = new Object[]{userName};
-		    DocWkflwMapper mapper = new DocWkflwMapper();
+			String userId = documentDTO.getUser().getUserId();
+		    String SQL = DocumentWorkflowToolConstant.FETCH_CHECKER_AGREEMENTS_SQL;
+		    Object[] inputParameters = new Object[]{userId};
+		    CheckerAgreementWorkflowMapper mapper = new CheckerAgreementWorkflowMapper();
 		    docList = this.getJdbcTemplateObject().query(SQL, inputParameters, mapper);
-		    
-		    
-		    //FIXME This is for demo purpose only
-		    if(!DocumentWorkflowToolUtility.isEmptyList(docList)){
-		    	
-		    	for(int i=0; i< docList.size(); i++){
-		    		DocWkflwProcess doc = docList.get(i);
-		    		doc.setMakerComments("I am a MAKER");
-		    		doc.setCheckerComments("I am a CHECKER");
-		    		//doc.setSmeComments("I am Onshore SME");
-		    		doc.setErrorReasonCd(1);
-		    		doc.setErrorReason("Trade Agreement");
-		    	}
-		    	
-		    }
-		    
-		    
 		    documentDTO.setDocList(docList);
 				
 		}
@@ -346,11 +303,9 @@ public class DocumentWorkflowDAOImpl extends BaseJDBCTemplate implements Documen
 	@Override
 	public DocumentDTO getDocumentsForAllSMEs(DocumentDTO documentDTO) throws SQLException, Exception {
 		List <DocWkflwProcess> docList = null;
-		String docStatus = documentDTO.getDocStatus();
-	    String SQL = DocumentWorkflowToolConstant.FETCH_ALL_ONLINE_SMES_DOCS_SQL;
-	    Object[] inputParameters = new Object[]{docStatus};
-	    DocWkflwMapper mapper = new DocWkflwMapper();
-	    docList = this.getJdbcTemplateObject().query(SQL, inputParameters, mapper);
+	    String SQL = DocumentWorkflowToolConstant.FETCH_ALL_ONSHORE_SMES_AGREEMENT_SQL;
+	    OnshoreSMEAgreementWorkflowMapper mapper = new OnshoreSMEAgreementWorkflowMapper();
+	    docList = this.getJdbcTemplateObject().query(SQL, mapper);
 	    documentDTO.setDocList(docList);
 		return documentDTO;
 	}
@@ -358,28 +313,167 @@ public class DocumentWorkflowDAOImpl extends BaseJDBCTemplate implements Documen
 	@Override
 	public DocumentDTO getDocumentsForSME(DocumentDTO documentDTO) throws SQLException, Exception {
 		List <DocWkflwProcess> docList = null;
-		String docStatus = documentDTO.getDocStatus();
-	    String SQL = DocumentWorkflowToolConstant.FETCH_AGREEMENTS_SQL;
-	    Object[] inputParameters = new Object[]{docStatus};
-	    DocWkflwMapper mapper = new DocWkflwMapper();
+		String userId = documentDTO.getUser().getUserId();
+	    String SQL = DocumentWorkflowToolConstant.FETCH_ONSHORE_SME_AGREEMENTS_SQL;
+	    Object[] inputParameters = new Object[]{userId};
+	    OnshoreSMEAgreementWorkflowMapper mapper = new OnshoreSMEAgreementWorkflowMapper();
 	    docList = this.getJdbcTemplateObject().query(SQL, inputParameters, mapper);
-	    
-	    //FIXME This is for demo purpose only
-	    if(!DocumentWorkflowToolUtility.isEmptyList(docList)){
-	    	
-	    	for(int i=0; i< docList.size(); i++){
-	    		DocWkflwProcess doc = docList.get(i);
-	    		doc.setMakerComments("I am a MAKER");
-	    		doc.setCheckerComments("I am a CHECKER");
-	    		doc.setSmeComments("I am Onshore SME");
-	    		doc.setErrorReasonCd(1);
-	    		doc.setErrorReason("Trade Agreement");
-	    	}
-	    	
-	    }	    
-	    
 	    documentDTO.setDocList(docList);
 		return documentDTO;
 	}
+
+	@Override
+	public Boolean startProcess(DocumentDTO documentDTO) throws SQLException, Exception {
+		
+		TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
+		TransactionStatus transactionStatus = this.getTransactionManager().getTransaction(transactionDefinition);
+		
+		try {
+			startProcessExecuteQueries(documentDTO);
+			this.getTransactionManager().commit(transactionStatus);
+			return Boolean.TRUE;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			this.getTransactionManager().rollback(transactionStatus);
+			return Boolean.FALSE;
+		}
+		
+	}
+	
+	private void startProcessExecuteQueries(DocumentDTO documentDTO) throws SQLException, Exception { 
+		Integer statusCode = documentDTO.getStatusCode();
+		Integer agreementId = documentDTO.getAgreementId();
+		Integer roleId = documentDTO.getRoleId();
+		String userId = documentDTO.getUser().getUserId();
+		
+		JdbcTemplate jdbcTemplate = this.getJdbcTemplateObject();
+		
+		Date currentDate = Calendar.getInstance().getTime();
+		
+		String UPDATE_STATUS_IN_WKF_PROCESS_SQL = DocumentWorkflowToolConstant.UPDATE_STATUS_IN_WKF_PROCESS_SQL;
+		jdbcTemplate.update(UPDATE_STATUS_IN_WKF_PROCESS_SQL, statusCode, userId, currentDate, agreementId);
+		
+		String SELECT_MAX_ID_VER_FROM_WF_PROCESS_AUDIT_SQL = DocumentWorkflowToolConstant.SELECT_MAX_ID_VER_FROM_WF_PROCESS_AUDIT_SQL;
+		Integer versionId = jdbcTemplate.queryForObject(SELECT_MAX_ID_VER_FROM_WF_PROCESS_AUDIT_SQL, Integer.class, agreementId);
+		
+		System.out.println(" ###### versionId "+versionId);
+		
+		String INSERT_INTO_WKF_PROCESS_AUDIT_SQL = DocumentWorkflowToolConstant.INSERT_INTO_WKF_PROCESS_AUDIT_SQL;
+		jdbcTemplate.update(INSERT_INTO_WKF_PROCESS_AUDIT_SQL, versionId+1, roleId, statusCode, userId, userId, currentDate, agreementId);
+	}
+
+	@Override
+	public Boolean completeProcess(DocumentDTO documentDTO) throws SQLException, Exception {
+		TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
+		TransactionStatus transactionStatus = this.getTransactionManager().getTransaction(transactionDefinition);
+		
+		try {
+			completeProcessExecuteQueries(documentDTO);
+			this.getTransactionManager().commit(transactionStatus);
+			return Boolean.TRUE;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			this.getTransactionManager().rollback(transactionStatus);
+			return Boolean.FALSE;
+		}
+		
+	}
+	
+	private void completeProcessExecuteQueries(DocumentDTO documentDTO) throws SQLException, Exception{
+		Integer statusCode = documentDTO.getStatusCode();
+		Integer agreementId = documentDTO.getAgreementId();
+		Integer roleId = documentDTO.getRoleId(); //Integer.valueOf(documentDTO.getUser().getRoleId());
+		String userId = documentDTO.getUser().getUserId();
+		String comment = documentDTO.getComment();
+		Integer errReasonCode = documentDTO.getErrorReasonCode();
+		Date currentDate = Calendar.getInstance().getTime();
+		
+		JdbcTemplate jdbcTemplate = this.getJdbcTemplateObject();
+		
+		Integer newRoleId = ((roleId==2 && statusCode==18 ) || (roleId==3 && statusCode == 22))?roleId : roleId+1;
+		
+		String UPDATE_STATUS_ASSIGNED_TO_IN_WKF_PROCESS_SQL = DocumentWorkflowToolConstant.UPDATE_STATUS_ASSIGNED_TO_IN_WKF_PROCESS_SQL;
+		jdbcTemplate.update(UPDATE_STATUS_ASSIGNED_TO_IN_WKF_PROCESS_SQL, newRoleId, statusCode, null,userId,currentDate, agreementId);
+		
+		String SELECT_MAX_ID_VER_FROM_WF_PROCESS_AUDIT_SQL = DocumentWorkflowToolConstant.SELECT_MAX_ID_VER_FROM_WF_PROCESS_AUDIT_SQL;
+		Integer versionId = jdbcTemplate.queryForObject(SELECT_MAX_ID_VER_FROM_WF_PROCESS_AUDIT_SQL, Integer.class, agreementId);
+		
+		String INSERT_INTO_WKF_PROCESS_AUDIT_SQL = DocumentWorkflowToolConstant.INSERT_INTO_WKF_PROCESS_AUDIT_SQL;
+		jdbcTemplate.update(INSERT_INTO_WKF_PROCESS_AUDIT_SQL, versionId+1, newRoleId, statusCode, null, userId,currentDate, agreementId);
+		
+		//if (!DocumentWorkflowToolUtility.isEmpty(comment)) {
+			jdbcTemplate.update(DocumentWorkflowToolConstant.INSERT_INTO_WF_COMMENT_AUDIT_SQL, versionId+1, comment, roleId, errReasonCode, statusCode, agreementId);
+		//}
+	}
+
+	@Override
+	public Boolean holdProcess(DocumentDTO documentDTO) throws SQLException, Exception {
+		TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
+		TransactionStatus transactionStatus = this.getTransactionManager().getTransaction(transactionDefinition);
+		
+		try {
+			holdProcessExecuteQueries(documentDTO);
+			this.getTransactionManager().commit(transactionStatus);
+			return Boolean.TRUE;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			this.getTransactionManager().rollback(transactionStatus);
+			return Boolean.FALSE;
+		}
+	}
+	
+	private void holdProcessExecuteQueries(DocumentDTO documentDTO) throws SQLException, Exception{
+		Integer statusCode = documentDTO.getStatusCode();
+		Integer agreementId = documentDTO.getAgreementId();
+		String comment = documentDTO.getComment();
+		Integer errReasonCode = documentDTO.getErrorReasonCode();
+		Integer roleId = documentDTO.getRoleId();
+		String userId = documentDTO.getUser().getUserId();
+		Date currentDate = Calendar.getInstance().getTime();
+		
+		Integer newRoleId = (roleId==3)?roleId : roleId+1;
+		
+		String assignedTo = (roleId==3)?userId : null;
+		
+		JdbcTemplate jdbcTemplate = this.getJdbcTemplateObject();
+		
+		String UPDATE_STATUS_ASSIGNED_TO_IN_WKF_PROCESS_SQL = DocumentWorkflowToolConstant.UPDATE_STATUS_ASSIGNED_TO_IN_WKF_PROCESS_SQL;
+		jdbcTemplate.update(UPDATE_STATUS_ASSIGNED_TO_IN_WKF_PROCESS_SQL, newRoleId, statusCode, assignedTo,userId,currentDate, agreementId);
+		
+		String SELECT_MAX_ID_VER_FROM_WF_PROCESS_AUDIT_SQL = DocumentWorkflowToolConstant.SELECT_MAX_ID_VER_FROM_WF_PROCESS_AUDIT_SQL;
+		Integer versionId = jdbcTemplate.queryForObject(SELECT_MAX_ID_VER_FROM_WF_PROCESS_AUDIT_SQL, Integer.class, agreementId);
+		
+		String INSERT_INTO_WKF_PROCESS_AUDIT_SQL = DocumentWorkflowToolConstant.INSERT_INTO_WKF_PROCESS_AUDIT_SQL;
+		jdbcTemplate.update(INSERT_INTO_WKF_PROCESS_AUDIT_SQL, versionId+1, newRoleId, statusCode, assignedTo, userId,currentDate, agreementId);
+		
+		//if (!DocumentWorkflowToolUtility.isEmpty(comment)) {
+			jdbcTemplate.update(DocumentWorkflowToolConstant.INSERT_INTO_WF_COMMENT_AUDIT_SQL, versionId+1, comment, roleId, errReasonCode, statusCode, agreementId);
+		//}
+	}
+	
+	 private void assignWorkflowProcess(JdbcTemplate jdbcTemplate, DocWkflwProcess docObj, TransactionStatus status, User user) throws SQLException, Exception {
+			Integer statusCode = docObj.getStatusCode();
+			Integer agreementId = docObj.getAgreementId();
+			Integer roleId = Integer.valueOf(user.getRoleId()); //Integer.valueOf(documentDTO.getUser().getRoleId());
+			Date currentDate = Calendar.getInstance().getTime();
+			String userId = user.getUserId();
+			
+			switch(roleId){
+				case 2: statusCode = 16;//FIXME Replace with constants
+				break;
+				case 3: statusCode = 20;
+				break;
+			}
+					
+			String UPDATE_STATUS_ASSIGNED_TO_IN_WKF_PROCESS_SQL = DocumentWorkflowToolConstant.UPDATE_STATUS_ASSIGNED_TO_IN_WKF_PROCESS_SQL;
+			jdbcTemplate.update(UPDATE_STATUS_ASSIGNED_TO_IN_WKF_PROCESS_SQL, roleId, statusCode, userId,userId,currentDate, agreementId);
+			
+			String SELECT_MAX_ID_VER_FROM_WF_PROCESS_AUDIT_SQL = DocumentWorkflowToolConstant.SELECT_MAX_ID_VER_FROM_WF_PROCESS_AUDIT_SQL;
+			Integer versionId = jdbcTemplate.queryForObject(SELECT_MAX_ID_VER_FROM_WF_PROCESS_AUDIT_SQL, Integer.class, agreementId);
+			
+			String INSERT_INTO_WKF_PROCESS_AUDIT_SQL = DocumentWorkflowToolConstant.INSERT_INTO_WKF_PROCESS_AUDIT_SQL;
+			jdbcTemplate.update(INSERT_INTO_WKF_PROCESS_AUDIT_SQL, versionId+1, roleId, statusCode, userId, userId,currentDate, agreementId);
+	
+	 }
 	
 }

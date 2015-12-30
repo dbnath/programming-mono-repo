@@ -30,8 +30,14 @@ public class DocWkflwProcess implements Serializable{
 	
 	private Date lastUpdationDate;
 	
+	private Integer roleId;
+	
 	private String makerComments;
+	private String makerStatus;
+	private Integer makerStatusId;
 	private String checkerComments;
+	private String checkerStatus;
+	private Integer checkerStatusId;
 	private String smeComments;
 	private Integer errorReasonCd;
 	private String errorReason;
@@ -163,6 +169,46 @@ public class DocWkflwProcess implements Serializable{
 
 	public void setErrorReason(String errorReason) {
 		this.errorReason = errorReason;
+	}
+
+	public Integer getRoleId() {
+		return roleId;
+	}
+
+	public void setRoleId(Integer roleId) {
+		this.roleId = roleId;
+	}
+
+	public String getMakerStatus() {
+		return makerStatus;
+	}
+
+	public void setMakerStatus(String makerStatus) {
+		this.makerStatus = makerStatus;
+	}
+
+	public String getCheckerStatus() {
+		return checkerStatus;
+	}
+
+	public void setCheckerStatus(String checkerStatus) {
+		this.checkerStatus = checkerStatus;
+	}
+
+	public Integer getMakerStatusId() {
+		return makerStatusId;
+	}
+
+	public void setMakerStatusId(Integer makerStatusId) {
+		this.makerStatusId = makerStatusId;
+	}
+
+	public Integer getCheckerStatusId() {
+		return checkerStatusId;
+	}
+
+	public void setCheckerStatusId(Integer checkerStatusId) {
+		this.checkerStatusId = checkerStatusId;
 	}
 	
 	

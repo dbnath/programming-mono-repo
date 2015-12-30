@@ -333,7 +333,7 @@ public class DocumentAdminDAOImpl extends BaseJDBCTemplate implements DocumentAd
 		params.add("ID_AGREEMENT_TYPE");
 		params.add("LOB");
 		params.add("ID_WF_STATUS");
-		params.add("ASSIGNED_TO");
+		params.add("IN_ASSIGNED_TO");
 		params.add("CREATED_BY");
 		params.add("CREATED_DT");
 		params.add("LAST_UPDATED_BY");
@@ -346,7 +346,7 @@ public class DocumentAdminDAOImpl extends BaseJDBCTemplate implements DocumentAd
 		in.addValue("ID_AGREEMENT_TYPE", doc.getAgreementTypeId());		
 		in.addValue("LOB", doc.getLob());
 		in.addValue("ID_WF_STATUS", doc.getWfStatusId());
-		in.addValue("ASSIGNED_TO", doc.getAssignedTo());
+		in.addValue("IN_ASSIGNED_TO", doc.getAssignedTo());
 		in.addValue("CREATED_BY", doc.getCreatedBy());
 		in.addValue("CREATED_DT", doc.getCreatedDt());
 		in.addValue("LAST_UPDATED_BY", doc.getLastUpdatedBy());
