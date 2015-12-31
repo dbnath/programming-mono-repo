@@ -503,6 +503,7 @@ landingCtrl.$inject = ['$stateParams','service','$scope','$rootScope','$template
 		  var docIdList = [];
 		  var msg = '';
 		  var validassign = true;
+		  alert('assign Me' + $scope.rows.length);
 		  angular.forEach( $scope.rows, function(row, key) {
 		  	validassign = validateAssignMe(home.roleId, row.entity.wfStatusId);
 		  	if(!validassign) {
@@ -535,7 +536,7 @@ landingCtrl.$inject = ['$stateParams','service','$scope','$rootScope','$template
 	};
 	
 	home.startWork = function(){
-		alert('start work' + $scope.rows.length);
+		alert('start work' + $scope.myrows.length);
 		 
 		  var log = [];
 		  var docIdList = [];
@@ -554,10 +555,10 @@ landingCtrl.$inject = ['$stateParams','service','$scope','$rootScope','$template
 	
 	function validatework() {
 		var msg = '';
-		if($scope.rows.length == 0) {
+		if($scope.myrows.length == 0) {
 			 msg = 'Please select a row';			  
 		 }
-		 else if($scope.rows.length > 1) {
+		 else if($scope.myrows.length > 1) {
 			 msg = 'More than one selection is not permitted.';
 		 }
 		return msg;
@@ -599,15 +600,15 @@ landingCtrl.$inject = ['$stateParams','service','$scope','$rootScope','$template
 
 	$scope.gridOptionsmylist.onRegisterApi = function(gridApi){
 		  //set gridApi on scope
-		  $scope.gridApi = gridApi;
-		  $scope.rows = [];
+		  $scope.myGridApi = gridApi;
+		  $scope.myrows = [];
 		  gridApi.selection.on.rowSelectionChanged($scope,function(row){
 		    var msg = 'row selected ' + row.isSelected;
 		    if(row.isSelected){    
-		     $scope.rows.push(row);    
+		     $scope.myrows.push(row);    
 		    }
 		    else {
-		     $scope.rows = jQuery.grep($scope.rows, function(value) {
+		     $scope.myrows = jQuery.grep($scope.myrows, function(value) {
 		      return value != row;
 		    });
 		    }
@@ -622,10 +623,37 @@ landingCtrl.$inject = ['$stateParams','service','$scope','$rootScope','$template
 		    gridApi.selection.on.rowSelectionChangedBatch($scope,function(rows){
 		      var msg = 'rows changed ' + rows.length;
 		      
-		      $scope.rows =  rows;
+		      $scope.myrows =  rows;
 		      $log.log(msg);
 		    });
 		  };
+		  
+		$scope.gridOptions.onRegisterApi = function(gridApi){
+			  //set gridApi on scope
+			  $scope.gridApi = gridApi;
+			  $scope.rows = [];
+			  gridApi.selection.on.rowSelectionChanged($scope,function(row){
+			    var msg = 'row selected ' + row.isSelected;
+			    if(row.isSelected){    
+			     $scope.rows.push(row);    
+			    }
+			    else {
+			     $scope.rows = jQuery.grep($scope.rows, function(value) {
+			      return value != row;
+			    });
+			    }
+			   
+			    $log.log(msg);
+			    
+			  });
+
+			    gridApi.selection.on.rowSelectionChangedBatch($scope,function(rows){
+			      var msg = 'rows changed ' + rows.length;
+			      
+			      $scope.rows =  rows;
+			      $log.log(msg);
+			    });
+			  };
 
   home.saveDoc = function(){  
 		$scope.DocumentWorkflowProcess.docDetail.docTagRelationship =[];
