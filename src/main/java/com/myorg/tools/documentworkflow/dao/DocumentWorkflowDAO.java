@@ -49,22 +49,22 @@ public interface DocumentWorkflowDAO {
 	  */
 	 public boolean assignWorkflow(List<DocWkflwProcess> docIds, User user) throws SQLException, Exception;
 	 
-	 public DocumentDTO getDocumentsForAllMakers(DocumentDTO documentDTO) throws SQLException, Exception;
-	   
      public DocumentDTO getDocumentsForMaker(DocumentDTO documentDTO) throws SQLException, Exception;
 
-	 public DocumentDTO getDocumentsForAllCheckers(DocumentDTO documentDTO) throws SQLException, Exception;
+	 public DocumentDTO getDocumentsForAllCheckers() throws SQLException, Exception;
 
      public DocumentDTO getDocumentsForChecker(DocumentDTO documentDTO) throws SQLException, Exception;
 
-	 public DocumentDTO getDocumentsForAllSMEs(DocumentDTO documentDTO) throws SQLException, Exception;
+	 public DocumentDTO getDocumentsForAllSMEs() throws SQLException, Exception;
 
 	 public DocumentDTO getDocumentsForSME(DocumentDTO documentDTO) throws SQLException, Exception;
 	 
-	 public Boolean startProcess(DocumentDTO documentDTO) throws SQLException, Exception;
+	 public DocumentDTO getAgreementsForAdminUsers(Integer viewId) throws SQLException, Exception;
+
+	 public DocumentDTO startProcess(DocumentDTO documentDTO) throws SQLException, Exception;
 	 
-	 public Boolean completeProcess(DocumentDTO documentDTO) throws SQLException, Exception;
+	 public DocumentDTO completeProcess(DocumentDTO documentDTO) throws SQLException, Exception;
 	 
-	 public Boolean holdProcess(DocumentDTO documentDTO) throws SQLException, Exception;
+	 public DocumentDTO holdProcess(DocumentDTO documentDTO) throws SQLException, Exception;
 
 }

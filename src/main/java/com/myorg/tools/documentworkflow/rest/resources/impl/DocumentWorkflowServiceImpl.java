@@ -169,9 +169,9 @@ public class DocumentWorkflowServiceImpl extends BaseResource implements Documen
 	}*/
 
 	@Override
-	public Response getDocumentsForAllMakers(DocumentDTO documentDTO) {
+	public Response getAgreementsForAdminUsers(DocumentDTO documentDTO) {
 		try {
-			documentDTO = documentDAO.getDocumentsForAllMakers(documentDTO);
+			documentDTO = documentDAO.getAgreementsForAdminUsers(documentDTO.getRoleId());
 			DocumentWorkflowToolUtility.setResponse(documentDTO, Constants.SUCCESS_CODE, Constants.SUCCESS_MESSAGE);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -193,9 +193,10 @@ public class DocumentWorkflowServiceImpl extends BaseResource implements Documen
 	}
 
 	@Override
-	public DocumentDTO getDocumentsForAllCheckers(DocumentDTO documentDTO) {
+	public DocumentDTO getDocumentsForAllCheckers() {
+		DocumentDTO documentDTO = null;
 		try {
-			documentDTO = documentDAO.getDocumentsForAllCheckers(documentDTO);
+			documentDTO = documentDAO.getDocumentsForAllCheckers();
 			DocumentWorkflowToolUtility.setResponse(documentDTO, Constants.SUCCESS_CODE, Constants.SUCCESS_MESSAGE);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -217,9 +218,10 @@ public class DocumentWorkflowServiceImpl extends BaseResource implements Documen
 	}
 	
 	@Override
-	public DocumentDTO getDocumentsForAllSMEs(DocumentDTO documentDTO) {
+	public DocumentDTO getDocumentsForAllSMEs() {
+		DocumentDTO documentDTO = null;
 		try {
-			documentDTO = documentDAO.getDocumentsForAllSMEs(documentDTO);
+			documentDTO = documentDAO.getDocumentsForAllSMEs();
 			DocumentWorkflowToolUtility.setResponse(documentDTO, Constants.SUCCESS_CODE, Constants.SUCCESS_MESSAGE);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -247,11 +249,10 @@ public class DocumentWorkflowServiceImpl extends BaseResource implements Documen
 
 	@Override
 	public Response startProcess(DocumentDTO documentDTO) {
-		Boolean bool = null;
 		try {
 			//FIXME Grab logged in User id
-			bool = documentDAO.startProcess(documentDTO);
-			if(bool == Boolean.TRUE){
+			documentDTO = documentDAO.startProcess(documentDTO);
+			if(documentDTO.isSuccess()){
 				DocumentWorkflowToolUtility.setResponse(documentDTO, Constants.SUCCESS_CODE, Constants.SUCCESS_MESSAGE);
 			}else {
 				DocumentWorkflowToolUtility.setResponse(documentDTO, Constants.FAILURE_CODE, "Failure");
@@ -266,11 +267,10 @@ public class DocumentWorkflowServiceImpl extends BaseResource implements Documen
 
 	@Override
 	public Response completeProcess(DocumentDTO documentDTO) {
-		Boolean bool = null;
 		try {
 			//FIXME Grab logged in User id
-			bool = documentDAO.completeProcess(documentDTO);
-			if(bool == Boolean.TRUE){
+			documentDTO = documentDAO.completeProcess(documentDTO);
+			if(documentDTO.isSuccess()){
 				DocumentWorkflowToolUtility.setResponse(documentDTO, Constants.SUCCESS_CODE, Constants.SUCCESS_MESSAGE);
 			}else {
 				DocumentWorkflowToolUtility.setResponse(documentDTO, Constants.FAILURE_CODE, "Failure");
@@ -285,10 +285,9 @@ public class DocumentWorkflowServiceImpl extends BaseResource implements Documen
 
 	@Override
 	public Response holdProcess(DocumentDTO documentDTO) {
-		Boolean bool = null;
 		try {
-			bool = documentDAO.holdProcess(documentDTO);
-			if(bool == Boolean.TRUE){
+			documentDTO = documentDAO.holdProcess(documentDTO);
+			if(documentDTO.isSuccess()){
 				DocumentWorkflowToolUtility.setResponse(documentDTO, Constants.SUCCESS_CODE, Constants.SUCCESS_MESSAGE);
 			}else {
 				DocumentWorkflowToolUtility.setResponse(documentDTO, Constants.FAILURE_CODE, "Failure");

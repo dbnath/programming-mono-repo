@@ -26,7 +26,7 @@ public class TestClient {
 		----------------------------------------------------
 */		
 		DocumentDTO documentDTO = new DocumentDTO(); 
-		
+
 		//Maker in Progress
 		documentDTO.setStatusCode(2);
 		documentDTO.setAgreementId(123456);
@@ -45,7 +45,7 @@ public class TestClient {
 		//getDocumentsForAMaker();
 		
 		//Checker Team INbox
-		getDocumentsForCheckerTeamInbox(new DocumentDTO());		
+		getDocumentsForCheckerTeamInbox();		
 		
 		//Checker Assign
 		documentDTO = new DocumentDTO(); 
@@ -75,11 +75,11 @@ public class TestClient {
 		documentDTO.setUser(new User("RASHMI","LIGHT","2"));
 		documentDTO.setRoleId(2); 
 		documentDTO.setStatusCode(18);
-		documentDTO.setComment("Checker Comments...Resolve Hold issue...");
+		documentDTO.setComment("Checker Comments...Completed...");
 		completeProcess(documentDTO);
 		
 		//Checker Team INbox
-		getDocumentsForCheckerTeamInbox(new DocumentDTO());
+		getDocumentsForCheckerTeamInbox();
 		
 		
 		
@@ -105,7 +105,7 @@ public class TestClient {
 		holdProcess(documentDTO);
 
 		//Checker Team INbox
-		getDocumentsForCheckerTeamInbox(new DocumentDTO());		
+		getDocumentsForCheckerTeamInbox();		
 		
 		//Checker Assign
 		documentDTO = new DocumentDTO(); 
@@ -140,7 +140,7 @@ public class TestClient {
 		holdProcess(documentDTO);
 		
 		//Onshore SME Team INbox
-		getDocumentsForOnshoreSMETeamInbox(new DocumentDTO());
+		getDocumentsForOnshoreSMETeamInbox();
 		
 		//SME Assign
 		documentDTO = new DocumentDTO(); 
@@ -179,11 +179,11 @@ public class TestClient {
 		documentDTO.setUser(new User("MRINAL","MRINAL","3"));
 		documentDTO.setRoleId(3); 
 		documentDTO.setStatusCode(22);
-		documentDTO.setComment("SME Comments...query resolved...");
+		documentDTO.setComment("SME Comments...query resolved and completed...");
 		completeProcess(documentDTO);
 		
 		//Onshore SME Team INbox
-		getDocumentsForOnshoreSMETeamInbox(new DocumentDTO());	
+		getDocumentsForOnshoreSMETeamInbox();	
 		
 		
 
@@ -209,7 +209,7 @@ public class TestClient {
 		holdProcess(documentDTO);
 
 		//Checker Team INbox
-		getDocumentsForCheckerTeamInbox(new DocumentDTO());		
+		getDocumentsForCheckerTeamInbox();		
 		
 		//Checker Assign
 		documentDTO = new DocumentDTO(); 
@@ -242,7 +242,8 @@ public class TestClient {
 		completeProcess(documentDTO);
 		
 		//Checker Team INbox
-		getDocumentsForCheckerTeamInbox(new DocumentDTO());	
+		getDocumentsForCheckerTeamInbox();	
+		
 
 /*		SEMI UNHAPPY PATH - MAKER HOLD CHECKER HOLD SME COMPLETE
 		---------------------------------------------------------------
@@ -266,7 +267,7 @@ public class TestClient {
 		holdProcess(documentDTO);
 
 		//Checker Team INbox
-		getDocumentsForCheckerTeamInbox(new DocumentDTO());		
+		getDocumentsForCheckerTeamInbox();		
 		
 		//Checker Assign
 		documentDTO = new DocumentDTO(); 
@@ -302,7 +303,7 @@ public class TestClient {
 		
 		
 		//Onshore SME Team INbox
-		getDocumentsForOnshoreSMETeamInbox(new DocumentDTO());
+		getDocumentsForOnshoreSMETeamInbox();
 		
 		//SME Assign
 		documentDTO = new DocumentDTO(); 
@@ -336,7 +337,49 @@ public class TestClient {
 		completeProcess(documentDTO);
 		
 		//Onshore SME Team INbox
-		getDocumentsForOnshoreSMETeamInbox(new DocumentDTO());	
+		getDocumentsForOnshoreSMETeamInbox();
+		
+/*		ADMIN INBOX
+ * --------------------------------------------------------------------------------------
+*/		
+		documentDTO = new DocumentDTO(); 
+		documentDTO.setUser(new User("DEBASISH","DEBASISH","4"));
+		documentDTO.setRoleId(1);
+		getAgreementsForAdminUsers(documentDTO);
+		
+		//Admin Maker Complete
+		documentDTO = new DocumentDTO(); 
+		documentDTO.setUser(new User("DEBASISH","DEBASISH","4"));
+		documentDTO.setStatusCode(3);
+		documentDTO.setAgreementId(123456);
+		documentDTO.setAssignedTo("ARDHENDU");
+		documentDTO.setRoleId(1); 
+		completeProcess(documentDTO);
+		
+		documentDTO = new DocumentDTO(); 
+		documentDTO.setUser(new User("DEBASISH","DEBASISH","4"));
+		documentDTO.setRoleId(2);
+		getAgreementsForAdminUsers(documentDTO);
+		
+		//Admin Checker In Progress
+		documentDTO = new DocumentDTO(); 
+		documentDTO.setAgreementId(123456);
+		documentDTO.setUser(new User("DEBASISH","DEBASISH","4"));
+		documentDTO.setRoleId(2); 
+		documentDTO.setStatusCode(17);
+		startProcess(documentDTO);
+
+		//Admin Checker Complete (using above user credentials)
+		documentDTO = new DocumentDTO(); 
+		documentDTO.setAgreementId(123456);
+		documentDTO.setUser(new User("DEBASISH","DEBASISH","4"));
+		documentDTO.setRoleId(2); 
+		documentDTO.setStatusCode(18);
+		documentDTO.setComment("Checker Comments...Completed...");
+		completeProcess(documentDTO);
+		
+//		documentDTO.setViewId(3);
+//		getAgreementsForAdminUsers(documentDTO);
 	}
 
 	private static void getDocumentsForAllMakers() throws Exception { 
@@ -355,8 +398,8 @@ public class TestClient {
 		System.out.println("###### REsponse "+responseString);
 	}	
 	
-	private static void getDocumentsForCheckerTeamInbox(DocumentDTO documentDTO) throws Exception { 
-		String s = callRESTService(documentDTO, "getDocumentsForAllCheckers");
+	private static void getDocumentsForCheckerTeamInbox() throws Exception { 
+		String s = callRESTService(null,"getDocumentsForAllCheckers");
 		System.out.println("###### Checker Team Inbox Response "+s);
 	}
 	
@@ -365,8 +408,8 @@ public class TestClient {
 		System.out.println("###### Checker My Inbox Response "+s);
 	}	
 	
-	private static void getDocumentsForOnshoreSMETeamInbox(DocumentDTO documentDTO) throws Exception { 
-		String s = callRESTService(documentDTO, "getDocumentsForAllSMEs");
+	private static void getDocumentsForOnshoreSMETeamInbox() throws Exception { 
+		String s = callRESTService(null, "getDocumentsForAllSMEs");
 		System.out.println("###### Onshore SME Team Inbox Response "+s);
 	}
 	
@@ -375,6 +418,11 @@ public class TestClient {
 		System.out.println("###### Onshore SME My Inbox Response "+s);
 	}	
 
+	private static void getAgreementsForAdminUsers(DocumentDTO documentDTO) throws Exception { 
+		String s = callRESTService(documentDTO, "getAgreementsForAdminUsers");
+		System.out.println("###### Admin User Team Inbox Response "+s);
+	}	
+	
 	private static void assignDocuments(DocumentDTO dto,List<Integer> docIds) throws Exception { 
 		ObjectMapper mapper = new ObjectMapper();
 		String inputJsonString = mapper.writeValueAsString(docIds);
@@ -411,13 +459,18 @@ public class TestClient {
 	private static String callRESTService(DocumentDTO dto, String method)
 			throws Exception {
 		ObjectMapper mapper = new ObjectMapper();
-		String inputJsonString = mapper.writeValueAsString(dto);
+		String inputJsonString = "";
+		if (dto != null){
+			inputJsonString = mapper.writeValueAsString(dto);
+		}
 		System.out.println("inputJsonString :: " + inputJsonString);
 		HttpClient client = new DefaultHttpClient();
 		HttpPost postRequest = new HttpPost(url + method);
 		postRequest.setHeader("Content-Type", "application/json");
 		//postRequest.setHeader("x-docwrkflow-auth", dto.getUser().getUserId()+"|"+dto.getRoleId());
-		postRequest.setEntity(new StringEntity(inputJsonString));
+		if (dto != null){
+			postRequest.setEntity(new StringEntity(inputJsonString));
+		}
 		HttpResponse response = client.execute(postRequest);
 
 		if (response.getStatusLine().getStatusCode() != HttpURLConnection.HTTP_OK) {

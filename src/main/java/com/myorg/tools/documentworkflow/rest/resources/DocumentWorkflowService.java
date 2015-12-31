@@ -58,10 +58,10 @@ public interface DocumentWorkflowService {
 	   public Response assignWorkflows(List<Integer> docIds);
 	   
 	   @POST
-	   @Path("/getDocumentsForAllMakers")
+	   @Path("/getAgreementsForAdminUsers")
 	   @Consumes(MediaType.APPLICATION_JSON)
 	   @Produces(MediaType.APPLICATION_JSON)	   
-	   public Response getDocumentsForAllMakers(DocumentDTO documentDTO);
+	   public Response getAgreementsForAdminUsers(DocumentDTO documentDTO);
 	   
 
 	   @POST
@@ -75,7 +75,7 @@ public interface DocumentWorkflowService {
 	   @Path("/getDocumentsForAllCheckers")
 	   @Consumes(MediaType.APPLICATION_JSON)
 	   @Produces(MediaType.APPLICATION_JSON)	   
-	   public DocumentDTO getDocumentsForAllCheckers(DocumentDTO documentDTO);
+	   public DocumentDTO getDocumentsForAllCheckers();
 
 	   @POST
 	   @Path("/getDocumentsForChecker")
@@ -87,7 +87,7 @@ public interface DocumentWorkflowService {
 	   @Path("/getDocumentsForAllSMEs")
 	   @Consumes(MediaType.APPLICATION_JSON)
 	   @Produces(MediaType.APPLICATION_JSON)	   
-	   public DocumentDTO getDocumentsForAllSMEs(DocumentDTO documentDTO);
+	   public DocumentDTO getDocumentsForAllSMEs();
 
 	   @POST
 	   @Path("/getDocumentsForSME")

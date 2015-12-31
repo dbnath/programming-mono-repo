@@ -15,6 +15,8 @@ public class DocumentDTO extends BaseDTO implements Serializable {
 
 	private User user;
 	
+	private String assignedTo;
+	
 	private Integer statusCode;
 	
 	private Integer agreementId;
@@ -28,6 +30,8 @@ public class DocumentDTO extends BaseDTO implements Serializable {
 	private Integer roleId;
 	
 	private List<DocWkflwProcess> docList;
+	
+	private boolean isSuccess;
 
 	public User getUser() {
 		return user;
@@ -35,6 +39,14 @@ public class DocumentDTO extends BaseDTO implements Serializable {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	public String getAssignedTo() {
+		return assignedTo;
+	}
+
+	public void setAssignedTo(String assignedTo) {
+		this.assignedTo = assignedTo;
 	}
 
 	public List<DocWkflwProcess> getDocList() {
@@ -92,5 +104,13 @@ public class DocumentDTO extends BaseDTO implements Serializable {
 	public void setRoleId(Integer roleId) {
 		this.roleId = roleId;
 	}
-	
+
+	public boolean isSuccess() {
+		return isSuccess;
+	}
+
+	public void setSuccess(boolean isSuccess) {
+		this.isSuccess = isSuccess;
+	}
+
 }
