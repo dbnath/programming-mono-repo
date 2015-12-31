@@ -6,7 +6,7 @@ var app = angular.module('legalrpf', [
   'ngSanitize',
   'ui.router',
   'ui.bootstrap',
-  'ui.grid','ui.grid.selection',
+  'ui.grid','ui.grid.selection','ui.grid.edit',
   'ngAnimate', 'ngUpload','ngDialog'
 ]).config(function ($stateProvider, $urlRouterProvider, $locationProvider) {
     $urlRouterProvider.otherwise('/login');
@@ -20,8 +20,9 @@ var app = angular.module('legalrpf', [
         templateUrl : 'static/app/pages/setting/setting.html'
     }).state('home',{
         url : '/home/:name',     
-        controller : 'homeCtrl as hc',
-        templateUrl : 'static/app/pages/home/home.html'
+        controller : 'landingCtrl as hc',
+        templateUrl : 'static/app/pages/landing/landing.html'
+        	
     }).state('reports',{
         url : '/reports/:name',     
         controller : 'reportsCtrl as rc',
