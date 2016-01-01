@@ -16,9 +16,25 @@
 	</listener>
 	<listener>
 		<listener-class>
-			org.springframework.web.context.request.RequestContextListener</listener-class>
+			org.springframework.web.context.request.RequestContextListener
+		</listener-class>
 	</listener>
 
+	<servlet>
+		<servlet-name>springServlet</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>/WEB-INF/documentworkflow-view.xml</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>springServlet</servlet-name>
+		<url-pattern>/view/*</url-pattern>
+	</servlet-mapping>
+	
 	<servlet>
 		<servlet-name>jersey-servlet</servlet-name>
 		<servlet-class>com.sun.jersey.spi.spring.container.servlet.SpringServlet</servlet-class>
@@ -42,5 +58,9 @@
 		<param-name>jerseyContextPath</param-name>
 		<param-value>rest</param-value>
 	</context-param>
+	
+	<welcome-file-list>
+		<welcome-file>dynamic/login.jsp</welcome-file>
+	</welcome-file-list>
 	
 </web-app>
