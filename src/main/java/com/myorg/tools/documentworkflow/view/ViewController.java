@@ -18,20 +18,20 @@ public class ViewController {
 		return modelView;
 	}
 	
-	@RequestMapping(headers = {"content-type=application/json"},method = RequestMethod.POST,value = "landingHome")
-	public ModelAndView getMakerHomeView(@RequestBody User user) {
+	@RequestMapping(method = RequestMethod.POST,value = "landingHome")
+	public ModelAndView getMakerHomeView() {
 		ModelAndView modelView = new ModelAndView("landing/landing");
 		return modelView;
 	}
 	
-	@RequestMapping(headers = {"content-type=application/json"},method = RequestMethod.POST,value = "checkerHome")
-	public ModelAndView getLandingHomeView(@RequestBody User user) {
+	@RequestMapping(method = RequestMethod.POST,value = "checkerHome")
+	public ModelAndView getLandingHomeView() {
 		ModelAndView modelView = new ModelAndView("landing/landing");
 		return modelView;
 	}
 	
-	@RequestMapping(headers = {"content-type=application/json"},method = RequestMethod.POST,value = "checkerHome")
-	public ModelAndView getCheckerHomeView(@RequestBody User user) {
+	@RequestMapping(method = RequestMethod.POST,value = "checkerHome")
+	public ModelAndView getCheckerHomeView() {
 		ModelAndView modelView = new ModelAndView("landing/landing");
 		return modelView;
 	}
@@ -43,8 +43,8 @@ public class ViewController {
 		return modelView;
 	}
 	
-	@RequestMapping(headers = {"content-type=application/json"},method = RequestMethod.POST,value = "adminUpdateAgreementView")
-	public ModelAndView getAdminUpdateAgreementView(@RequestBody User user) {
+	@RequestMapping(method = RequestMethod.GET,value = "adminUpdateAgreementView")
+	public ModelAndView getAdminUpdateAgreementView() {
 		ModelAndView modelView = new ModelAndView("admin/updateAgreement");
 		return modelView;
 	}

@@ -1,6 +1,12 @@
-<div ng-include="'static/app/pages/common/banner.html'" style="padding:10px"></div>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
-<!-- slide in menu (mobile only) -->
+<jsp:include page="../common/banner.jsp" />
+
+<%
+	long ver = java.lang.System.currentTimeMillis();
+%>
+
+<script language="Javascript" src="<%=request.getContextPath()%>/js/admin.js?ver=<%=ver%>"></script>
   
 <div id="adminUpdate" ng-init="admupdctrl.init();" style="padding-top:10px; padding-left:10px; padding-right:10px">
 	<table border="0" style="width:100%; height:50px">
