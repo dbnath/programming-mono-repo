@@ -28,7 +28,7 @@
 	
 </head>
 
-<body style="padding-top:10px; padding-left:5px; padding-right:5px; padding-bottom:40px;">
+<body style="padding-top:10px; padding-left:5px; padding-right:5px; ">
 
 <table border="0" style="width:100%; background-color:#000099;height:50px">
 	<tr>

@@ -9,7 +9,7 @@
 <script language="Javascript" src="<%=request.getContextPath()%>/js/landing.js?ver=<%=ver%>"></script>
   <!-- slide in menu (mobile only) -->
   
-  <div class="container bootcards-container" id="main" ng-init="hc.inithome();">
+  <div class="container bootcards-container" id="main" ng-init="hc.inithome();" style="padding-top:40px">
     
 			  <a class="btn btn-primary" href="#" ng-click="hc.refreshGrid()" >
 				<i class="glyphicon glyphicon-refresh"></i> 
@@ -80,6 +80,7 @@
 </div> <!-- end of row -->
 </div> <!-- end of main container -->
 
+<%@ include file="../common/footer.jsp" %>
 	
 
  <script >
