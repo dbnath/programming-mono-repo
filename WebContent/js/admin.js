@@ -1,13 +1,7 @@
 /**
  * 
  */
-var login = function () {
-	
-	//var service = new service();
-	this.alertMe =  alertMe;
-	function alertMe() {
-		//alert('Ekla cholo re');
-	}
+var admin = function () {
 	
 
 	var $ = getElementById;
@@ -16,17 +10,6 @@ var login = function () {
 		return document.getElementById(elemId);
 	}
 
-	//Code -E, S, A
-	function showMessage(code, targetdiv, message) {
-		$(targetdiv).style.display='';
-		$(targetdiv).innerHTML = message;
-	}
-	
-	function clearMessage(targetdiv) {
-		$(targetdiv).style.display='none';
-		$(targetdiv).innerHTML = '';
-	}
-	
 	this.login = login;
 	function login() {
 		clearMessage("login-alert"); 
@@ -59,9 +42,6 @@ var login = function () {
 			  } else {
 				  landingURL = cotextPathTop+'/view/landingHome/';
 			  }    	  
-			  $("loginform").action=landingURL;
-			  $("loginform").method="POST";
-			  $("loginform").submit();
 		  } else {   	  
 			  showMessage('E',"login-alert",responseObject.responseMessage);
 			  
