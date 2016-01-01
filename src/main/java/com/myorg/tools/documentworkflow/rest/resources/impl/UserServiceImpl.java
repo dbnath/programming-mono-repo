@@ -30,6 +30,7 @@ public class UserServiceImpl extends BaseResource implements UserService   {
 			dto = userAdminDAO.authenticateAndFetchDetails(user.getUserId(), user.getPassword());
 			if (dto != null) {
 				String customHeader = dto.getUserId()+"|"+dto.getRoleId(); //apply encryption here
+				getRequest().getSession().setAttribute("userDetails", dto);
 				return Response.ok().entity(dto).header("x-docwrkflow-auth", customHeader).build();
 			} else {
 				DocumentWorkflowResponse dr = new DocumentWorkflowResponse();

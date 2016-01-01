@@ -1,3 +1,4 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <HTML>
 <HEAD>
 <%
@@ -34,17 +35,17 @@
 	<tr>
 		<td style="width:60%;font-family:'Arial Bold', 'Arial';font-weight:500;font-style:normal;font-size:20px;color:#ffffff;text-align:right;padding-left:100px;line-height:normal;" >AM Remediation Workflow</td>
 		<td style="width:40%;text-align:right;"><div id="navbar" class="navbar-collapse collapse">
-			<%if (session.getAttribute("selectedRoleName") != null) {%>
+			<c:if test="${userDetails != null}">
 			<ul class="nav navbar-nav navbar-right" style="background-color:#000099;" >
 				<li class="dropdown" style="background-color:#000099;">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color:#ffffff;">
-					Welcome {{selectedUserRole.userName | capitalizeCase }} ({{selectedUserRole.selectedRoleName}})<span class="caret"></span></a>
+					Welcome <c:out value="${userDetails.userName}" /> (<c:out value="${userDetails.userRoleList[0].roleName}" />) <span class="caret"></span></a>
 					<ul class="dropdown-menu" style="color:#ffffff;background-color:#000099;">
 						<li><a href="#" ng-click="ahc.logout()" style="color:#ffffff;">Logout</a></li>
 				</ul>
 			</li>           			
           </ul>
-		  <%}%>
+		  </c:if>
       </div>
 		</td>
 	</tr>

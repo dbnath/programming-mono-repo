@@ -38,7 +38,7 @@
 			  </a><br><br>
 
 </div> <!-- end of main container -->
-<%@ include file="common/footer.jsp" %>
+<%@ include file="../common/footer.jsp" %>
 
 <script>
 	ahc = new admin();
