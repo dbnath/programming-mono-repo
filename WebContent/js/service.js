@@ -1,5 +1,11 @@
 var service = function(){
 
+	var $ = getElementById;
+
+	function getElementById(elemId){
+		return document.getElementById(elemId);
+	}
+	
 	function addUser(data){
 		return request('POST','/api/users/add',{'x-docwrkflow-auth' : getDocWorkflowAuthorizationId()},data);
 	}
@@ -9,6 +15,7 @@ var service = function(){
 		return request('POST','rest/UserService/login',{'x-docwrkflow-auth' :  undefined},data, null, responseFunction);
 	}
 	
+	this.logout = logout;
 	function logout(){
 		return request('POST','rest/UserService/logout',{'x-docwrkflow-auth' :  getDocWorkflowAuthorizationId()});
 	}
@@ -113,7 +120,7 @@ var service = function(){
 	}
 	
 	function getDocWorkflowAuthorizationId() {
-		return $rootScope.selectedUserRole.userId+"|"+$rootScope.selectedUserRole.selectedRoleId;
+		return $("selectedUserId").value+"|"+$("selectedRoleId").value;
 	}
 	
 	function fetchCompletionReportData() {

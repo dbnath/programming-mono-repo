@@ -21,7 +21,8 @@
     <link href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" />
         
     <!-- multiselect -->
-    <link rel="stylesheet" href="<%=request.getContextPath()%>/static/bower_components/multiselect/bootstrap-multiselect.css" type="text/css">	
+    <link rel="stylesheet" href="<%=request.getContextPath()%>/static/bower_components/multiselect/bootstrap-multiselect.css" type="text/css" />	
+	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/css/docworkflow.css" />
 	<script language="Javascript" src="<%=request.getContextPath()%>/js/commonframework.js?ver=<%=ver%>"></script>
 	<script language="Javascript" src="<%=request.getContextPath()%>/js/service.js?ver=<%=ver%>"></script>
 	<script language="Javascript" src="<%=request.getContextPath()%>/js/json2.js"></script>
@@ -31,27 +32,36 @@
 
 <body style="padding-top:10px; padding-left:5px; padding-right:5px; ">
 
-<table border="0" style="width:100%; background-color:#000099;height:50px">
+<table border="1" style="width:100%; background-color:#000099;height:50px">
 	<tr>
 		<td style="width:60%;font-family:'Arial Bold', 'Arial';font-weight:500;font-style:normal;font-size:20px;color:#ffffff;text-align:right;padding-left:100px;line-height:normal;" >AM Remediation Workflow</td>
-		<td style="width:40%;text-align:right;"><div id="navbar" class="navbar-collapse collapse">
+		<td style="width:40%;text-align:right;" align="right">
 			<c:if test="${userDetails != null}">
-			<ul class="nav navbar-nav navbar-right" style="background-color:#000099;" >
-				<li class="dropdown" style="background-color:#000099;">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color:#ffffff;">
+			<nav id="docworkflow_nav_wrap">
+				<ul>
+					<li class="current-menu-item" style="background-color:#000099;">
+						<a href="#" class="dropdown-toggle">
 					Welcome <c:out value="${userDetails.userName}" /> (<c:out value="${userDetails.userRoleList[0].roleName}" />) <span class="caret"></span></a>
-					<ul class="dropdown-menu" style="color:#ffffff;background-color:#000099;">
-						<li><a href="#" ng-click="ahc.logout()" style="color:#ffffff;">Logout</a></li>
+						<ul style="color:#ffffff;background-color:#000099;">
+							<li><a href="#" onclick="logout()" style="color:#ffffff;">Logout</a></li>
 				</ul>
 			</li>           			
           </ul>
+			</nav>  
 		  </c:if>
-      </div>
+      
 		</td>
 	</tr>
 </table>
-
+<input type="hidden" id="selectedUserId" name="selectedUserId" value="<c:out value="${userDetails.userId}" />">
+<input type="hidden" id="selectedRoleId" name="selectedRoleId" value="<c:out value="${userDetails.userRoleList[0].roleId}" />">
 </body>
 
 
-<script>var cotextPathTop = "${pageContext.request.contextPath}"</script>
+<script>
+	var cotextPathTop = "${pageContext.request.contextPath}";
+	function logout() {
+		new service().logout();
+		window.location=cotextPathTop+"/view/login";
+	}
+</script>
