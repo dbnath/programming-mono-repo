@@ -17,8 +17,9 @@
 			<td style="text-align:left;padding-left:10px;">
 				<select id="u8_input" style="height:25px; width:100px">
 				  <option selected value=" ">&nbsp;</option>
-				  <option value="Maker">Maker</option>
-				  <option value="Checker">Checker</option>
+				  <option value="1">Maker</option>
+				  <option value="2">Checker</option>
+				  <option value="3">Onshore SME</option>
 				</select>
 			</td>
 		</tr>
