@@ -66,59 +66,43 @@
 
 
 .ContentContainer {
-    width: 100%;
-	height: 300px;
-	background-color: #FAF6F1;
-	border-top: solid 3px #513D33;
+    width: 1500x;
+	height: 200px;
+	background-color: #ffffff;
+	border-top: 1px solid #513D33;
 	border-left: 1px solid #331B0F; 
 	border-right: 1px solid #331B0F; 
 	border-bottom: 1px solid #331B0F;
-	padding: 0px 10px 10px 10px;
-	overflow-y: auto;
-	height: 200px;
+	padding: 0px 0px 0px 0px;
+	overflow: auto;
 }
 
 .ContentTable {
     width: 100%;
+	border-spacing: 10px;
+}
+
+.ContentTable THEAD {
+	height : 100;
 }
 
 .ContentTable TD {
+	padding-left: 5px;
 	padding-right: 5px;
 	padding-bottom: 2px;
 	text-align: left;
-	vertical-align: top;
-}
-
-.ContentTable .statusImage {
-	padding: 3px 2px 0px 2px;
-	text-align: left;
 	vertical-align: middle;
+	white-space: nowrap;
+	border: 1px dotted #000000;
 }
 
-.ContentTable .RefreshLink{
-	padding: 3px 0px 0px 0px;
-	text-align: left;
-	vertical-align: top;
-}
+
 .ContentTable .subHeading {
-	height:18px;
-	background-color:#DDC5A6;
-	border-bottom:1px solid #FFFFFF;
-}
-
-.ContentContainer .TopazPortal_lookupFieldNames {
+	height:30px;
+	color : #FFFFFF;
+	font-size: 14px;
 	font-weight: bold;
-	text-align: left;
-	background-color: #B7D1DF;
-	height: 25px;
-}
-
-.ContentContainer .TopazPortal_blotterRowWH {
-	text-align: left;
-	background-color: #FFFFFF;
-}
-
-.ContentContainer .TopazPortal_blotterRowGR {
-	text-align: left;
-	background-color: #E8EAE8;
+	background-color:#000066;
+	border-bottom:1px solid #FFFFFF;
+	text-align : middle;
 }

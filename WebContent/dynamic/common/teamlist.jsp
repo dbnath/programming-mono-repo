@@ -1,6 +1,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<table class="ContentTable" border="0">
-	<thead class="TopazPortal_lookupFieldNames">
+<table class="ContentTable" border="0" cellpadding>
+	<thead>
 		<tr class="subHeading">
 			<td>Select</td>
 			<td>Agreement Id</td>
