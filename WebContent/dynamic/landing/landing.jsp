@@ -24,18 +24,18 @@
 
 	<div class="row">
 	
-		<div class="col-sm-5">
+		<div width="100%">
 			<ul class="nav nav-tabs" id="myTabs">
-				<li role="presentation" class="active"><a href="#home"><span class="glyphicon glyphicon-tags"></span>&nbspGlobal Inbox <span class="badge">{{hc.count}}</span></a></li>
-				<li role="presentation"><a href="#profile"><span class="glyphicon glyphicon-tag"></span>&nbsp;My Inbox <span class="badge">{{hc.countmylist}}</span></a></li>
+				<li role="presentation" class="active"><a href="javascript:activateTab('home')"><span class="glyphicon glyphicon-tags"></span>&nbspGlobal Inbox <span class="badge" id="teamCount">&nbsp;</span></a></li>
+				<li role="presentation"><a href="javascript:activateTab('profile')"><span class="glyphicon glyphicon-tag"></span>&nbsp;My Inbox <span class="badge" id="myCount">&nbsp;</span></a></li>
 			</ul>
  
 	 
-			<div id="myTabContent" class="tab-content">
-		       <div role="tabpanel" class="tab-pane fade in active" id="home" aria-labelledBy="home-tab">
-		         <div class="gridStyle" ui-grid="gridOptions"  ui-grid-selection ui-grid-edit class="grid" >
-		          </div>
-		           <div class="col-xs-4">
+			<div id="myTabContent" width="100%">
+		       <div id="home" width="100%">
+		         	<div id="teamGrid" class="documentlist_div_parent">
+		          	</div>
+		           	<div class="col-xs-4">
 		             <br>
 		                  <a class="btn btn-primary btn-block" href="#" ng-click="hc.assignMe()" >
 		                    <i class="glyphicon glyphicon-hand-up"></i> 
@@ -43,8 +43,8 @@
 		                  </a>
 		             </div>
 		       </div>
-		       <div role="tabpanel" class="tab-pane fade" id="profile" aria-labelledBy="profile-tab">
-		           <div class="gridStyle" ui-grid="gridOptionsmylist"  ui-grid-selection ui-grid-edit class="grid">         
+		       <div id="profile" width="100%">
+		          <div id="myGrid" class="documentlist_div_parent">         
 		          </div>
 		          <!-- start stop button -->
 		          	<div class="btn-group btn-group-justified">
@@ -83,6 +83,18 @@
 <%@ include file="../common/footer.jsp" %>
 	
 
- <script >
- 
-    </script>
+<script>
+ 	var landingObj = new landing();
+ 	landingObj.landinginit();
+	
+	function activateTab(pageId) {
+          var tabCtrl = document.getElementById('myTabContent');
+          var pageToActivate = document.getElementById(pageId);
+          for (var i = 0; i < tabCtrl.childNodes.length; i++) {
+              var node = tabCtrl.childNodes[i];
+              if (node.nodeType == 1) { /* Element */
+                  node.style.display = (node == pageToActivate) ? 'block' : 'none';
+              }
+          }
+      }
+</script>

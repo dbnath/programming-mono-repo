@@ -63,3 +63,13 @@
 #docworkflow_nav_wrap ul li:hover > ul {
   display: block
 }
+
+.documentlist_div_parent {
+    width: 100%;
+	height: 300px;
+    border:solid 1px #999999;
+}
+
+.documentlist_table {
+    width: 100%;
+}

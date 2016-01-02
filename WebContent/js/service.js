@@ -112,6 +112,16 @@ var service = function(){
 		 return request('GET','rest/docadmin/template',{'x-docwrkflow-auth' : getDocWorkflowAuthorizationId()});
 	}
 	
+	this.getTeamDocList = getTeamDocList;
+	function getTeamDocList(responseFunction) {
+		 return request('GET','view/teamDocs',{'x-docwrkflow-auth' : getDocWorkflowAuthorizationId()},null,null,responseFunction,'text/html');
+	}
+	
+	this.getMyDocList = getMyDocList;
+	function getMyDocList(responseFunction) {
+		 return request('GET','view/myDocs',{'x-docwrkflow-auth' : getDocWorkflowAuthorizationId()},null,null,responseFunction,'text/html');
+	}
+	
 	function setDocWorkflowAuthorizationId(userData) {
 		/*$rootScope.selectedUserRole.userId = userData.userId;
 		$rootScope.selectedUserRole.userName = userData.userName;
@@ -127,7 +137,7 @@ var service = function(){
 		 return request('GET','rest/report/completion',{'x-docwrkflow-auth' : getDocWorkflowAuthorizationId()});
 	}	
 
-  	function request(method,url,headers,data,params, responseFunction){
+  	function request(method,url,headers,data,params, responseFunction, contentType){
 		ajaxData = JSON.stringify(data);
 		var ajaxRequestObject = {
 				"url" : cotextPathTop+"/"+url,
@@ -136,7 +146,7 @@ var service = function(){
 				"responseFunction" : responseFunction,
 				"postBody" : ajaxData,
 				"method" : method,
-				"contentType" : "application/json"
+				"contentType" : contentType ? contentType : "application/json"
 			};
 			
 		return new commonframework().request(ajaxRequestObject);

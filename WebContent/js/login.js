@@ -6,7 +6,7 @@ var login = function () {
 	//var service = new service();
 	this.alertMe =  alertMe;
 	function alertMe() {
-		//alert('Ekla cholo re');
+		
 	}
 	
 
