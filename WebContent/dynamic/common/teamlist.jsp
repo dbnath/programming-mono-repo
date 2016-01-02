@@ -7,9 +7,6 @@
 		<th>Maker Status</th>
 		<th>Maker Details</th>
 		<th>Assigned To</th>
-		<th>QC Status</th>
-		<th>QC Details</th>
-		<th>Error Reason</th>
 	</tr>
 	<c:forEach items="${teamDocumentList}" var="document">
         <tr>
@@ -19,9 +16,6 @@
 		  <td><c:out value="${document.wfStatusDesc}" /><td>
           <td>Not found from service<td>
 		  <td><c:out value="${document.assignedTo}" /><td>
-		  <td>Not found from service<td>
-          <td>Not found from service<td>
-		  <td>Not found from service<td>
         </tr>
     </c:forEach>
 </table>

@@ -37,9 +37,13 @@
 		          	</div>
 		           	<div class="col-xs-4">
 		             <br>
-		                  <a class="btn btn-primary btn-block" href="#" ng-click="hc.assignMe()" >
+		                  <a class="btn btn-default" href="#" ng-click="hc.assignMe()" >
 		                    <i class="glyphicon glyphicon-hand-up"></i> 
 		                    <span>Assign Me</span>
+		                  </a>
+						  <a class="btn btn-default" href="#" ng-click="hc.assignMe()" >
+		                    <i class="glyphicon glyphicon-export"></i> 
+		                    <span>Export pending with Client</span>
 		                  </a>
 		             </div>
 		       </div>
@@ -47,25 +51,23 @@
 		          <div id="myGrid" class="documentlist_div_parent">         
 		          </div>
 		          <!-- start stop button -->
-		          	<div class="btn-group btn-group-justified">
-						<div class="btn-group">
+		          	<div class="col-xs-4">
+						<br>
 							<a class="btn btn-default" ng-click="hc.startWork()">
 								<i class="fa fa-play"></i>
 								Start
 							</a>
-						</div>
-						<div class="btn-group">
-							<button class="btn btn-default view-comment">
-								<i class="fa fa-stop""></i>
+						
+							<a class="btn btn-default">
+								<i class="fa fa-stop"></i>
 								Hold 
-							</button>
-						</div>
-						<div class="btn-group" >
+							</a>
+						
 							<a class="btn btn-default assign-tag">
 								<i class="fa fa-check"></i>
 								Done
 							</a>
-						</div>															
+																					
 					</div>
 			   </div>
 		
