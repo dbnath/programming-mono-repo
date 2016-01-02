@@ -33,7 +33,7 @@
 	 
 			<div id="myTabContent" width="100%">
 		       <div id="home" width="100%">
-		         	<div id="teamGrid" class="documentlist_div_parent">
+		         	<div id="teamGrid" class="ContentContainer">
 		          	</div>
 		           	<div class="col-xs-4">
 		             <br>
@@ -48,7 +48,7 @@
 		             </div>
 		       </div>
 		       <div id="profile" width="100%">
-		          <div id="myGrid" class="documentlist_div_parent">         
+		          <div id="myGrid" class="ContentContainer">         
 		          </div>
 		          <!-- start stop button -->
 		          	<div class="col-xs-4">

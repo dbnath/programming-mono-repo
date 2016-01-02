@@ -64,12 +64,61 @@
   display: block
 }
 
-.documentlist_div_parent {
+
+.ContentContainer {
     width: 100%;
 	height: 300px;
-    border:solid 1px #999999;
+	background-color: #FAF6F1;
+	border-top: solid 3px #513D33;
+	border-left: 1px solid #331B0F; 
+	border-right: 1px solid #331B0F; 
+	border-bottom: 1px solid #331B0F;
+	padding: 0px 10px 10px 10px;
+	overflow-y: auto;
+	height: 200px;
 }
 
-.documentlist_table {
+.ContentTable {
     width: 100%;
+}
+
+.ContentTable TD {
+	padding-right: 5px;
+	padding-bottom: 2px;
+	text-align: left;
+	vertical-align: top;
+}
+
+.ContentTable .statusImage {
+	padding: 3px 2px 0px 2px;
+	text-align: left;
+	vertical-align: middle;
+}
+
+.ContentTable .RefreshLink{
+	padding: 3px 0px 0px 0px;
+	text-align: left;
+	vertical-align: top;
+}
+.ContentTable .subHeading {
+	height:18px;
+	background-color:#DDC5A6;
+	border-bottom:1px solid #FFFFFF;
+}
+
+.ContentContainer .TopazPortal_lookupFieldNames {
+	font-weight: bold;
+	text-align: left;
+	background-color: #B7D1DF;
+	height: 25px;
+}
+
+.ContentContainer .TopazPortal_blotterRowWH {
+	text-align: left;
+	background-color: #FFFFFF;
+}
+
+.ContentContainer .TopazPortal_blotterRowGR {
+	text-align: left;
+	background-color: #E8EAE8;
 }
