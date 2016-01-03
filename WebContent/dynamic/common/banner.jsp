@@ -39,7 +39,7 @@
 
 <div class="header">
     <div class="home-menu pure-menu pure-menu-horizontal pure-menu-fixed" style="height:80px;">
-        <a class="pure-menu-heading" href="">DocumentWorkFlow</a>
+        <a class="pure-menu-heading" href="">AM Remediation Workflow</a>
 
         <ul class="pure-menu-list">
             <!-- <li class="pure-menu-item pure-menu-selected"><a href="#" class="pure-menu-link">Home</a></li>
