@@ -40,8 +40,9 @@ var service = function(){
 		return request('GET','rest/WflService/getdetail',{'x-docwrkflow-auth' : getDocWorkflowAuthorizationId()},null,{'docId':data});
 	}
  
-	function assignToMe(data){
-		return request('POST', 'rest/WflService/assigndocto', {'x-docwrkflow-auth' : getDocWorkflowAuthorizationId()}, data);
+	this.assignToMe=assignToMe;
+	function assignToMe(data, assignRespFn){
+		return request('POST', 'rest/WflService/assignWorkflows', {'x-docwrkflow-auth' : getDocWorkflowAuthorizationId()}, data,null,assignRespFn);
 	}
 	
 	function submitWorkflow(data){
@@ -135,6 +136,16 @@ var service = function(){
 	
 	function fetchCompletionReportData() {
 		 return request('GET','rest/report/completion',{'x-docwrkflow-auth' : getDocWorkflowAuthorizationId()});
+	}	
+	
+	this.startProcess=startProcess;
+	function startProcess(data, startRespFn){
+		return request('POST', 'rest/WflService/startProcess', {'x-docwrkflow-auth' : getDocWorkflowAuthorizationId()}, data,null,startRespFn);
+	}	
+	
+	this.completeProcess=completeProcess;
+	function completeProcess(data, completeRespFn){
+		return request('POST', 'rest/WflService/completeProcess', {'x-docwrkflow-auth' : getDocWorkflowAuthorizationId()}, data,null,completeRespFn);
 	}	
 
   	function request(method,url,headers,data,params, responseFunction, contentType){

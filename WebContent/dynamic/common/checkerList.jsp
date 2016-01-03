@@ -14,14 +14,13 @@
 	<tbody>
 	<c:forEach items="${myDocumentList}" var="document">
         <tr>
-		  <td><input type="checkbox" id="<c:out value="${document.agreementId}" />" name="docId" value="<c:out value="${document.agreementId}" />" /> </td>
-          <td><c:out value="${document.agreementId}" /></td>
-		  <td><c:out value="${document.lob}" /></td>
-		  <td><c:out value="${document.agreementTypeDesc}" /></td>
-		  <td><c:out value="${document.makerStatus}" /></td>
-          <td><c:out value="${document.makerComments}" /></td>
-		  <td><c:out value="${document.assignedTo}" /></td>
-		  <td><c:out value="${document.checkerStatus}" /></td>
+		  <td><input type="checkbox" id="<c:out value="${document.agreementId}" />" name="docId" value="<c:out value="${document.agreementId}" />" onclick="landingObj.setMyAssignment(this)" /> </td>
+          <td id="<c:out value="${document.agreementId}agreementId" />"><c:out value="${document.agreementId}" /></td>
+		  <td id="<c:out value="${document.agreementId}lob" />"><c:out value="${document.lob}" /></td>
+		  <td id="<c:out value="${document.agreementId}agreementTypeDesc" />"><c:out value="${document.agreementTypeDesc}" /></td>
+		  <td id="<c:out value="${document.agreementId}makerStatus" />"><c:out value="${document.makerStatus}" /></td>
+          <td id="<c:out value="${document.agreementId}makerComments" />"><c:out value="${document.makerComments}" /></td>
+		  <td id="<c:out value="${document.agreementId}statusDescription" />"><c:out value="${document.statusDescription}" /></td>
         </tr>
     </c:forEach>
    </tbody>
@@ -32,17 +31,17 @@
 		<tr>
 			<td>Status:</td>
 			<td>
-				<select id="checkerStatus" >
+				<select id="checkerStatus" disabled >
 					<c:forEach items="${workflowStatusList}" var="status">
 				        <option value="${status.statusCode}">${status.statusDescription}</option>
 				    </c:forEach>
 				</select>
 			</td>
 			<td>Comments:</td>
-			<td><input type="textarea" id="checkerComments" value="" /></td>
+			<td><input type="textarea" id="checkerComments" value="" disabled /></td>
 			<td>Error Reason:</td>
 			<td>
-				<select id="errorReasonList" >
+				<select id="errorReasonList" disabled >
 					<c:forEach items="${errorList}" var="error">
 				        <option value="${error.errorTypeId}">${error.errorTypeName}</option>
 				    </c:forEach>
@@ -54,12 +53,24 @@
 <br>
 <div class="btn-group btn-group-justified">
 	<div class="btn-group">
-		<a class="btn btn-default view-comment" ng-click="hc.startWork()">
+		<button class="btn btn-default view-comment" id="checkerUnasgn" onclick="#" disabled>
 			<i class="fa fa-play"></i>
 			Unassign
-		</a>
+		</button>&nbsp;&nbsp;&nbsp;
+		<button class="btn btn-default view-comment" id="checkerStart" onclick="landingObj.startClick()" disabled>
+			<i class="fa fa-play"></i>
+			Start &nbsp;&nbsp;&nbsp;
+		</button>&nbsp;&nbsp;&nbsp;		
+		<button class="btn btn-default view-comment" id="checkerHold" onclick="#" disabled>
+			<i class="fa fa-stop""></i>
+			Hold &nbsp;&nbsp;&nbsp;
+		</button>&nbsp;&nbsp;&nbsp;
+		<button class="btn btn-default view-comment" id="checkerComplete" onclick="landingObj.completeClick()" disabled>
+			<i class="fa fa-check"></i>
+			Complete
+		</button>				
 	</div>
-	<div class="btn-group">
+	<%--<div class="btn-group">
 		<a class="btn btn-default view-comment" ng-click="hc.startWork()">
 			<i class="fa fa-play"></i>
 			Start
@@ -76,5 +87,5 @@
 			<i class="fa fa-check"></i>
 			Done
 		</a>
-	</div>															
+	</div>--%>														
 </div>

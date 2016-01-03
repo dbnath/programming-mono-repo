@@ -6,15 +6,17 @@
 		<th>Agreement Id</th>
 		<th>LOB</th>
 		<th>Agreement Type</th>
+		<th>Maker Status</th>		
 	</tr>
 	</thead>
 	<tbody>
 	<c:forEach items="${myDocumentList}" var="document">
         <tr>
-		  <td><input type="checkbox" id="<c:out value="${document.agreementId}" />" name="docId" value="<c:out value="${document.agreementId}" />" /> </td>
-          <td><c:out value="${document.agreementId}" /></td>
-		  <td><c:out value="${document.lob}" /></td>
-		  <td><c:out value="${document.agreementTypeDesc}" /></td>
+		  <td><input type="checkbox" id="<c:out value="${document.agreementId}" />" name="docId" value="<c:out value="${document.agreementId}" />" onclick="landingObj.setMyAssignment(this)"/> </td>
+          <td id="<c:out value="${document.agreementId}agreementId" />"><c:out value="${document.agreementId}" /></td>
+		  <td id="<c:out value="${document.agreementId}lob" />"><c:out value="${document.lob}" /></td>
+		  <td id="<c:out value="${document.agreementId}agreementTypeDesc" />"><c:out value="${document.agreementTypeDesc}" /></td>
+		  <td id="<c:out value="${document.agreementId}statusDescription" />"><c:out value="${document.statusDescription}" /></td>		  
         </tr>
     </c:forEach>
    </tbody>
@@ -25,7 +27,7 @@
 		<tr>
 			<td>Status:</td>
 			<td>
-				<select id="makerStatus" >
+				<select id="checkerStatus" >
 					<c:forEach items="${workflowStatusList}" var="status">
 				        <option value="${status.statusCode}">${status.statusDescription}</option>
 				    </c:forEach>
@@ -39,21 +41,17 @@
 <br>
 <div class="btn-group btn-group-justified">
 	<div class="btn-group">
-		<a class="btn btn-default" ng-click="hc.startWork()">
+		<button class="btn btn-default view-comment" id="checkerStart" onclick="landingObj.startClick()" disabled>
 			<i class="fa fa-play"></i>
-			Start
-		</a>
-	</div>
-	<div class="btn-group">
-		<button class="btn btn-default view-comment">
+			Start &nbsp;&nbsp;&nbsp;
+		</button>&nbsp;&nbsp;&nbsp;		
+		<button class="btn btn-default view-comment" id="checkerHold" onclick="#" disabled>
 			<i class="fa fa-stop""></i>
-			Hold 
-		</button>
-	</div>
-	<div class="btn-group" >
-		<a class="btn btn-default assign-tag">
+			Hold &nbsp;&nbsp;&nbsp;
+		</button>&nbsp;&nbsp;&nbsp;
+		<button class="btn btn-default view-comment" id="checkerComplete" onclick="landingObj.completeClick()" disabled>
 			<i class="fa fa-check"></i>
-			Done
-		</a>
+			Complete
+		</button>				
 	</div>															
 </div>

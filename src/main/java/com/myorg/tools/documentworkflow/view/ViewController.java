@@ -97,6 +97,11 @@ public class ViewController {
 		Integer primaryRole = new Integer(user.getRoleId());
 		try {
 			List<DocumentWorkflowStatus> workflowStatusList = documentDAO.getWorkflowStatusListByRole(primaryRole);
+			DocumentWorkflowStatus blankStatus = new DocumentWorkflowStatus();
+			blankStatus.setStatusCode(-1);
+			blankStatus.setStatusDescription("");
+			workflowStatusList.add(0, blankStatus);
+			
 			List<AgreementErrorType> errorList = null;
 			if (Role.ID_ROLE_MAKER.intValue() == primaryRole.intValue()) {
 				dto = documentDAO.getDocumentsForMaker(dto);
@@ -104,6 +109,12 @@ public class ViewController {
 			} else if (Role.ID_ROLE_CHECKER.intValue() == primaryRole.intValue()) {
 				dto = documentDAO.getDocumentsForChecker(dto);
 				errorList = documentAdminDAO.populateErrorTypes();
+				AgreementErrorType blankErrorType = new AgreementErrorType();
+				blankErrorType.setErrorTypeId(-1);
+				blankErrorType.setErrorTypeCode("");
+				blankErrorType.setErrorTypeName("");
+				errorList.add(0, blankErrorType);
+				
 				modelView = new ModelAndView("common/checkerList");
 				modelView.addObject("errorList", errorList);
 			} else if (Role.ID_ROLE_QC.intValue() == primaryRole.intValue()) {
