@@ -147,6 +147,11 @@ var service = function(){
 	function completeProcess(data, completeRespFn){
 		return request('POST', 'rest/WflService/completeProcess', {'x-docwrkflow-auth' : getDocWorkflowAuthorizationId()}, data,null,completeRespFn);
 	}	
+	
+	this.holdProcess=holdProcess;
+	function holdProcess(data, holdRespFn){
+		return request('POST', 'rest/WflService/holdProcess', {'x-docwrkflow-auth' : getDocWorkflowAuthorizationId()}, data,null,holdRespFn);
+	}	
 
   	function request(method,url,headers,data,params, responseFunction, contentType){
 		ajaxData = JSON.stringify(data);

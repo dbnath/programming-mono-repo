@@ -18,6 +18,7 @@ var landing = function () {
 		serviceObj = new service();
 		if($("selectedRoleId").value == "1") {
 			$("home").style.display = 'none';
+			$("myInboxSwitch").style.display = 'none';
 			$("globalInboxSwitch").style.display = 'none';
 		}
 		if($("home").style.display != 'none') {
@@ -72,7 +73,7 @@ var landing = function () {
 			$(selectedItemsTeamList[k]).disabled = true;
 			selectedItemsTeamList[k]=null;
 		}
-		alert(selectedItemsTeamList);
+		//alert(selectedItemsTeamList);
 	}
 	
 	this.setMyAssignment=setMyAssignment;
@@ -80,10 +81,52 @@ var landing = function () {
 		if(control.checked == true){
 			selectedItemsMyList[selectedItemsMyList.length] = control.value;
 		}
-		alert(selectedItemsMyList.length+ $('checkerStart'));
 		if(selectedItemsMyList.length > 0){
 			$('checkerStart').disabled=false;
-		}		
+		}
+		if(selectedItemsMyList.length == 1){			
+			
+			var statusCd = $(control.id+'statusCode').value;
+			
+			if($("selectedRoleId").value == "1"){
+				if(statusCd == 1){
+					$('checkerStart').disabled=false;
+					$('checkerHold').disabled=true;
+					$('checkerComplete').disabled=true;
+					$('checkerStatus').disabled=true;
+				} else if(statusCd == 2){
+					$('checkerStart').disabled=true;
+					$('checkerHold').disabled=true;
+					$('checkerComplete').disabled=false;
+					$('checkerStatus').disabled=false;
+				}
+			} else if($("selectedRoleId").value == "2"){
+				if(statusCd == 16){
+					$('checkerStart').disabled=false;
+					$('checkerHold').disabled=true;
+					$('checkerComplete').disabled=true;
+					$('checkerStatus').disabled=true;
+				} else if(statusCd == 17){
+					$('checkerStart').disabled=true;
+					$('checkerHold').disabled=true;
+					$('checkerComplete').disabled=false;
+					$('checkerStatus').disabled=false;
+				}				
+			} else if($("selectedRoleId").value == "3"){
+				if(statusCd == 19){
+					$('checkerStart').disabled=false;
+					$('checkerHold').disabled=true;
+					$('checkerComplete').disabled=true;
+					$('checkerStatus').disabled=true;
+				} else if(statusCd == 20){
+					$('checkerStart').disabled=true;
+					$('checkerHold').disabled=true;
+					$('checkerComplete').disabled=false;
+					$('checkerStatus').disabled=false;
+				}				
+			}
+			
+		} 
 	}
 	
 	this.startClick=startClick;
@@ -127,6 +170,7 @@ var landing = function () {
 				var agrId = docList[k].agreementId;
 				
 				$(agrId+'statusDescription').innerHTML=docList[k].statusDescription;
+				$(agrId+'statusCode').innerHTML=docList[k].statusCode;
 				if($("selectedRoleId").value == "2"){
 					$(agrId+'makerStatus').innerHTML=docList[k].makerStatus;
 				}
@@ -179,21 +223,90 @@ var landing = function () {
 			for(var k in docList){
 				var agrId = docList[k].agreementId;
 				$(agrId+'statusDescription').innerHTML=docList[k].statusDescription;
+				$(agrId+'statusCode').innerHTML=docList[k].statusCode;
 				if($("selectedRoleId").value == "2"){
 					$(agrId+'makerStatus').innerHTML=docList[k].makerStatus;
 				}
 			}
 			$('checkerStart').disabled=true;
-			$('checkerComplete').disabled=false;
-			$('checkerStatus').disabled=false;	
+			$('checkerHold').disabled=true;
+			$('checkerComplete').disabled=true;
+			$('checkerStatus').disabled=true;	
+			$('checkerComments').disabled=true;	
+		}
+	}	
+	
+	this.holdClick=holdClick;
+	function holdClick(){
+		if(selectedItemsMyList.length == 0){
+			alert("Please select an agreement");
+			return false;
+		}
+		if(selectedItemsMyList.length > 1){
+			alert("You can work with only one Agreement at a time");
+			return false;
 		}
 		
+		var inputObj = {};
+		inputObj.agreementId=selectedItemsMyList[0];
+		inputObj.roleId=$("selectedRoleId").value;
+		inputObj.statusCode=$('checkerStatus').value;
+		inputObj.user={userId:$("selectedUserId").value, roleId:$("selectedRoleId").value};
+		inputObj.comment=$('checkerComments').value;
+		if($("selectedRoleId").value == "2"){
+		  inputObj.errorReasonCode=$('errorReasonList').value;
+		}
+		serviceObj.holdProcess(inputObj,holdRespFn);		
+	}
+	
+	this.holdRespFn=holdRespFn;
+	function holdRespFn(responseData){
+		
+		var responseObject = JSON.parse(responseData.responseText);
+		
+		var respStatus = responseObject.response.responseMessage;
+		
+		if(respStatus == "Success"){
+			var docList = responseObject.docList;
+			
+			for(var k in docList){
+				var agrId = docList[k].agreementId;
+				$(agrId+'statusDescription').innerHTML=docList[k].statusDescription;
+				$(agrId+'statusCode').innerHTML=docList[k].statusCode;
+				if($("selectedRoleId").value == "2"){
+					$(agrId+'makerStatus').innerHTML=docList[k].makerStatus;
+				}
+			}
+			$('checkerStart').disabled=true;
+			$('checkerHold').disabled=true;
+			$('checkerComplete').disabled=true;
+			$('checkerStatus').disabled=true;	
+			$('checkerComments').disabled=true;	
+			
+			if($("selectedRoleId").value == "3"){
+				$('checkerComplete').disabled=false;
+			}
+		}
 	}	
 	
 	this.reloadGridData=reloadGridData
 	function reloadGridData(){
 		serviceObj.getTeamDocList(landinginitResponse);
 		serviceObj.getMyDocList(landinginitMyListResponse);
+	}
+	
+	this.setHoldStatus=setHoldStatus;
+	function setHoldStatus(stsCombo){
+		
+		if(stsCombo.value != -1){
+			$('checkerHold').disabled=false;
+			$('checkerStart').disabled=true;
+			$('checkerComplete').disabled=false;
+			$('checkerComments').disabled=false;
+			if($("selectedRoleId").value == "2"){
+				$('errorReasonList').disabled=false;
+			}
+		}
 	}
 	  
 } 

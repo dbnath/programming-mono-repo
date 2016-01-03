@@ -9,6 +9,7 @@
 		<th>Maker Status</th>
 		<th>Maker Details</th>
 		<th>QC Status</th>
+		<th style="display:none">StatusCode</th>	
 	</tr>
 	</thead>
 	<tbody>
@@ -21,6 +22,7 @@
 		  <td id="<c:out value="${document.agreementId}makerStatus" />"><c:out value="${document.makerStatus}" /></td>
           <td id="<c:out value="${document.agreementId}makerComments" />"><c:out value="${document.makerComments}" /></td>
 		  <td id="<c:out value="${document.agreementId}statusDescription" />"><c:out value="${document.statusDescription}" /></td>
+		  <td style="display:none" id="<c:out value="${document.agreementId}statusCode" />" value="<c:out value="${document.statusCode}" />" ><c:out value="${document.statusCode}" /></td>		  
         </tr>
     </c:forEach>
    </tbody>
@@ -31,7 +33,7 @@
 		<tr>
 			<td>Status:</td>
 			<td>
-				<select id="checkerStatus" disabled >
+				<select id="checkerStatus" disabled onchange="landingObj.setHoldStatus(this)" >
 					<c:forEach items="${workflowStatusList}" var="status">
 				        <option value="${status.statusCode}">${status.statusDescription}</option>
 				    </c:forEach>
@@ -61,7 +63,7 @@
 			<i class="fa fa-play"></i>
 			Start &nbsp;&nbsp;&nbsp;
 		</button>&nbsp;&nbsp;&nbsp;		
-		<button class="btn btn-default view-comment" id="checkerHold" onclick="#" disabled>
+		<button class="btn btn-default view-comment" id="checkerHold" onclick="landingObj.holdClick()" disabled>
 			<i class="fa fa-stop""></i>
 			Hold &nbsp;&nbsp;&nbsp;
 		</button>&nbsp;&nbsp;&nbsp;
