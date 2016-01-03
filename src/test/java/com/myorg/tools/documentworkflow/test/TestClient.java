@@ -20,7 +20,11 @@ public class TestClient {
 	private static String url = "http://localhost:8080/documentworkflow/rest/WflService/";
 
 	public static void main(String[] args) throws Exception {
-		//getDocumentsForAMaker();
+		getDocumentsForAMaker();
+		getDocumentsForCheckerTeamInbox();	
+		if (true) {
+			return;
+		}
 		
 /*		HAPPY PATH
 		----------------------------------------------------

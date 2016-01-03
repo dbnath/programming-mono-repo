@@ -5,34 +5,57 @@
 	long ver = java.lang.System.currentTimeMillis();
 %>
 
- <link href="<%=request.getContextPath()%>/static/bower_components/bootcards/css/bootcards-desktop.min.css" rel="stylesheet" type="text/css" />
-    <link href="<%=request.getContextPath()%>/static/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"/>
          
-    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/bower_components/ng-grid.min.css" />
-    <link rel="stylesheet" href="<%=request.getContextPath()%>/static/bower_components/angular-ui-grid/ui-grid.min.css" type="text/css">
-    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/bower_components/style.css" />
-    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/bower_components/ngDialog.css" />
-    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/bower_components/ngDialog-custom-width.css" />
-    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/bower_components/ngDialog-theme-default.css" />
-     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/bower_components/ngDialog-theme-plain.css" />
-    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/bower_components/style.css" />
-    <link data-require="ui-select@0.11.1" data-semver="0.11.1" rel="stylesheet" href="https://cdn.rawgit.com/angular-ui/ui-select/v0.11.2/dist/select.css" />
-  	<!-- Font awesome -->
-    <link href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" />
-        
-    <!-- multiselect -->
-    <link rel="stylesheet" href="<%=request.getContextPath()%>/static/bower_components/multiselect/bootstrap-multiselect.css" type="text/css" />	
-	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/css/docworkflow.css" />
+
 	<script language="Javascript" src="<%=request.getContextPath()%>/js/commonframework.js?ver=<%=ver%>"></script>
 	<script language="Javascript" src="<%=request.getContextPath()%>/js/service.js?ver=<%=ver%>"></script>
 	<script language="Javascript" src="<%=request.getContextPath()%>/js/json2.js"></script>
 	
+	<link rel="stylesheet" href="<%=request.getContextPath()%>/css/pure-release-0.6.0/pure-min.css">
+
+
+
+<!--[if lte IE 8]>
+  
+    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/grids-responsive-old-ie-min.css">
+  
+<![endif]-->
+<!--[if gt IE 8]><!-->
+  
+    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/grids-responsive-min.css">
+  
+<!--<![endif]-->
+	
+	 <!--[if lte IE 8]>
+        <link rel="stylesheet" href="<%=request.getContextPath()%>/css/mainstyle-old-ie.css">
+    <![endif]-->
+    <!--[if gt IE 8]><!-->
+        <link rel="stylesheet" href="<%=request.getContextPath()%>/css/mainstyle.css">
+    <!--<![endif]-->
 	
 </head>
 
-<body style="padding-top:10px; padding-left:5px; padding-right:5px; ">
+<body>
 
-<table border="1" style="width:100%; background-color:#000099;height:50px">
+<div class="header">
+    <div class="home-menu pure-menu pure-menu-horizontal pure-menu-fixed" style="height:80px;">
+        <a class="pure-menu-heading" href="">DocumentWorkFlow</a>
+
+        <ul class="pure-menu-list">
+            <!-- <li class="pure-menu-item pure-menu-selected"><a href="#" class="pure-menu-link">Home</a></li>
+            <li class="pure-menu-item"><a href="#" class="pure-menu-link">Help</a></li> -->
+            <c:if test="${userDetails != null}">
+            <li class="pure-menu-item">
+            	<a href="#" class="pure-menu-link" style="font-size: 12px;">Welcome <c:out value="${userDetails.userName}" /> (<c:out value="${userDetails.userRoleList[0].roleName}" />)</a>            
+            </li>
+            <li class="pure-menu-item"><a href="#" onclick="logout()" style="font-size: 12px;">Logout</a></li>
+            </c:if>
+        </ul>
+    </div>
+</div>
+
+
+<%-- <table border="1" style="width:100%; background-color:#000099;height:50px">
 	<tr>
 		<td style="width:60%;font-family:'Arial Bold', 'Arial';font-weight:500;font-style:normal;font-size:20px;color:#ffffff;text-align:right;padding-left:100px;line-height:normal;" >AM Remediation Workflow</td>
 		<td style="width:40%;text-align:right;" align="right">
@@ -52,10 +75,9 @@
       
 		</td>
 	</tr>
-</table>
+</table> --%>
 <input type="hidden" id="selectedUserId" name="selectedUserId" value="<c:out value="${userDetails.userId}" />">
 <input type="hidden" id="selectedRoleId" name="selectedRoleId" value="<c:out value="${userDetails.userRoleList[0].roleId}" />">
-</body>
 
 
 <script>
