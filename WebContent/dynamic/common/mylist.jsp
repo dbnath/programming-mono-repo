@@ -14,13 +14,14 @@
 	<tbody>
 	<c:forEach items="${myDocumentList}" var="document">
         <tr>
-		  <td><input type="checkbox" id="<c:out value="${document.docId}" />" name="docId" value="<c:out value="${document.docId}" />" /> </td>	
-          <td><c:out value="${document.docId}" /></td>
-          <td><c:out value="${document.docLocation}" /></td>
-		  <td>Not found from service</td>
-		  <td><c:out value="${document.wfStatusDesc}" /></td>
-          <td>Not found from service</td>
+		  <td><input type="checkbox" id="<c:out value="${document.agreementId}" />" name="docId" value="<c:out value="${document.agreementId}" />" /> </td>
+          <td><c:out value="${document.agreementId}" /></td>
+		  <td><c:out value="${document.lob}" /></td>
+		  <td><c:out value="${document.agreementTypeDesc}" /></td>
+		  <td><c:out value="${document.makerStatus}" /></td>
+          <td><c:out value="${document.makerComments}" /></td>
 		  <td><c:out value="${document.assignedTo}" /></td>
+		  <td><c:out value="${document.checkerStatus}" /></td>
         </tr>
     </c:forEach>
    </tbody>

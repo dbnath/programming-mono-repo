@@ -11,22 +11,22 @@
 		<th>Assigned To</th>
 		<th>QC Status</th>
 		<th>QC Details</th>
-		<th>Error Reason</th>
+		<th>Error Reason</th>		
 	</tr>
 	</thead>
 	<tbody>
 	<c:forEach items="${teamDocumentList}" var="document">
         <tr>
-		  <td><input type="checkbox" id="<c:out value="${document.docId}" />" name="docId" value="<c:out value="${document.docId}" />" /> </td>
-          <td><c:out value="${document.docId}" /></td>
-		  <td>Not found from service</td>
-		  <td><c:out value="${document.docName}" /></td>
-		  <td><c:out value="${document.wfStatusDesc}" /></td>
-          <td><c:out value="${document.wfActivityDesc}" /></td>
+		  <td><input type="checkbox" id="<c:out value="${document.agreementId}" />" name="docId" value="<c:out value="${document.agreementId}" />" /> </td>
+          <td><c:out value="${document.agreementId}" /></td>
+		  <td><c:out value="${document.lob}" /></td>
+		  <td><c:out value="${document.agreementTypeDesc}" /></td>
+		  <td><c:out value="${document.makerStatus}" /></td>
+          <td><c:out value="${document.makerComments}" /></td>
 		  <td><c:out value="${document.assignedTo}" /></td>
-		  <td>&nbsp;</td>
-		  <td>&nbsp;</td>
-		  <td>&nbsp;</td>
+		  <td><c:out value="${document.checkerStatus}" /></td>
+		  <td><c:out value="${document.checkerComments}" /></td>
+		  <td><c:out value="${document.errorReason}" /></td>
         </tr>
     </c:forEach>
    </tbody>

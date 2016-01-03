@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.myorg.tools.documentworkflow.dao.DocumentWorkflowDAO;
+import com.myorg.tools.documentworkflow.dto.DocumentDTO;
 import com.myorg.tools.documentworkflow.model.DocumentWorkflow;
 import com.myorg.tools.documentworkflow.model.User;
 
@@ -39,8 +40,25 @@ public class ViewController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST,value = "landingHome")
-	public ModelAndView getLandingHomeView() {
+	public ModelAndView getLandingHomeView(HttpServletRequest request, HttpServletResponse response) {
+		
+		DocumentDTO dto = new DocumentDTO();
 		ModelAndView modelView = new ModelAndView("landing/landing");
+		
+		/*User user = (User)request.getSession().getAttribute("userDetails");
+		dto.setUser(user);
+		try {
+			dto = documentDAO.getDocumentsForMaker(dto);
+			modelView.addObject("myDocumentList", dto.getDocList());
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
+		
 		return modelView;
 	}
 	
@@ -60,9 +78,12 @@ public class ViewController {
 	@RequestMapping(method = RequestMethod.GET,value = "teamDocs")
 	public ModelAndView getTeamDocumentList(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView modelView = new ModelAndView("common/teamlist");
+		DocumentDTO dto = new DocumentDTO();
+		User user = (User)request.getSession().getAttribute("userDetails");
+		dto.setUser(user);
 		try {
-			List<DocumentWorkflow> documentList = documentDAO.getAllDocuments(null);
-			modelView.addObject("teamDocumentList", documentList);
+			dto = documentDAO.getDocumentsForMaker(dto);
+			modelView.addObject("myDocumentList", dto.getDocList());
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -76,10 +97,12 @@ public class ViewController {
 	@RequestMapping(method = RequestMethod.GET,value = "myDocs")
 	public ModelAndView getMyDocumentList(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView modelView = new ModelAndView("common/mylist");
+		DocumentDTO dto = new DocumentDTO();
 		User user = (User)request.getSession().getAttribute("userDetails");
+		dto.setUser(user);
 		try {
-			List<DocumentWorkflow> documentList = documentDAO.getAllDocuments(user.getUserId());
-			modelView.addObject("myDocumentList", documentList);
+			dto = documentDAO.getDocumentsForMaker(dto);
+			modelView.addObject("myDocumentList", dto.getDocList());
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
