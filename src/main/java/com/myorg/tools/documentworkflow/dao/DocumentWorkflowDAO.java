@@ -7,6 +7,7 @@ import com.myorg.tools.documentworkflow.dto.DocumentDTO;
 import com.myorg.tools.documentworkflow.model.DocWkflwProcess;
 import com.myorg.tools.documentworkflow.model.DocumentWorkflow;
 import com.myorg.tools.documentworkflow.model.DocumentWorkflowDetail;
+import com.myorg.tools.documentworkflow.model.DocumentWorkflowStatus;
 import com.myorg.tools.documentworkflow.model.User;
 
 public interface DocumentWorkflowDAO {
@@ -66,5 +67,7 @@ public interface DocumentWorkflowDAO {
 	 public DocumentDTO completeProcess(DocumentDTO documentDTO) throws SQLException, Exception;
 	 
 	 public DocumentDTO holdProcess(DocumentDTO documentDTO) throws SQLException, Exception;
+	 
+	 public List<DocumentWorkflowStatus> getWorkflowStatusListByRole(int roleId)throws SQLException, Exception;
 
 }

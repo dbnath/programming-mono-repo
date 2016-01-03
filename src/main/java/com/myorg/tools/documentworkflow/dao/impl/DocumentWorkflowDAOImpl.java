@@ -16,6 +16,7 @@ import com.myorg.tools.documentworkflow.constant.DocumentWorkflowToolConstant;
 import com.myorg.tools.documentworkflow.dao.DocumentWorkflowDAO;
 import com.myorg.tools.documentworkflow.dto.DocumentDTO;
 import com.myorg.tools.documentworkflow.mapper.CheckerAgreementWorkflowMapper;
+import com.myorg.tools.documentworkflow.mapper.DocumentWorkflowStatusMapper;
 import com.myorg.tools.documentworkflow.mapper.MakerAgreementWkflwMapper;
 import com.myorg.tools.documentworkflow.mapper.OnshoreSMEAgreementWorkflowMapper;
 /*import com.myorg.tools.documentworkflow.mapper.CheckerAgreementWorkflowMapper;
@@ -26,6 +27,7 @@ import com.myorg.tools.documentworkflow.model.Document;
 import com.myorg.tools.documentworkflow.model.DocumentTagRelationship;
 import com.myorg.tools.documentworkflow.model.DocumentWorkflow;
 import com.myorg.tools.documentworkflow.model.DocumentWorkflowDetail;
+import com.myorg.tools.documentworkflow.model.DocumentWorkflowStatus;
 import com.myorg.tools.documentworkflow.model.User;
 import com.myorg.tools.documentworkflow.util.DocumentWorkflowToolUtility;
 
@@ -570,5 +572,15 @@ public class DocumentWorkflowDAOImpl extends BaseJDBCTemplate implements Documen
 			jdbcTemplate.update(INSERT_INTO_WKF_PROCESS_AUDIT_SQL, versionId+1, roleId, statusCode, userId, userId,currentDate, agreementId);
 	
 	 }
+	 
+	 @Override
+	public List<DocumentWorkflowStatus> getWorkflowStatusListByRole(int roleId)
+			throws SQLException, Exception {
+	
+		List <DocumentWorkflowStatus> statusList = null;
+	    String SQL = DocumentWorkflowToolConstant.FETCH_STATUS_BY_ROLE;
+	    statusList = this.getJdbcTemplateObject().query(SQL, new Object[]{roleId}, new DocumentWorkflowStatusMapper());
+		return statusList;
+	}
 	
 }

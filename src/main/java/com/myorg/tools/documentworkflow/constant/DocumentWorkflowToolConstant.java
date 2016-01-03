@@ -93,4 +93,6 @@ public class DocumentWorkflowToolConstant {
 	public static String UPDATE_STATUS_ASSIGNED_TO_IN_WKF_PROCESS_SQL = "update WF_PROCESS set ID_ROLE=?, ID_WF_STATUS=?, ASSIGNED_TO=?, LAST_UPDATED_BY=?,LAST_UPDATE_DT=? where ID_AGRMT=?";
 	
 	public static String FETCH_DOC_WFL_SQL = "select *, '' AS TX_AGREEMENT_TYPE, '' AS TX_WF_STATUS from WF_PROCESS where ID_AGRMT in ";
+	
+	public static String FETCH_STATUS_BY_ROLE = "select b.ID_WF_STATUS, a.TX_WF_STATUS, c.ID_ROLE, c.NM_ROLE from WF_STATUS a, ROLE_STATUS_MAPPING b, ROLE c where b.ID_ROLE = ? AND b.ID_WF_STATUS=a.ID_WF_STATUS AND b.ID_ROLE = c.ID_ROLE";
 }

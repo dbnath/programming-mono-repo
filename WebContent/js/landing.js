@@ -13,8 +13,12 @@ var landing = function () {
 	this.landinginit = landinginit;
 	function landinginit() {
 		serviceObj = new service();
+		if($("selectedRoleId").value == "1") {
+			$("home").style.display = 'none';
+			$("globalInboxSwitch").style.display = 'none';
+		}
 		if($("home").style.display != 'none') {
-		serviceObj.getTeamDocList(landinginitResponse);
+			serviceObj.getTeamDocList(landinginitResponse);
 			$("profile").style.display = 'none';
 		}
 		
