@@ -11,7 +11,7 @@ var landing = function () {
 	}
 
 	var selectedItemsTeamList = [];
-	var selectedItemsMyList = [];
+	var selectedItemsMyList = null;
 	
 	this.landinginit = landinginit;
 	function landinginit() {
@@ -79,12 +79,27 @@ var landing = function () {
 	this.setMyAssignment=setMyAssignment;
 	function setMyAssignment(control){
 		if(control.checked == true){
-			selectedItemsMyList[selectedItemsMyList.length] = control.value;
+			//selectedItemsMyList[selectedItemsMyList.length] = control.value;
+			//alert(selectedItemsMyList);
+			if(selectedItemsMyList == null){
+				selectedItemsMyList = control.value;
+			} else {
+				alert('You can work on one agreement at a time');
+				control.checked=false;
+				return false;
+			}
+		} else { //User unchecks a row
+			selectedItemsMyList = null;
 		}
-		if(selectedItemsMyList.length > 0){
-			$('checkerStart').disabled=false;
-		}
-		if(selectedItemsMyList.length == 1){			
+		if(selectedItemsMyList != null){
+			//$('checkerStart').disabled=false;
+		//}
+		//if(selectedItemsMyList.length == 1){	
+
+			$('checkerStart').disabled=true;
+			$('checkerHold').disabled=true;
+			$('checkerComplete').disabled=true;
+			$('checkerStatus').disabled=true;			
 			
 			var statusCd = $(control.id+'statusCode').value;
 			
@@ -123,7 +138,12 @@ var landing = function () {
 					$('checkerHold').disabled=true;
 					$('checkerComplete').disabled=false;
 					$('checkerStatus').disabled=false;
-				}				
+				} else if(statusCd == 21){
+					$('checkerStart').disabled=true;
+					$('checkerHold').disabled=true;
+					$('checkerComplete').disabled=false;
+					$('checkerStatus').disabled=true;
+				}
 			}
 			
 		} 
@@ -131,17 +151,17 @@ var landing = function () {
 	
 	this.startClick=startClick;
 	function startClick(){
-		if(selectedItemsMyList.length == 0){
+		/*if(selectedItemsMyList.length == 0){
 			alert("Please select an agreement");
 			return false;
 		}
 		if(selectedItemsMyList.length > 1){
 			alert("You can work with only one Agreement at a time");
 			return false;
-		}
+		}*/
 		
 		var inputObj = {};
-		inputObj.agreementId=selectedItemsMyList[0];
+		inputObj.agreementId=selectedItemsMyList;//[0];
 		inputObj.roleId=$("selectedRoleId").value;
 		
 		if($("selectedRoleId").value == "1"){
@@ -185,17 +205,17 @@ var landing = function () {
 	
 	this.completeClick=completeClick;
 	function completeClick(){
-		if(selectedItemsMyList.length == 0){
+		/*if(selectedItemsMyList.length == 0){
 			alert("Please select an agreement");
 			return false;
 		}
 		if(selectedItemsMyList.length > 1){
 			alert("You can work with only one Agreement at a time");
 			return false;
-		}
+		}*/
 		
 		var inputObj = {};
-		inputObj.agreementId=selectedItemsMyList[0];
+		inputObj.agreementId=selectedItemsMyList;//[0];
 		inputObj.roleId=$("selectedRoleId").value;
 		
 		if($("selectedRoleId").value == "1"){
@@ -238,17 +258,39 @@ var landing = function () {
 	
 	this.holdClick=holdClick;
 	function holdClick(){
-		if(selectedItemsMyList.length == 0){
+		/*if(selectedItemsMyList.length == 0){
 			alert("Please select an agreement");
 			return false;
 		}
 		if(selectedItemsMyList.length > 1){
 			alert("You can work with only one Agreement at a time");
 			return false;
+		}*/
+		
+		if($("selectedRoleId").value == "1" && $('checkerStatus').value == 15){
+			if($('checkerComments').value == null){
+				alert('Please fill in comments section');
+				return false;
+			}
+		}
+
+		if($("selectedRoleId").value == "2" && $('checkerStatus').value == 15){
+			if($('checkerComments').value == null || $('errorReasonList').value == -1){
+				alert('Please fill in both comments section and Error Reason');
+				return false;
+			}
 		}
 		
+		if($("selectedRoleId").value == "3" && $('checkerStatus').value == 21){
+			if($('checkerComments').value == null){
+				alert('Please fill in comments section');
+				return false;
+			}
+		}		
+		
+		
 		var inputObj = {};
-		inputObj.agreementId=selectedItemsMyList[0];
+		inputObj.agreementId=selectedItemsMyList;//[0];
 		inputObj.roleId=$("selectedRoleId").value;
 		inputObj.statusCode=$('checkerStatus').value;
 		inputObj.user={userId:$("selectedUserId").value, roleId:$("selectedRoleId").value};
@@ -293,6 +335,7 @@ var landing = function () {
 	function reloadGridData(){
 		serviceObj.getTeamDocList(landinginitResponse);
 		serviceObj.getMyDocList(landinginitMyListResponse);
+		selectedItemsMyList = null;
 	}
 	
 	this.setHoldStatus=setHoldStatus;

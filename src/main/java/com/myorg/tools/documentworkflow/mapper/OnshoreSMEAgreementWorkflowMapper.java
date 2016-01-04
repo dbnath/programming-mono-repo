@@ -21,6 +21,7 @@ public class OnshoreSMEAgreementWorkflowMapper implements RowMapper<DocWkflwProc
 			docWorkflow.setCheckerStatusId(rs.getInt("ID_WF_CHECKER_STATUS"));
 			docWorkflow.setCheckerStatus(rs.getString("TX_WF_CHECKER_STATUS"));
 			docWorkflow.setCheckerComments(rs.getString("CHECKER_COM"));
+			docWorkflow.setSmeComments(rs.getString("SME_COM"));
 			docWorkflow.setLob(rs.getString("LOB"));
 		    docWorkflow.setAssignedTo(rs.getString("ASSIGNED_TO"));
 		    docWorkflow.setCreatedBy(rs.getString("CREATED_BY"));

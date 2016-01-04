@@ -8,7 +8,7 @@
 		<th>Agreement Type</th>
 		<th>Maker Status</th>
 		<th>Maker Details</th>
-		<th>QC Status</th>
+		<th>Current Status</th>
 		<th style="display:none">StatusCode</th>	
 	</tr>
 	</thead>
@@ -55,7 +55,7 @@
 <br>
 <div class="btn-group btn-group-justified">
 	<div class="btn-group">
-		<button class="btn btn-default view-comment" id="checkerUnasgn" onclick="#" disabled>
+		<button class="btn btn-default view-comment" id="checkerUnasgn" onclick="#" style="display:none">
 			<i class="fa fa-play"></i>
 			Unassign
 		</button>&nbsp;&nbsp;&nbsp;

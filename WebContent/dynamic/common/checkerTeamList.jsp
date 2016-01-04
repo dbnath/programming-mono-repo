@@ -9,7 +9,7 @@
 		<th>Maker Status</th>
 		<th>Maker Details</th>
 		<th>Assigned To</th>
-		<th>QC Status</th>
+		<th>Current Status</th>
 		<th>QC Details</th>
 		<th>Error Reason</th>		
 	</tr>

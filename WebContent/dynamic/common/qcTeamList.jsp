@@ -9,7 +9,7 @@
 		<th>QC Status</th>
 		<th>QC Details</th>
 		<th>Assigned To</th>
-		<th>Onshore QC Status</th>
+		<th>Current Status</th>
 		<th>Onshore QC Details</th>
 	</tr>
 	</thead>

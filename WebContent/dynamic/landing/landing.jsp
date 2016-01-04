@@ -10,13 +10,9 @@
   <!-- slide in menu (mobile only) -->
   <div class="container bootcards-container" id="main" ng-init="hc.inithome();" style="padding-top:40px">
     
-			  <a class="btn btn-primary" href="#" ng-click="hc.refreshGrid()" >
+			  <a class="btn btn-primary" href="#" onclick="landingObj.reloadGridData()" >
 				<i class="glyphicon glyphicon-refresh"></i> 
 				<span>Reload Documents</span>
-			  </a>
-			  <a class="btn btn-primary" href="rest/docadmin/dump">
-				<i class="glyphicon glyphicon-refresh"></i> 
-				<span>Export Completed Document Workflow List</span>
 			  </a><br><br>			  
 			  
 

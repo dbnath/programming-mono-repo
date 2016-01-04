@@ -8,7 +8,7 @@
 		<th>Agreement Type</th>
 		<th>QC Status</th>
 		<th>QC Details</th>
-		<th>Onshore QC Status</th>
+		<th>Current Status</th>
 		<th>Onshore QC Details</th>		
 		<th style="display:none">StatusCode</th>
 	</tr>
@@ -57,7 +57,7 @@
 <br>
 <div class="btn-group btn-group-justified">
 	<div class="btn-group">
-		<button class="btn btn-default view-comment" id="checkerUnasgn" onclick="#" disabled>
+		<button class="btn btn-default view-comment" id="checkerUnasgn" onclick="#" style="display:none">
 			<i class="fa fa-play"></i>
 			Unassign
 		</button>&nbsp;&nbsp;&nbsp;

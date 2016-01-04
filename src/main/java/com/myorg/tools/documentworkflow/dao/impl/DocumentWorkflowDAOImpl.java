@@ -558,7 +558,7 @@ public class DocumentWorkflowDAOImpl extends BaseJDBCTemplate implements Documen
 			switch(roleId){
 				case 2: statusCode = 16;//FIXME Replace with constants
 				break;
-				case 3: statusCode = 20;
+				case 3: statusCode = 19;
 				break;
 			}
 					
