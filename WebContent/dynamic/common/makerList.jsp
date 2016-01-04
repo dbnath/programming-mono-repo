@@ -24,6 +24,8 @@
    </tbody>
 </table>
 <br>
+<form class="pure-form pure-form-stacked">
+<fieldset>
 <div id="makerActionsPanel" style="display:block">
 	<table>
 		<tr>
@@ -36,24 +38,23 @@
 				</select>
 			</td>
 			<td>Comments:</td>
-			<td><input type="textarea" id="checkerComments" value="" disabled /></td>
+			<td><textarea id="checkerComments" value="" class="pure-input-4-3" disabled></textarea></td>
 		</tr>
 	</table>
 </div>
 <br>
-<div class="btn-group btn-group-justified">
+<div>
 	<div class="btn-group">
-		<button class="btn btn-default view-comment" id="checkerStart" onclick="landingObj.startClick()" disabled>
-			<i class="fa fa-play"></i>
-			Start &nbsp;&nbsp;&nbsp;
-		</button>&nbsp;&nbsp;&nbsp;		
-		<button class="btn btn-default view-comment" id="checkerHold" onclick="landingObj.holdClick()" disabled>
-			<i class="fa fa-stop""></i>
-			Hold &nbsp;&nbsp;&nbsp;
-		</button>&nbsp;&nbsp;&nbsp;
-		<button class="btn btn-default view-comment" id="checkerComplete" onclick="landingObj.completeClick()" disabled>
-			<i class="fa fa-check"></i>
-			Complete
-		</button>				
+		<a class="button-secondary pure-button" id="checkerStart" onclick="landingObj.startClick()" disabled>
+			Start
+		</a>		
+		<a class="button-warning pure-button" id="checkerHold" onclick="landingObj.holdClick()" disabled>
+			Hold 
+		</a>
+		<a class="button-success pure-button" id="checkerComplete" onclick="landingObj.completeClick()" disabled>
+			Done
+		</a>				
 	</div>															
 </div>
+</fieldset>
+</form>
