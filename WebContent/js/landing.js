@@ -37,6 +37,10 @@ var landing = function () {
 	this.landinginitMyListResponse = landinginitMyListResponse;
 	function landinginitMyListResponse(responseData) {
 		$("myGrid").innerHTML = responseData.responseText;
+		//setTimeout(function(){
+			sorter.init();
+		//}, 2000);
+		
 	}
 	
 	this.setAssignment=setAssignment;
@@ -78,6 +82,7 @@ var landing = function () {
 	
 	this.setMyAssignment=setMyAssignment;
 	function setMyAssignment(control){
+		
 		if(control.checked == true){
 			//selectedItemsMyList[selectedItemsMyList.length] = control.value;
 			//alert(selectedItemsMyList);
@@ -91,18 +96,14 @@ var landing = function () {
 		} else { //User unchecks a row
 			selectedItemsMyList = null;
 		}
+		$('checkerStart').disabled=true;
+		$('checkerHold').disabled=true;
+		$('checkerComplete').disabled=true;
+		$('checkerStatus').disabled=true;	
 		if(selectedItemsMyList != null){
-			//$('checkerStart').disabled=false;
-		//}
-		//if(selectedItemsMyList.length == 1){	
-
-			$('checkerStart').disabled=true;
-			$('checkerHold').disabled=true;
-			$('checkerComplete').disabled=true;
-			$('checkerStatus').disabled=true;			
 			
-			var statusCd = $(control.id+'statusCode').value;
-			
+			var statusCd = $(selectedItemsMyList+'statusCode').textContent;
+			//alert($('106754lob').textContent);
 			if($("selectedRoleId").value == "1"){
 				if(statusCd == 1){
 					$('checkerStart').disabled=false;

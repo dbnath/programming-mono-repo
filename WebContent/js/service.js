@@ -120,7 +120,7 @@ var service = function(){
 	
 	this.getMyDocList = getMyDocList;
 	function getMyDocList(responseFunction) {
-		 return request('GET','view/myDocs',{'x-docwrkflow-auth' : getDocWorkflowAuthorizationId()},null,null,responseFunction,'text/html');
+		 return request('GET','view/myDocs',{'x-docwrkflow-auth' : getDocWorkflowAuthorizationId()},null,null,responseFunction,'text/html');		 
 	}
 	
 	function setDocWorkflowAuthorizationId(userData) {
