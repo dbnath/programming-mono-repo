@@ -49,6 +49,33 @@
 	
 
 <script>
+	var sorter = new TINY.table.sorter('sorter','mytable',{
+		headclass:'head',
+		ascclass:'asc',
+		descclass:'desc',
+		evenclass:'evenrow',
+		oddclass:'oddrow',
+		evenselclass:'evenselected',
+		oddselclass:'oddselected',
+		paginate:true,
+		size:5,
+		colddid:'columns',
+		currentid:'currentpage',
+		totalid:'totalpages',
+		startingrecid:'startrecord',
+		endingrecid:'endrecord',
+		totalrecid:'totalrecords',
+		hoverid:'selectedrow',
+		pageddid:'pagedropdown',
+		navid:'tablenav',
+		sortcolumn:2,
+		sortdir:1,
+		//sum:[8],
+		//avg:[6,7,8,9],
+		//columns:[{index:6, format:'%', decimals:1},{index:8, format:'$', decimals:0}],
+		init:false
+	});
+
  	var landingObj = new landing();
  	landingObj.landinginit();
 	
@@ -62,4 +89,7 @@
               }
           }
       }
+	
+	
+
 </script>
