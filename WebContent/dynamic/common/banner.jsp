@@ -33,6 +33,9 @@
         <link rel="stylesheet" href="<%=request.getContextPath()%>/css/mainstyle.css">
     <!--<![endif]-->
 	
+	<link rel="stylesheet" href="<%=request.getContextPath()%>/static/TinyTableV3/style.css" />
+	<script type="text/javascript" src="<%=request.getContextPath()%>/static/TinyTableV3/script.js"></script>
+	
 </head>
 
 <body>
