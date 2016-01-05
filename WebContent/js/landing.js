@@ -5,6 +5,7 @@ var landing = function () {
 	
 	
 	var $ = getElementById;
+	var commonfn = new commonframework();
 
 	function getElementById(elemId){
 		return document.getElementById(elemId);
@@ -26,19 +27,24 @@ var landing = function () {
 			$("profile").style.display = 'none';
 		}
 		
-		serviceObj.getMyDocList(landinginitMyListResponse);
+		serviceObj.getMyDocList(landinginitMyListResponse);		
 	}
 	
 	this.landinginitResponse = landinginitResponse;
 	function landinginitResponse(responseData) {
 		$("teamGrid").innerHTML = responseData.responseText;
+		if($("teamtable")){
+			teamSorter.init();
+		}
 	}
 	
 	this.landinginitMyListResponse = landinginitMyListResponse;
 	function landinginitMyListResponse(responseData) {
 		$("myGrid").innerHTML = responseData.responseText;
+		if($("mytable")){
 		//setTimeout(function(){
 			sorter.init();
+		}
 		//}, 2000);
 		
 	}
@@ -89,7 +95,7 @@ var landing = function () {
 			if(selectedItemsMyList == null){
 				selectedItemsMyList = control.value;
 			} else {
-				alert('You can work on one agreement at a time');
+				alert('You can work on one agreement at a time','E');
 				control.checked=false;
 				return false;
 			}
@@ -102,8 +108,7 @@ var landing = function () {
 		$('checkerStatus').disabled=true;	
 		if(selectedItemsMyList != null){
 			
-			var statusCd = $(selectedItemsMyList+'statusCode').textContent;
-			//alert($('106754lob').textContent);
+			var statusCd = $(selectedItemsMyList+'statusCode').value;
 			if($("selectedRoleId").value == "1"){
 				if(statusCd == 1){
 					$('checkerStart').disabled=false;
@@ -181,25 +186,25 @@ var landing = function () {
 	function startRespFn(responseData){
 		
 		var responseObject = JSON.parse(responseData.responseText);
-		
 		var respStatus = responseObject.response.responseMessage;
-		
 		if(respStatus == "Success"){
 			var docList = responseObject.docList;
-			
 			for(var k in docList){
 				var agrId = docList[k].agreementId;
-				
-				$(agrId+'statusDescription').innerHTML=docList[k].statusDescription;
-				$(agrId+'statusCode').innerHTML=docList[k].statusCode;
-				if($("selectedRoleId").value == "2"){
-					$(agrId+'makerStatus').innerHTML=docList[k].makerStatus;
+				//alert('3a1'+agrId+'###'+k);
+				if(agrId){
+					$(agrId).checked=false;
+					$(agrId+'statusDescription').innerHTML=docList[k].statusDescription;
+					$(agrId+'statusCode').innerHTML=docList[k].statusCode;
+					if($("selectedRoleId").value == "2"){
+						$(agrId+'makerStatus').innerHTML=docList[k].makerStatus;
+					}
 				}
-				
 			}
 			$('checkerStart').disabled=true;
 			$('checkerComplete').disabled=false;
-			$('checkerStatus').disabled=false;	
+			$('checkerStatus').disabled=false;
+			//$('makerActionsPanel').style="display:none";
 		}
 		
 	}
@@ -352,5 +357,19 @@ var landing = function () {
 			}
 		}
 	}
+	
+	function showMessage(msg,msgType){
+		//if($('msgPanel')){
+			//document.getElementById('msgPanel').style="display:''";
+			/*if(msgType === 'I'){
+				$('msgPanel').style="color:Blue";
+			}
+			if(msgType === 'E'){
+				$('msgPanel').style="color:Red";
+			}*/
+			//$('msgPanel').outerHTML = "<div style='display:visible'>"+msg+"</div>";
+		//}
+		window.showModalDialog(msg);
+	}	
 	  
 } 
