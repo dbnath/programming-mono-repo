@@ -60,7 +60,9 @@
         <h2 class="content-head is-center">Sign In</h2>
 
         <div class="pure-g">
-            <div class="l-box-lrg pure-u-1 pure-u-md-2-5">
+        	<div class="pure-u-1-4">
+		    </div>
+            <div class="pure-u-1-2">
                 <form class="pure-form pure-form-stacked" id="loginform">
                     <fieldset>
 
@@ -70,11 +72,14 @@
                         <input type="password" placeholder="Your Password" id="login-password" name="password">
                         <br>
                         <div id="login-alert" style="color:red;" style="display:none"></div>
-						<div></div><a id="btn-login" href='#' onclick="login.login()" class="pure-button">Login  </a></div>
+						<div></div><a id="btn-login" href='#' onclick="login.login()" class="pure-button">Login  </a>
                     </fieldset>
                 </form>
+             </div>
+                <div class="pure-u-1-4">
+	    		</div>
             </div>
-            
+           
         </div>
 </div>
 
