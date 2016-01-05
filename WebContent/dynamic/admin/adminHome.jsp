@@ -10,7 +10,7 @@
 
   <!-- slide in menu (mobile only) -->
   
-<div class="container bootcards-container" id="main" ng-init="ahc.inithome();" style="padding-top:60px">
+<div class="content" style="margin-top: 100px;">
     
 			  <a class="btn btn-primary" href="#" onclick="ahc.uploadDocs('<%=request.getContextPath()%>')" style="text-align:left;width:240px">
 				<i class="glyphicon glyphicon-upload"></i> 
