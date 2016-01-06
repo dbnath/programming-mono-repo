@@ -523,7 +523,7 @@ https://github.com/litson/jDialog
             context = context || this.getWrapper();
     
             if (context.nodeType === 1 && typeof className === 'string') {
-                context.classList.add(className);
+                //context.classList.add(className);
             }
     
             return this;
