@@ -1,4 +1,5 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<!doctype html>
 <HTML>
 <HEAD>
 <%
@@ -36,9 +37,18 @@
 	<link rel="stylesheet" href="<%=request.getContextPath()%>/static/TinyTableV3/style.css" />
 	<script type="text/javascript" src="<%=request.getContextPath()%>/static/TinyTableV3/script.js"></script>
 	
+	<!--[if lt IE 9]>
+    	<script src="http://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.js"></script>
+	<![endif]-->
+	
+    
+    <link rel="stylesheet" href="<%=request.getContextPath()%>/css/jDialog.css" />
+    <script type="text/javascript" src="<%=request.getContextPath()%>/css/jDialog.js"></script>
+	
 </head>
 
 <body>
+
 
 <div class="header">
     <div class="home-menu pure-menu pure-menu-horizontal pure-menu-fixed" style="height:80px;">

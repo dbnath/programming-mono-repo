@@ -81,7 +81,7 @@
 
 
 
-<div id="makerActionPanel" style="display:none">
+<div id="makerActionPanel" > <!-- style="display:none"> -->
 	<table align="left" width="100%">
 		<tr>
 			<table>
