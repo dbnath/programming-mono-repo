@@ -95,7 +95,8 @@ var landing = function () {
 			if(selectedItemsMyList == null){
 				selectedItemsMyList = control.value;
 			} else {
-				alert('You can work on one agreement at a time','E');
+				//alert('You can work on one agreement at a time','E');
+				jDialog('You can work on one agreement at a time.');
 				control.checked=false;
 				return false;
 			}
@@ -109,6 +110,9 @@ var landing = function () {
 		if(selectedItemsMyList != null){
 			
 			var statusCd = $(selectedItemsMyList+'statusCode').value;
+			if(!statusCd) {
+				statusCd = $(selectedItemsMyList+'statusCode').innerHTML;
+			}
 			if($("selectedRoleId").value == "1"){
 				if(statusCd == 1){
 					$('checkerStart').disabled=false;
@@ -272,39 +276,41 @@ var landing = function () {
 			alert("You can work with only one Agreement at a time");
 			return false;
 		}*/
-		
-		if($("selectedRoleId").value == "1" && $('checkerStatus').value == 15){
-			if($('checkerComments').value == null){
-				alert('Please fill in comments section');
-				return false;
+		jDialog('Do you realy want to hold it?',function(){
+			if($("selectedRoleId").value == "1" && $('checkerStatus').value == 15){
+				if($('checkerComments').value == null){
+					alert('Please fill in comments section');
+					return false;
+				}
 			}
-		}
-
-		if($("selectedRoleId").value == "2" && $('checkerStatus').value == 15){
-			if($('checkerComments').value == null || $('errorReasonList').value == -1){
-				alert('Please fill in both comments section and Error Reason');
-				return false;
+	
+			if($("selectedRoleId").value == "2" && $('checkerStatus').value == 15){
+				if($('checkerComments').value == null || $('errorReasonList').value == -1){
+					alert('Please fill in both comments section and Error Reason');
+					return false;
+				}
 			}
-		}
-		
-		if($("selectedRoleId").value == "3" && $('checkerStatus').value == 21){
-			if($('checkerComments').value == null){
-				alert('Please fill in comments section');
-				return false;
+			
+			if($("selectedRoleId").value == "3" && $('checkerStatus').value == 21){
+				if($('checkerComments').value == null){
+					alert('Please fill in comments section');
+					return false;
+				}
+			}		
+			
+			
+			var inputObj = {};
+			inputObj.agreementId=selectedItemsMyList;//[0];
+			inputObj.roleId=$("selectedRoleId").value;
+			inputObj.statusCode=$('checkerStatus').value;
+			inputObj.user={userId:$("selectedUserId").value, roleId:$("selectedRoleId").value};
+			inputObj.comment=$('checkerComments').value;
+			if($("selectedRoleId").value == "2"){
+			  inputObj.errorReasonCode=$('errorReasonList').value;
 			}
-		}		
-		
-		
-		var inputObj = {};
-		inputObj.agreementId=selectedItemsMyList;//[0];
-		inputObj.roleId=$("selectedRoleId").value;
-		inputObj.statusCode=$('checkerStatus').value;
-		inputObj.user={userId:$("selectedUserId").value, roleId:$("selectedRoleId").value};
-		inputObj.comment=$('checkerComments').value;
-		if($("selectedRoleId").value == "2"){
-		  inputObj.errorReasonCode=$('errorReasonList').value;
-		}
-		serviceObj.holdProcess(inputObj,holdRespFn);		
+			serviceObj.holdProcess(inputObj,holdRespFn);
+			jDialog.currentDialog.remove();
+		});
 	}
 	
 	this.holdRespFn=holdRespFn;
