@@ -32,6 +32,10 @@ public class DocumentDTO extends BaseDTO implements Serializable {
 	private List<DocWkflwProcess> docList;
 	
 	private boolean isSuccess;
+	
+	private Integer numPages;
+	
+	private Integer numFields;
 
 	public User getUser() {
 		return user;
@@ -111,6 +115,22 @@ public class DocumentDTO extends BaseDTO implements Serializable {
 
 	public void setSuccess(boolean isSuccess) {
 		this.isSuccess = isSuccess;
+	}
+
+	public Integer getNumPages() {
+		return numPages;
+	}
+
+	public void setNumPages(Integer numPages) {
+		this.numPages = numPages;
+	}
+
+	public Integer getNumFields() {
+		return numFields;
+	}
+
+	public void setNumFields(Integer numFields) {
+		this.numFields = numFields;
 	}
 
 }

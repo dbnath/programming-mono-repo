@@ -260,6 +260,7 @@ public class DocumentWorkflowDAOImpl extends BaseJDBCTemplate implements Documen
 	    String SQL = DocumentWorkflowToolConstant.FETCH_ADMIN_MAKER_AGREEMENTS_SQL;
 	    MakerAgreementWkflwMapper mapper = new MakerAgreementWkflwMapper();
 	    docList = this.getJdbcTemplateObject().query(SQL, mapper);
+	    System.out.println(docList);
 	    documentDTO.setDocList(docList);
 		return documentDTO;
 	}
@@ -395,15 +396,20 @@ public class DocumentWorkflowDAOImpl extends BaseJDBCTemplate implements Documen
 	
 	@Override
 	public DocumentDTO getAgreementsForAdminUsers(Integer viewId) throws SQLException, Exception {
+		
+		DocumentDTO dto = new DocumentDTO();
 		switch(viewId){
 		case 1:
-			return getDocumentsForAdminAsMaker();
+			dto = getDocumentsForAdminAsMaker();
+			break;
 		case 2:
-			return getDocumentsForAdminAsChecker();
+			dto = getDocumentsForAdminAsChecker();
+			break;
 		case 3:
-			return getDocumentsForAdminAsSME();
+			dto = getDocumentsForAdminAsSME();
+			break;
 		}
-		return null;
+		return dto;
 	}
 
 	@Override
@@ -430,6 +436,8 @@ public class DocumentWorkflowDAOImpl extends BaseJDBCTemplate implements Documen
 		Integer agreementId = documentDTO.getAgreementId();
 		Integer roleId = documentDTO.getRoleId();
 		String userId = documentDTO.getUser().getUserId();
+		Integer numPages = documentDTO.getNumPages();
+		Integer numFields = documentDTO.getNumFields();
 		
 		JdbcTemplate jdbcTemplate = this.getJdbcTemplateObject();
 		
@@ -446,7 +454,7 @@ public class DocumentWorkflowDAOImpl extends BaseJDBCTemplate implements Documen
 		System.out.println(" ###### versionId "+versionId);
 		
 		String INSERT_INTO_WKF_PROCESS_AUDIT_SQL = DocumentWorkflowToolConstant.INSERT_INTO_WKF_PROCESS_AUDIT_SQL;
-		jdbcTemplate.update(INSERT_INTO_WKF_PROCESS_AUDIT_SQL, versionId+1, roleId, statusCode, assignedTo, userId, currentDate, agreementId);
+		jdbcTemplate.update(INSERT_INTO_WKF_PROCESS_AUDIT_SQL, versionId+1, roleId, statusCode, assignedTo, userId, currentDate, numPages, numFields, agreementId);
 	}
 	
 	private DocumentDTO getUpdatedAgreementWorkflow(DocumentDTO documentDTO, boolean success) throws SQLException, Exception {
@@ -481,6 +489,8 @@ public class DocumentWorkflowDAOImpl extends BaseJDBCTemplate implements Documen
 		String userId = documentDTO.getUser().getUserId();
 		String comment = documentDTO.getComment();
 		Integer errReasonCode = documentDTO.getErrorReasonCode();
+		Integer numPages = documentDTO.getNumPages();
+		Integer numFields = documentDTO.getNumFields();
 		Date currentDate = Calendar.getInstance().getTime();
 		
 		JdbcTemplate jdbcTemplate = this.getJdbcTemplateObject();
@@ -488,13 +498,13 @@ public class DocumentWorkflowDAOImpl extends BaseJDBCTemplate implements Documen
 		Integer newRoleId = ((roleId==2 && statusCode==18 ) || (roleId==3 && statusCode == 22))?roleId : roleId+1;
 		
 		String UPDATE_STATUS_ASSIGNED_TO_IN_WKF_PROCESS_SQL = DocumentWorkflowToolConstant.UPDATE_STATUS_ASSIGNED_TO_IN_WKF_PROCESS_SQL;
-		jdbcTemplate.update(UPDATE_STATUS_ASSIGNED_TO_IN_WKF_PROCESS_SQL, newRoleId, statusCode, null,userId,currentDate, agreementId);
+		jdbcTemplate.update(UPDATE_STATUS_ASSIGNED_TO_IN_WKF_PROCESS_SQL, newRoleId, statusCode, null,userId,currentDate, numPages, numFields, agreementId);
 		
 		String SELECT_MAX_ID_VER_FROM_WF_PROCESS_AUDIT_SQL = DocumentWorkflowToolConstant.SELECT_MAX_ID_VER_FROM_WF_PROCESS_AUDIT_SQL;
 		Integer versionId = jdbcTemplate.queryForObject(SELECT_MAX_ID_VER_FROM_WF_PROCESS_AUDIT_SQL, Integer.class, agreementId);
 		
 		String INSERT_INTO_WKF_PROCESS_AUDIT_SQL = DocumentWorkflowToolConstant.INSERT_INTO_WKF_PROCESS_AUDIT_SQL;
-		jdbcTemplate.update(INSERT_INTO_WKF_PROCESS_AUDIT_SQL, versionId+1, newRoleId, statusCode, null, userId,currentDate, agreementId);
+		jdbcTemplate.update(INSERT_INTO_WKF_PROCESS_AUDIT_SQL, versionId+1, newRoleId, statusCode, null, userId,currentDate, numPages, numFields, agreementId);
 		
 		//if (!DocumentWorkflowToolUtility.isEmpty(comment)) {
 			jdbcTemplate.update(DocumentWorkflowToolConstant.INSERT_INTO_WF_COMMENT_AUDIT_SQL, versionId+1, comment, roleId, errReasonCode, statusCode, agreementId);
@@ -527,6 +537,8 @@ public class DocumentWorkflowDAOImpl extends BaseJDBCTemplate implements Documen
 		Integer roleId = documentDTO.getRoleId();
 		String userId = documentDTO.getUser().getUserId();
 		Date currentDate = Calendar.getInstance().getTime();
+		Integer numPages = documentDTO.getNumPages();
+		Integer numFields = documentDTO.getNumFields();
 		
 		Integer newRoleId = (roleId==3)?roleId : roleId+1;
 		
@@ -535,13 +547,13 @@ public class DocumentWorkflowDAOImpl extends BaseJDBCTemplate implements Documen
 		JdbcTemplate jdbcTemplate = this.getJdbcTemplateObject();
 		
 		String UPDATE_STATUS_ASSIGNED_TO_IN_WKF_PROCESS_SQL = DocumentWorkflowToolConstant.UPDATE_STATUS_ASSIGNED_TO_IN_WKF_PROCESS_SQL;
-		jdbcTemplate.update(UPDATE_STATUS_ASSIGNED_TO_IN_WKF_PROCESS_SQL, newRoleId, statusCode, assignedTo,userId,currentDate, agreementId);
+		jdbcTemplate.update(UPDATE_STATUS_ASSIGNED_TO_IN_WKF_PROCESS_SQL, newRoleId, statusCode, assignedTo,userId,currentDate, numPages, numFields, agreementId);
 		
 		String SELECT_MAX_ID_VER_FROM_WF_PROCESS_AUDIT_SQL = DocumentWorkflowToolConstant.SELECT_MAX_ID_VER_FROM_WF_PROCESS_AUDIT_SQL;
 		Integer versionId = jdbcTemplate.queryForObject(SELECT_MAX_ID_VER_FROM_WF_PROCESS_AUDIT_SQL, Integer.class, agreementId);
 		
 		String INSERT_INTO_WKF_PROCESS_AUDIT_SQL = DocumentWorkflowToolConstant.INSERT_INTO_WKF_PROCESS_AUDIT_SQL;
-		jdbcTemplate.update(INSERT_INTO_WKF_PROCESS_AUDIT_SQL, versionId+1, newRoleId, statusCode, assignedTo, userId,currentDate, agreementId);
+		jdbcTemplate.update(INSERT_INTO_WKF_PROCESS_AUDIT_SQL, versionId+1, newRoleId, statusCode, assignedTo, userId,currentDate, numPages, numFields, agreementId);
 		
 		//if (!DocumentWorkflowToolUtility.isEmpty(comment)) {
 			jdbcTemplate.update(DocumentWorkflowToolConstant.INSERT_INTO_WF_COMMENT_AUDIT_SQL, versionId+1, comment, roleId, errReasonCode, statusCode, agreementId);
@@ -551,9 +563,11 @@ public class DocumentWorkflowDAOImpl extends BaseJDBCTemplate implements Documen
 	 private void assignWorkflowProcess(JdbcTemplate jdbcTemplate, DocWkflwProcess docObj, TransactionStatus status, User user) throws SQLException, Exception {
 			Integer statusCode = docObj.getStatusCode();
 			Integer agreementId = docObj.getAgreementId();
-			Integer roleId = Integer.valueOf(user.getRoleId()); //Integer.valueOf(documentDTO.getUser().getRoleId());
+			Integer roleId = DocumentWorkflowToolUtility.equalStrings("4", user.getRoleId(), false, true)? docObj.getRoleId() : Integer.valueOf(user.getRoleId()); //Integer.valueOf(documentDTO.getUser().getRoleId());
 			Date currentDate = Calendar.getInstance().getTime();
 			String userId = user.getUserId();
+			Integer numPages = docObj.getNumPages();
+			Integer numFields = docObj.getNumFields();
 			
 			switch(roleId){
 				case 2: statusCode = 16;//FIXME Replace with constants
@@ -563,13 +577,13 @@ public class DocumentWorkflowDAOImpl extends BaseJDBCTemplate implements Documen
 			}
 					
 			String UPDATE_STATUS_ASSIGNED_TO_IN_WKF_PROCESS_SQL = DocumentWorkflowToolConstant.UPDATE_STATUS_ASSIGNED_TO_IN_WKF_PROCESS_SQL;
-			jdbcTemplate.update(UPDATE_STATUS_ASSIGNED_TO_IN_WKF_PROCESS_SQL, roleId, statusCode, userId,userId,currentDate, agreementId);
+			jdbcTemplate.update(UPDATE_STATUS_ASSIGNED_TO_IN_WKF_PROCESS_SQL, roleId, statusCode, userId,userId,currentDate, numPages, numFields, agreementId);
 			
 			String SELECT_MAX_ID_VER_FROM_WF_PROCESS_AUDIT_SQL = DocumentWorkflowToolConstant.SELECT_MAX_ID_VER_FROM_WF_PROCESS_AUDIT_SQL;
 			Integer versionId = jdbcTemplate.queryForObject(SELECT_MAX_ID_VER_FROM_WF_PROCESS_AUDIT_SQL, Integer.class, agreementId);
 			
 			String INSERT_INTO_WKF_PROCESS_AUDIT_SQL = DocumentWorkflowToolConstant.INSERT_INTO_WKF_PROCESS_AUDIT_SQL;
-			jdbcTemplate.update(INSERT_INTO_WKF_PROCESS_AUDIT_SQL, versionId+1, roleId, statusCode, userId, userId,currentDate, agreementId);
+			jdbcTemplate.update(INSERT_INTO_WKF_PROCESS_AUDIT_SQL, versionId+1, roleId, statusCode, userId, userId,currentDate, numPages, numFields, agreementId);
 	
 	 }
 	 

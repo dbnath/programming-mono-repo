@@ -16,7 +16,7 @@
 				<i class="glyphicon glyphicon-upload"></i> 
 				<span>Bulk Upload Agreements</span>
 			  </a><br><br>
-			  <a class="btn btn-primary" href="rest/docadmin/dump" style="text-align:left;width:240px">
+			  <a class="btn btn-primary" href="<%=request.getContextPath()%>/rest/docadmin/dump" style="text-align:left;width:240px">
 				<i class="glyphicon glyphicon-save"></i> 
 				<span>Export Agreement List</span>
 			  </a><br><br>

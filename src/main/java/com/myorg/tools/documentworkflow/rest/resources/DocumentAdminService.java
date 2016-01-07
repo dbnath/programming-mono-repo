@@ -105,7 +105,7 @@ public interface DocumentAdminService {
 	   @GET
 	   @Path("/dump")
 	   @Produces("application/vnd.ms-excel")	   
-	   public Response getDocTagDump();
+	   public Response getAgreementDataDump();
 
 	   
 	   /*@POST

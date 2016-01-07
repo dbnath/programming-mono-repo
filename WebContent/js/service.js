@@ -123,6 +123,11 @@ var service = function(){
 		 return request('GET','view/myDocs',{'x-docwrkflow-auth' : getDocWorkflowAuthorizationId()},null,null,responseFunction,'text/html');		 
 	}
 	
+	this.getAdminDocList = getAdminDocList;
+	function getAdminDocList(data,responseFunction) {
+		 return request('GET','view/myAdminDocs?u8_input='+data.roleId,{'x-docwrkflow-auth' : getDocWorkflowAuthorizationId()},data,null,responseFunction);		 
+	}	
+	
 	function setDocWorkflowAuthorizationId(userData) {
 		/*$rootScope.selectedUserRole.userId = userData.userId;
 		$rootScope.selectedUserRole.userName = userData.userName;

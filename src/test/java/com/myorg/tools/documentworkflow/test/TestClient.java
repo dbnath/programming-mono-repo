@@ -20,11 +20,11 @@ public class TestClient {
 	private static String url = "http://localhost:8080/documentworkflow/rest/WflService/";
 
 	public static void main(String[] args) throws Exception {
-		getDocumentsForAMaker();
-		getDocumentsForCheckerTeamInbox();	
-		if (true) {
-			return;
-		}
+//		getDocumentsForAMaker();
+//		getDocumentsForCheckerTeamInbox();	
+//		if (true) {
+//			return;
+//		}
 		
 /*		HAPPY PATH
 		----------------------------------------------------
@@ -52,335 +52,335 @@ public class TestClient {
 		getDocumentsForCheckerTeamInbox();		
 		
 		//Checker Assign
-		documentDTO = new DocumentDTO(); 
-		documentDTO.setAgreementId(123456);
-		documentDTO.setUser(new User("RASHMI","LIGHT","2"));
-		documentDTO.setRoleId(2); 	
-		assignDocuments(documentDTO,Arrays.asList(new Integer[]{123456}));
-		
-		//Checker My Inbox
-		documentDTO = new DocumentDTO(); 
-		documentDTO.setAgreementId(123456);
-		documentDTO.setUser(new User("RASHMI","LIGHT","2"));
-		documentDTO.setRoleId(2); 
-		getDocumentsForCheckerMyInbox(documentDTO);
-
-		//Checker In Progress
-		documentDTO = new DocumentDTO(); 
-		documentDTO.setAgreementId(123456);
-		documentDTO.setUser(new User("RASHMI","LIGHT","2"));
-		documentDTO.setRoleId(2); 
-		documentDTO.setStatusCode(17);
-		startProcess(documentDTO);
-
-		//Checker Complete (using above user credentials)
-		documentDTO = new DocumentDTO(); 
-		documentDTO.setAgreementId(123456);
-		documentDTO.setUser(new User("RASHMI","LIGHT","2"));
-		documentDTO.setRoleId(2); 
-		documentDTO.setStatusCode(18);
-		documentDTO.setComment("Checker Comments...Completed...");
-		completeProcess(documentDTO);
-		
-		//Checker Team INbox
-		getDocumentsForCheckerTeamInbox();
-		
-		
-		
-/*		MOST UNHAPPY PATH - Cross all hold scenarios
-		---------------------------------------------------------------
-*/		
-		//Maker in Progress
-		documentDTO = new DocumentDTO(); 
-		documentDTO.setStatusCode(2);
-		documentDTO.setAgreementId(123456);
-		documentDTO.setUser(new User("ARDHENDU","APM","1"));
-		documentDTO.setRoleId(1); 
-		startProcess(documentDTO);
-		//getDocumentsForAMaker();
-		
-		//Maker Hold
-		documentDTO = new DocumentDTO(); 
-		documentDTO.setStatusCode(10);
-		documentDTO.setAgreementId(123456);
-		documentDTO.setUser(new User("ARDHENDU","APM","1"));
-		documentDTO.setRoleId(1);
-		documentDTO.setComment("Maker Comments...");
-		holdProcess(documentDTO);
-
-		//Checker Team INbox
-		getDocumentsForCheckerTeamInbox();		
-		
-		//Checker Assign
-		documentDTO = new DocumentDTO(); 
-		documentDTO.setAgreementId(123456);
-		documentDTO.setUser(new User("RASHMI","LIGHT","2"));
-		documentDTO.setRoleId(2); 	
-		assignDocuments(documentDTO,Arrays.asList(new Integer[]{123456}));
-		
-		//Checker My Inbox
-		documentDTO = new DocumentDTO(); 
-		documentDTO.setAgreementId(123456);
-		documentDTO.setUser(new User("RASHMI","LIGHT","2"));
-		documentDTO.setRoleId(2); 
-		getDocumentsForCheckerMyInbox(documentDTO);
-		
-		//Checker In Progress
-		documentDTO = new DocumentDTO(); 
-		documentDTO.setAgreementId(123456);
-		documentDTO.setUser(new User("RASHMI","LIGHT","2"));
-		documentDTO.setRoleId(2); 
-		documentDTO.setStatusCode(17);
-		startProcess(documentDTO);
-
-		//Checker Hold
-		documentDTO = new DocumentDTO(); 
-		documentDTO.setAgreementId(123456);
-		documentDTO.setUser(new User("RASHMI","LIGHT","2"));
-		documentDTO.setRoleId(2); 
-		documentDTO.setStatusCode(15);
-		documentDTO.setComment("Checker Comments...Have query...");
-		documentDTO.setErrorReasonCode(2);
-		holdProcess(documentDTO);
-		
-		//Onshore SME Team INbox
-		getDocumentsForOnshoreSMETeamInbox();
-		
-		//SME Assign
-		documentDTO = new DocumentDTO(); 
-		documentDTO.setAgreementId(123456);
-		documentDTO.setUser(new User("MRINAL","MRINAL","3"));
-		documentDTO.setRoleId(3); 	
-		assignDocuments(documentDTO,Arrays.asList(new Integer[]{123456}));
-		
-		//SME My Inbox
-		documentDTO = new DocumentDTO(); 
-		documentDTO.setAgreementId(123456);
-		documentDTO.setUser(new User("MRINAL","MRINAL","3"));
-		documentDTO.setRoleId(3); 
-		getDocumentsForOnshoreSMEMyInbox(documentDTO);
-		
-		//SME - In Progress
-		documentDTO = new DocumentDTO(); 
-		documentDTO.setAgreementId(123456);
-		documentDTO.setUser(new User("MRINAL","MRINAL","3"));
-		documentDTO.setRoleId(3); 
-		documentDTO.setStatusCode(20);
-		startProcess(documentDTO);
-
-		//SME - Hold
-		documentDTO = new DocumentDTO(); 
-		documentDTO.setAgreementId(123456);
-		documentDTO.setUser(new User("MRINAL","MRINAL","3"));
-		documentDTO.setRoleId(3); 
-		documentDTO.setStatusCode(21);
-		documentDTO.setComment("SME Comments...Have query to JPMC...");
-		holdProcess(documentDTO);
-		
-		//SME Complete
-		documentDTO = new DocumentDTO(); 
-		documentDTO.setAgreementId(123456);
-		documentDTO.setUser(new User("MRINAL","MRINAL","3"));
-		documentDTO.setRoleId(3); 
-		documentDTO.setStatusCode(22);
-		documentDTO.setComment("SME Comments...query resolved and completed...");
-		completeProcess(documentDTO);
-		
-		//Onshore SME Team INbox
-		getDocumentsForOnshoreSMETeamInbox();	
-		
-		
-
-/*		SEMI UNHAPPY SCENARIO - MAKER HOLD CHECKER COMPLETE
-		-----------------------------------------------------------
-*/
-		//Maker in Progress
-		documentDTO = new DocumentDTO(); 
-		documentDTO.setStatusCode(2);
-		documentDTO.setAgreementId(123456);
-		documentDTO.setUser(new User("ARDHENDU","APM","1"));
-		documentDTO.setRoleId(1); 
-		startProcess(documentDTO);
-		//getDocumentsForAMaker();
-		
-		//Maker Hold
-		documentDTO = new DocumentDTO(); 
-		documentDTO.setStatusCode(10);
-		documentDTO.setAgreementId(123456);
-		documentDTO.setUser(new User("ARDHENDU","APM","1"));
-		documentDTO.setRoleId(1);
-		documentDTO.setComment("Maker Comments...");
-		holdProcess(documentDTO);
-
-		//Checker Team INbox
-		getDocumentsForCheckerTeamInbox();		
-		
-		//Checker Assign
-		documentDTO = new DocumentDTO(); 
-		documentDTO.setAgreementId(123456);
-		documentDTO.setUser(new User("RASHMI","LIGHT","2"));
-		documentDTO.setRoleId(2); 	
-		assignDocuments(documentDTO,Arrays.asList(new Integer[]{123456}));
-		
-		//Checker My Inbox
-		documentDTO = new DocumentDTO(); 
-		documentDTO.setAgreementId(123456);
-		documentDTO.setUser(new User("RASHMI","LIGHT","2"));
-		documentDTO.setRoleId(2); 
-		getDocumentsForCheckerMyInbox(documentDTO);
-		
-		//Checker In Progress
-		documentDTO = new DocumentDTO(); 
-		documentDTO.setAgreementId(123456);
-		documentDTO.setUser(new User("RASHMI","LIGHT","2"));
-		documentDTO.setRoleId(2); 
-		documentDTO.setStatusCode(17);
-		startProcess(documentDTO);
-		
-		//Checker Complete (using above user credentials)
-		documentDTO = new DocumentDTO(); 
-		documentDTO.setAgreementId(123456);
-		documentDTO.setUser(new User("RASHMI","LIGHT","2"));
-		documentDTO.setRoleId(2); 
-		documentDTO.setStatusCode(18);
-		completeProcess(documentDTO);
-		
-		//Checker Team INbox
-		getDocumentsForCheckerTeamInbox();	
-		
-
-/*		SEMI UNHAPPY PATH - MAKER HOLD CHECKER HOLD SME COMPLETE
-		---------------------------------------------------------------
-*/		
-		//Maker in Progress
-		documentDTO = new DocumentDTO(); 
-		documentDTO.setStatusCode(2);
-		documentDTO.setAgreementId(123456);
-		documentDTO.setUser(new User("ARDHENDU","APM","1"));
-		documentDTO.setRoleId(1); 
-		startProcess(documentDTO);
-		//getDocumentsForAMaker();
-		
-		//Maker Hold
-		documentDTO = new DocumentDTO(); 
-		documentDTO.setStatusCode(10);
-		documentDTO.setAgreementId(123456);
-		documentDTO.setUser(new User("ARDHENDU","APM","1"));
-		documentDTO.setRoleId(1);
-		documentDTO.setComment("Maker Comments...");
-		holdProcess(documentDTO);
-
-		//Checker Team INbox
-		getDocumentsForCheckerTeamInbox();		
-		
-		//Checker Assign
-		documentDTO = new DocumentDTO(); 
-		documentDTO.setAgreementId(123456);
-		documentDTO.setUser(new User("RASHMI","LIGHT","2"));
-		documentDTO.setRoleId(2); 	
-		assignDocuments(documentDTO,Arrays.asList(new Integer[]{123456}));
-		
-		//Checker My Inbox
-		documentDTO = new DocumentDTO(); 
-		documentDTO.setAgreementId(123456);
-		documentDTO.setUser(new User("RASHMI","LIGHT","2"));
-		documentDTO.setRoleId(2); 
-		getDocumentsForCheckerMyInbox(documentDTO);
-		
-		//Checker In Progress
-		documentDTO = new DocumentDTO(); 
-		documentDTO.setAgreementId(123456);
-		documentDTO.setUser(new User("RASHMI","LIGHT","2"));
-		documentDTO.setRoleId(2); 
-		documentDTO.setStatusCode(17);
-		startProcess(documentDTO);
-
-		//Checker Hold
-		documentDTO = new DocumentDTO(); 
-		documentDTO.setAgreementId(123456);
-		documentDTO.setUser(new User("RASHMI","LIGHT","2"));
-		documentDTO.setRoleId(2); 
-		documentDTO.setStatusCode(15);
-		documentDTO.setComment("Checker Comments...Have query...");
-		documentDTO.setErrorReasonCode(2);
-		holdProcess(documentDTO);
-		
-		
-		//Onshore SME Team INbox
-		getDocumentsForOnshoreSMETeamInbox();
-		
-		//SME Assign
-		documentDTO = new DocumentDTO(); 
-		documentDTO.setAgreementId(123456);
-		documentDTO.setUser(new User("MRINAL","MRINAL","3"));
-		documentDTO.setRoleId(3); 	
-		assignDocuments(documentDTO,Arrays.asList(new Integer[]{123456}));
-		
-		//SME My Inbox
-		documentDTO = new DocumentDTO(); 
-		documentDTO.setAgreementId(123456);
-		documentDTO.setUser(new User("MRINAL","MRINAL","3"));
-		documentDTO.setRoleId(3); 
-		getDocumentsForOnshoreSMEMyInbox(documentDTO);
-		
-		//SME - In Progress
-		documentDTO = new DocumentDTO(); 
-		documentDTO.setAgreementId(123456);
-		documentDTO.setUser(new User("MRINAL","MRINAL","3"));
-		documentDTO.setRoleId(3); 
-		documentDTO.setStatusCode(20);
-		startProcess(documentDTO);
-
-		//SME Complete
-		documentDTO = new DocumentDTO(); 
-		documentDTO.setAgreementId(123456);
-		documentDTO.setUser(new User("MRINAL","MRINAL","3"));
-		documentDTO.setRoleId(3); 
-		documentDTO.setStatusCode(22);
-		documentDTO.setComment("SME Comments...query resolved...");
-		completeProcess(documentDTO);
-		
-		//Onshore SME Team INbox
-		getDocumentsForOnshoreSMETeamInbox();
-		
-/*		ADMIN INBOX
- * --------------------------------------------------------------------------------------
-*/		
-		documentDTO = new DocumentDTO(); 
-		documentDTO.setUser(new User("DEBASISH","DEBASISH","4"));
-		documentDTO.setRoleId(1);
-		getAgreementsForAdminUsers(documentDTO);
-		
-		//Admin Maker Complete
-		documentDTO = new DocumentDTO(); 
-		documentDTO.setUser(new User("DEBASISH","DEBASISH","4"));
-		documentDTO.setStatusCode(3);
-		documentDTO.setAgreementId(123456);
-		documentDTO.setAssignedTo("ARDHENDU");
-		documentDTO.setRoleId(1); 
-		completeProcess(documentDTO);
-		
-		documentDTO = new DocumentDTO(); 
-		documentDTO.setUser(new User("DEBASISH","DEBASISH","4"));
-		documentDTO.setRoleId(2);
-		getAgreementsForAdminUsers(documentDTO);
-		
-		//Admin Checker In Progress
-		documentDTO = new DocumentDTO(); 
-		documentDTO.setAgreementId(123456);
-		documentDTO.setUser(new User("DEBASISH","DEBASISH","4"));
-		documentDTO.setRoleId(2); 
-		documentDTO.setStatusCode(17);
-		startProcess(documentDTO);
-
-		//Admin Checker Complete (using above user credentials)
-		documentDTO = new DocumentDTO(); 
-		documentDTO.setAgreementId(123456);
-		documentDTO.setUser(new User("DEBASISH","DEBASISH","4"));
-		documentDTO.setRoleId(2); 
-		documentDTO.setStatusCode(18);
-		documentDTO.setComment("Checker Comments...Completed...");
-		completeProcess(documentDTO);
+//		documentDTO = new DocumentDTO(); 
+//		documentDTO.setAgreementId(123456);
+//		documentDTO.setUser(new User("RASHMI","LIGHT","2"));
+//		documentDTO.setRoleId(2); 	
+//		assignDocuments(documentDTO,Arrays.asList(new Integer[]{123456}));
+//		
+//		//Checker My Inbox
+//		documentDTO = new DocumentDTO(); 
+//		documentDTO.setAgreementId(123456);
+//		documentDTO.setUser(new User("RASHMI","LIGHT","2"));
+//		documentDTO.setRoleId(2); 
+//		getDocumentsForCheckerMyInbox(documentDTO);
+//
+//		//Checker In Progress
+//		documentDTO = new DocumentDTO(); 
+//		documentDTO.setAgreementId(123456);
+//		documentDTO.setUser(new User("RASHMI","LIGHT","2"));
+//		documentDTO.setRoleId(2); 
+//		documentDTO.setStatusCode(17);
+//		startProcess(documentDTO);
+//
+//		//Checker Complete (using above user credentials)
+//		documentDTO = new DocumentDTO(); 
+//		documentDTO.setAgreementId(123456);
+//		documentDTO.setUser(new User("RASHMI","LIGHT","2"));
+//		documentDTO.setRoleId(2); 
+//		documentDTO.setStatusCode(18);
+//		documentDTO.setComment("Checker Comments...Completed...");
+//		completeProcess(documentDTO);
+//		
+//		//Checker Team INbox
+//		getDocumentsForCheckerTeamInbox();
+//		
+//		
+//		
+///*		MOST UNHAPPY PATH - Cross all hold scenarios
+//		---------------------------------------------------------------
+//*/		
+//		//Maker in Progress
+//		documentDTO = new DocumentDTO(); 
+//		documentDTO.setStatusCode(2);
+//		documentDTO.setAgreementId(123456);
+//		documentDTO.setUser(new User("ARDHENDU","APM","1"));
+//		documentDTO.setRoleId(1); 
+//		startProcess(documentDTO);
+//		//getDocumentsForAMaker();
+//		
+//		//Maker Hold
+//		documentDTO = new DocumentDTO(); 
+//		documentDTO.setStatusCode(10);
+//		documentDTO.setAgreementId(123456);
+//		documentDTO.setUser(new User("ARDHENDU","APM","1"));
+//		documentDTO.setRoleId(1);
+//		documentDTO.setComment("Maker Comments...");
+//		holdProcess(documentDTO);
+//
+//		//Checker Team INbox
+//		getDocumentsForCheckerTeamInbox();		
+//		
+//		//Checker Assign
+//		documentDTO = new DocumentDTO(); 
+//		documentDTO.setAgreementId(123456);
+//		documentDTO.setUser(new User("RASHMI","LIGHT","2"));
+//		documentDTO.setRoleId(2); 	
+//		assignDocuments(documentDTO,Arrays.asList(new Integer[]{123456}));
+//		
+//		//Checker My Inbox
+//		documentDTO = new DocumentDTO(); 
+//		documentDTO.setAgreementId(123456);
+//		documentDTO.setUser(new User("RASHMI","LIGHT","2"));
+//		documentDTO.setRoleId(2); 
+//		getDocumentsForCheckerMyInbox(documentDTO);
+//		
+//		//Checker In Progress
+//		documentDTO = new DocumentDTO(); 
+//		documentDTO.setAgreementId(123456);
+//		documentDTO.setUser(new User("RASHMI","LIGHT","2"));
+//		documentDTO.setRoleId(2); 
+//		documentDTO.setStatusCode(17);
+//		startProcess(documentDTO);
+//
+//		//Checker Hold
+//		documentDTO = new DocumentDTO(); 
+//		documentDTO.setAgreementId(123456);
+//		documentDTO.setUser(new User("RASHMI","LIGHT","2"));
+//		documentDTO.setRoleId(2); 
+//		documentDTO.setStatusCode(15);
+//		documentDTO.setComment("Checker Comments...Have query...");
+//		documentDTO.setErrorReasonCode(2);
+//		holdProcess(documentDTO);
+//		
+//		//Onshore SME Team INbox
+//		getDocumentsForOnshoreSMETeamInbox();
+//		
+//		//SME Assign
+//		documentDTO = new DocumentDTO(); 
+//		documentDTO.setAgreementId(123456);
+//		documentDTO.setUser(new User("MRINAL","MRINAL","3"));
+//		documentDTO.setRoleId(3); 	
+//		assignDocuments(documentDTO,Arrays.asList(new Integer[]{123456}));
+//		
+//		//SME My Inbox
+//		documentDTO = new DocumentDTO(); 
+//		documentDTO.setAgreementId(123456);
+//		documentDTO.setUser(new User("MRINAL","MRINAL","3"));
+//		documentDTO.setRoleId(3); 
+//		getDocumentsForOnshoreSMEMyInbox(documentDTO);
+//		
+//		//SME - In Progress
+//		documentDTO = new DocumentDTO(); 
+//		documentDTO.setAgreementId(123456);
+//		documentDTO.setUser(new User("MRINAL","MRINAL","3"));
+//		documentDTO.setRoleId(3); 
+//		documentDTO.setStatusCode(20);
+//		startProcess(documentDTO);
+//
+//		//SME - Hold
+//		documentDTO = new DocumentDTO(); 
+//		documentDTO.setAgreementId(123456);
+//		documentDTO.setUser(new User("MRINAL","MRINAL","3"));
+//		documentDTO.setRoleId(3); 
+//		documentDTO.setStatusCode(21);
+//		documentDTO.setComment("SME Comments...Have query to JPMC...");
+//		holdProcess(documentDTO);
+//		
+//		//SME Complete
+//		documentDTO = new DocumentDTO(); 
+//		documentDTO.setAgreementId(123456);
+//		documentDTO.setUser(new User("MRINAL","MRINAL","3"));
+//		documentDTO.setRoleId(3); 
+//		documentDTO.setStatusCode(22);
+//		documentDTO.setComment("SME Comments...query resolved and completed...");
+//		completeProcess(documentDTO);
+//		
+//		//Onshore SME Team INbox
+//		getDocumentsForOnshoreSMETeamInbox();	
+//		
+//		
+//
+///*		SEMI UNHAPPY SCENARIO - MAKER HOLD CHECKER COMPLETE
+//		-----------------------------------------------------------
+//*/
+//		//Maker in Progress
+//		documentDTO = new DocumentDTO(); 
+//		documentDTO.setStatusCode(2);
+//		documentDTO.setAgreementId(123456);
+//		documentDTO.setUser(new User("ARDHENDU","APM","1"));
+//		documentDTO.setRoleId(1); 
+//		startProcess(documentDTO);
+//		//getDocumentsForAMaker();
+//		
+//		//Maker Hold
+//		documentDTO = new DocumentDTO(); 
+//		documentDTO.setStatusCode(10);
+//		documentDTO.setAgreementId(123456);
+//		documentDTO.setUser(new User("ARDHENDU","APM","1"));
+//		documentDTO.setRoleId(1);
+//		documentDTO.setComment("Maker Comments...");
+//		holdProcess(documentDTO);
+//
+//		//Checker Team INbox
+//		getDocumentsForCheckerTeamInbox();		
+//		
+//		//Checker Assign
+//		documentDTO = new DocumentDTO(); 
+//		documentDTO.setAgreementId(123456);
+//		documentDTO.setUser(new User("RASHMI","LIGHT","2"));
+//		documentDTO.setRoleId(2); 	
+//		assignDocuments(documentDTO,Arrays.asList(new Integer[]{123456}));
+//		
+//		//Checker My Inbox
+//		documentDTO = new DocumentDTO(); 
+//		documentDTO.setAgreementId(123456);
+//		documentDTO.setUser(new User("RASHMI","LIGHT","2"));
+//		documentDTO.setRoleId(2); 
+//		getDocumentsForCheckerMyInbox(documentDTO);
+//		
+//		//Checker In Progress
+//		documentDTO = new DocumentDTO(); 
+//		documentDTO.setAgreementId(123456);
+//		documentDTO.setUser(new User("RASHMI","LIGHT","2"));
+//		documentDTO.setRoleId(2); 
+//		documentDTO.setStatusCode(17);
+//		startProcess(documentDTO);
+//		
+//		//Checker Complete (using above user credentials)
+//		documentDTO = new DocumentDTO(); 
+//		documentDTO.setAgreementId(123456);
+//		documentDTO.setUser(new User("RASHMI","LIGHT","2"));
+//		documentDTO.setRoleId(2); 
+//		documentDTO.setStatusCode(18);
+//		completeProcess(documentDTO);
+//		
+//		//Checker Team INbox
+//		getDocumentsForCheckerTeamInbox();	
+//		
+//
+///*		SEMI UNHAPPY PATH - MAKER HOLD CHECKER HOLD SME COMPLETE
+//		---------------------------------------------------------------
+//*/		
+//		//Maker in Progress
+//		documentDTO = new DocumentDTO(); 
+//		documentDTO.setStatusCode(2);
+//		documentDTO.setAgreementId(123456);
+//		documentDTO.setUser(new User("ARDHENDU","APM","1"));
+//		documentDTO.setRoleId(1); 
+//		startProcess(documentDTO);
+//		//getDocumentsForAMaker();
+//		
+//		//Maker Hold
+//		documentDTO = new DocumentDTO(); 
+//		documentDTO.setStatusCode(10);
+//		documentDTO.setAgreementId(123456);
+//		documentDTO.setUser(new User("ARDHENDU","APM","1"));
+//		documentDTO.setRoleId(1);
+//		documentDTO.setComment("Maker Comments...");
+//		holdProcess(documentDTO);
+//
+//		//Checker Team INbox
+//		getDocumentsForCheckerTeamInbox();		
+//		
+//		//Checker Assign
+//		documentDTO = new DocumentDTO(); 
+//		documentDTO.setAgreementId(123456);
+//		documentDTO.setUser(new User("RASHMI","LIGHT","2"));
+//		documentDTO.setRoleId(2); 	
+//		assignDocuments(documentDTO,Arrays.asList(new Integer[]{123456}));
+//		
+//		//Checker My Inbox
+//		documentDTO = new DocumentDTO(); 
+//		documentDTO.setAgreementId(123456);
+//		documentDTO.setUser(new User("RASHMI","LIGHT","2"));
+//		documentDTO.setRoleId(2); 
+//		getDocumentsForCheckerMyInbox(documentDTO);
+//		
+//		//Checker In Progress
+//		documentDTO = new DocumentDTO(); 
+//		documentDTO.setAgreementId(123456);
+//		documentDTO.setUser(new User("RASHMI","LIGHT","2"));
+//		documentDTO.setRoleId(2); 
+//		documentDTO.setStatusCode(17);
+//		startProcess(documentDTO);
+//
+//		//Checker Hold
+//		documentDTO = new DocumentDTO(); 
+//		documentDTO.setAgreementId(123456);
+//		documentDTO.setUser(new User("RASHMI","LIGHT","2"));
+//		documentDTO.setRoleId(2); 
+//		documentDTO.setStatusCode(15);
+//		documentDTO.setComment("Checker Comments...Have query...");
+//		documentDTO.setErrorReasonCode(2);
+//		holdProcess(documentDTO);
+//		
+//		
+//		//Onshore SME Team INbox
+//		getDocumentsForOnshoreSMETeamInbox();
+//		
+//		//SME Assign
+//		documentDTO = new DocumentDTO(); 
+//		documentDTO.setAgreementId(123456);
+//		documentDTO.setUser(new User("MRINAL","MRINAL","3"));
+//		documentDTO.setRoleId(3); 	
+//		assignDocuments(documentDTO,Arrays.asList(new Integer[]{123456}));
+//		
+//		//SME My Inbox
+//		documentDTO = new DocumentDTO(); 
+//		documentDTO.setAgreementId(123456);
+//		documentDTO.setUser(new User("MRINAL","MRINAL","3"));
+//		documentDTO.setRoleId(3); 
+//		getDocumentsForOnshoreSMEMyInbox(documentDTO);
+//		
+//		//SME - In Progress
+//		documentDTO = new DocumentDTO(); 
+//		documentDTO.setAgreementId(123456);
+//		documentDTO.setUser(new User("MRINAL","MRINAL","3"));
+//		documentDTO.setRoleId(3); 
+//		documentDTO.setStatusCode(20);
+//		startProcess(documentDTO);
+//
+//		//SME Complete
+//		documentDTO = new DocumentDTO(); 
+//		documentDTO.setAgreementId(123456);
+//		documentDTO.setUser(new User("MRINAL","MRINAL","3"));
+//		documentDTO.setRoleId(3); 
+//		documentDTO.setStatusCode(22);
+//		documentDTO.setComment("SME Comments...query resolved...");
+//		completeProcess(documentDTO);
+//		
+//		//Onshore SME Team INbox
+//		getDocumentsForOnshoreSMETeamInbox();
+//		
+///*		ADMIN INBOX
+// * --------------------------------------------------------------------------------------
+//*/		
+//		documentDTO = new DocumentDTO(); 
+//		documentDTO.setUser(new User("DEBASISH","DEBASISH","4"));
+//		documentDTO.setRoleId(1);
+//		getAgreementsForAdminUsers(documentDTO);
+//		
+//		//Admin Maker Complete
+//		documentDTO = new DocumentDTO(); 
+//		documentDTO.setUser(new User("DEBASISH","DEBASISH","4"));
+//		documentDTO.setStatusCode(3);
+//		documentDTO.setAgreementId(123456);
+//		documentDTO.setAssignedTo("ARDHENDU");
+//		documentDTO.setRoleId(1); 
+//		completeProcess(documentDTO);
+//		
+//		documentDTO = new DocumentDTO(); 
+//		documentDTO.setUser(new User("DEBASISH","DEBASISH","4"));
+//		documentDTO.setRoleId(2);
+//		getAgreementsForAdminUsers(documentDTO);
+//		
+//		//Admin Checker In Progress
+//		documentDTO = new DocumentDTO(); 
+//		documentDTO.setAgreementId(123456);
+//		documentDTO.setUser(new User("DEBASISH","DEBASISH","4"));
+//		documentDTO.setRoleId(2); 
+//		documentDTO.setStatusCode(17);
+//		startProcess(documentDTO);
+//
+//		//Admin Checker Complete (using above user credentials)
+//		documentDTO = new DocumentDTO(); 
+//		documentDTO.setAgreementId(123456);
+//		documentDTO.setUser(new User("DEBASISH","DEBASISH","4"));
+//		documentDTO.setRoleId(2); 
+//		documentDTO.setStatusCode(18);
+//		documentDTO.setComment("Checker Comments...Completed...");
+//		completeProcess(documentDTO);
 		
 //		documentDTO.setViewId(3);
 //		getAgreementsForAdminUsers(documentDTO);

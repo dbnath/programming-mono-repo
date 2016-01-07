@@ -2,6 +2,7 @@ package com.myorg.tools.documentworkflow.dao.impl;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -22,11 +23,11 @@ import com.myorg.tools.documentworkflow.model.AgreementErrorType;
 import com.myorg.tools.documentworkflow.model.AgreementStatus;
 import com.myorg.tools.documentworkflow.model.AgreementType;
 import com.myorg.tools.documentworkflow.model.AgreementWorkflow;
+import com.myorg.tools.documentworkflow.model.DocWkflwProcess;
 import com.myorg.tools.documentworkflow.model.Document;
 import com.myorg.tools.documentworkflow.model.DocumentRepository;
 import com.myorg.tools.documentworkflow.model.DocumentSubTagValues;
 import com.myorg.tools.documentworkflow.model.DocumentTag;
-import com.myorg.tools.documentworkflow.model.DocumentTagReport;
 import com.myorg.tools.documentworkflow.model.DocumentTagSubTagMapping;
 import com.myorg.tools.documentworkflow.model.DocumentType;
 import com.myorg.tools.documentworkflow.model.DocumentTypeTagMapping;
@@ -71,13 +72,13 @@ public class DocumentAdminDAOImpl extends BaseJDBCTemplate implements DocumentAd
 	
 	public List<AgreementStatus> populateAgreementStatus() throws SQLException, Exception {
 		String SQL = DocumentWorkflowToolConstant.AGR_STATUS_POPULATE_SQL;
-		List<AgreementStatus> docTypeList = null;
+		List<AgreementStatus> agrStatusList = null;
 		try{
-			docTypeList = this.getJdbcTemplateObject().query(SQL, new AgreementStatusMapper());
+			agrStatusList = this.getJdbcTemplateObject().query(SQL, new AgreementStatusMapper());
 		} catch(EmptyResultDataAccessException e) {
-			docTypeList = null;
+			agrStatusList = null;
 		}
-		return docTypeList;
+		return agrStatusList;
 	}	
 	
 	public List<DocumentRepository> populateDocumentRepos() throws SQLException, Exception {
@@ -411,15 +412,62 @@ public class DocumentAdminDAOImpl extends BaseJDBCTemplate implements DocumentAd
 		}
 	}	
 	
-	public List<DocumentTagReport> extractDocTagInfo() throws SQLException, Exception {
-		String SQL = DocumentWorkflowToolConstant.FETCH_CLOSED_DOC_TAGS;
-		List<DocumentTagReport> docRepoList = null;
+	public List<DocWkflwProcess> extractAgreementAHTInfo() throws SQLException, Exception {
+		String SQL = DocumentWorkflowToolConstant.AGRMT_DATA_DUMP;
+		List<DocWkflwProcess> docRepoList = null;
 		try{
-			docRepoList = this.getJdbcTemplateObject().query(SQL, new DocumentDumpMapper());
+			docRepoList = this.getJdbcTemplateObject().query(SQL, new AgreementDumpMapper());
 		} catch(EmptyResultDataAccessException e) {
 			docRepoList = null;
 		}
 		return docRepoList;
+	}
+	
+	private void calculateAHT(List<AgreementWorkflow> docList){
+		
+		try {
+			List<AgreementStatus> agrStatusList = populateAgreementStatus();
+			
+			HashMap<Integer,AgreementStatus> statusMap = new HashMap<Integer, AgreementStatus>();
+			
+			for(int i=0; i<agrStatusList.size(); i++) {
+				AgreementStatus status = agrStatusList.get(i);
+				statusMap.put(status.getAgreementStatusId(), status);
+			}
+			
+			
+			
+			
+			
+			
+			Date startTime = null;
+			Integer currentRole = 0;
+			
+			for(int i=0; i< docList.size(); i++){
+				
+				AgreementWorkflow agrmt = docList.get(i);
+				
+				if("Y".equalsIgnoreCase(statusMap.get(agrmt.getWfStatusId()).getIsClockStart())){
+					startTime = agrmt.getLastUpdateDt();
+					currentRole = agrmt.getRoleId();
+				}
+				
+				
+				
+				
+			}
+			
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+		
+		
 	}
 	
 }

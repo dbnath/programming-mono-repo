@@ -170,6 +170,7 @@ public class DocumentWorkflowServiceImpl extends BaseResource implements Documen
 
 	@Override
 	public Response getAgreementsForAdminUsers(DocumentDTO documentDTO) {
+		System.out.println("###### GORU "+documentDTO.getRoleId());
 		try {
 			documentDTO = documentDAO.getAgreementsForAdminUsers(documentDTO.getRoleId());
 			DocumentWorkflowToolUtility.setResponse(documentDTO, Constants.SUCCESS_CODE, Constants.SUCCESS_MESSAGE);
@@ -177,7 +178,7 @@ public class DocumentWorkflowServiceImpl extends BaseResource implements Documen
 			e.printStackTrace();
 			DocumentWorkflowToolUtility.setResponse(documentDTO, Constants.FAILURE_CODE, e.getMessage());
 		}
-		return Response.ok(documentDTO).build();
+		return Response.ok(documentDTO).build(); 
 	}
 
 	@Override

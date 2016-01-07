@@ -1,53 +1,26 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
-<jsp:include page="../common/banner.jsp" />
-
 <%
 	long ver = java.lang.System.currentTimeMillis();
 %>
 
-<script language="Javascript" src="<%=request.getContextPath()%>/js/landing.js?ver=<%=ver%>"></script>
+<jsp:include page="../admin/updateAgreement.jsp" />
+
+<script language="Javascript" src="<%=request.getContextPath()%>/js/adminlanding.js?ver=<%=ver%>"></script>
   <!-- slide in menu (mobile only) -->
   <div class="container bootcards-container" id="main" style="padding-top:40px">
-    
-			  <!--<a class="btn btn-primary" href="#" onclick="landingObj.reloadGridData()" >
-				<i class="glyphicon glyphicon-refresh"></i> 
-				<span>Reload Documents</span>
-			  </a><br><br>-->			  
-	<!--<div class="row">-->
-		<!--<div width="100%">-->
-		<div class="pure-menu pure-menu-horizontal" id="myTabs" style="height: 80px;align:center;" border="1">
-		    <ul class="pure-menu-list">
-		        <li id="globalInboxSwitch" class="pure-menu-item"><a href="javascript:activateTab('home')" class="pure-menu-link">Global Inbox<span class="badge" id="teamCount">&nbsp;</span></a></li>
-		        <li id="myInboxSwitch" class="pure-menu-item"><a href="javascript:activateTab('profile')" class="pure-menu-link">My Inbox</span><span class="badge" id="myCount">&nbsp;</span></a></li>
-		    </ul>
-		</div>
-		
-		
-		<div align="center" id="myTabContent" width="100%">
-	       	<div id="home" width="100%">
-	         	<div id="teamGrid" class="documentlist_div_parent">
-	          	</div>
-	       	</div>
-	       	<div id="profile" width="100%">			
-	          <div id="myGrid" class="documentlist_div_parent">         
-	          </div>
-		   	</div>
-		</div>
-	<!--</div>-->
-	
-	
-	
-	<!--details panel on right side-->
-   
 
-<!--</div>--> <!-- end of row -->
+	<div align="center" id="myTabContent" width="100%">
+		<div id="profile" width="100%">			
+			<div id="myGrid" class="documentlist_div_parent">         
+			</div>
+		</div>
+	</div>
 </div> <!-- end of main container -->
-
-<%@ include file="../common/footer.jsp" %>
-	
+<input type="hidden" id="viewId"value="<%=request.getParameter("u8_input")%>" />
 
 <script>
+	document.getElementById("u8_input").value=document.getElementById("viewId").value;
 	var sorter = new TINY.table.sorter('sorter','mytable',{
 		headclass:'head',
 		ascclass:'asc',
@@ -75,7 +48,7 @@
 		init:false
 	});
 
-	var teamSorter = new TINY.table.sorter('teamSorter','teamtable',{
+	/*var teamSorter = new TINY.table.sorter('teamSorter','teamtable',{
 		headclass:'head',
 		ascclass:'asc',
 		descclass:'desc',
@@ -100,18 +73,18 @@
 		//avg:[6,7,8,9],
 		//columns:[{index:6, format:'%', decimals:1},{index:8, format:'$', decimals:0}],
 		init:false
-	});	
+	});	*/
 	
- 	var landingObj = new landing();
+ 	var landingObj = new adminlanding();
  	landingObj.landinginit();
 	
-	function activateTab(pageId) {
+	/*function activateTab(pageId) {
           var tabCtrl = document.getElementById('myTabContent');
           var pageToActivate = document.getElementById(pageId);
           for (var i = 0; i < tabCtrl.childNodes.length; i++) {
               var node = tabCtrl.childNodes[i];
               if (node.nodeType == 1) { /* Element */
-                  node.style.display = (node == pageToActivate) ? 'block' : 'none';
+                  /*node.style.display = (node == pageToActivate) ? 'block' : 'none';
 				  
 				  if(pageId == 'home'){
 					document.getElementById("globalInboxSwitch").style.backgroundColor="#C2C9CC";
@@ -124,7 +97,7 @@
 				  
               }
           }
-      }
+      }*/
 	
 	
 

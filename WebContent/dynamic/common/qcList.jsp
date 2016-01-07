@@ -39,6 +39,8 @@
 				<th width="18%"><h3 style="Color:#ffffff">QC Details</h3></th>
 				<th width="15%"><h3 style="Color:#ffffff">Current Status</h3></th>
 				<th width="18%"><h3 style="Color:#ffffff">SME Details</h3></th>
+				<th><h3 style="Color:#ffffff">Number of Pages</h3></th>
+				<th><h3 style="Color:#ffffff">Number of Fields</h3></th>
 				<th style="display:none"><h3 style="Color:#ffffff">StatusCode</h3></th>	
 			</tr>
 		</thead>
@@ -49,10 +51,12 @@
 				  <td width="15%" id="<c:out value="${document.agreementId}agreementId" />"><c:out value="${document.agreementId}" /></td>
 				  <td width="4%" id="<c:out value="${document.agreementId}lob" />"><c:out value="${document.lob}" /></td>
 				  <td width="15%" id="<c:out value="${document.agreementId}agreementTypeDesc" />"><c:out value="${document.agreementTypeDesc}" /></td>
-				  <td width="15%" id="<c:out value="${document.agreementId}makerStatus" />"><c:out value="${document.checkerStatus}" /></td>
-				  <td width="18%" id="<c:out value="${document.agreementId}makerComments" />"><c:out value="${document.checkerComments}" /></td>
+				  <td width="15%" id="<c:out value="${document.agreementId}checkerStatus" />"><c:out value="${document.checkerStatus}" /></td>
+				  <td width="18%" id="<c:out value="${document.agreementId}checkerComments" />"><c:out value="${document.checkerComments}" /></td>
 				  <td width="15%" id="<c:out value="${document.agreementId}statusDescription" />"><c:out value="${document.statusDescription}" /></td>
-				  <td width="18%" id="<c:out value="${document.agreementId}checkerComments" />"><c:out value="${document.smeComments}" /></td>
+				  <td width="18%" id="<c:out value="${document.agreementId}smeComments" />"><c:out value="${document.smeComments}" /></td>
+				  <td id="<c:out value="${document.agreementId}numPages" />"><c:out value="${document.numPages}" /></td>		  
+				  <td id="<c:out value="${document.agreementId}numFields" />"><c:out value="${document.numFields}" /></td>		  
 				  <td style="display:none" id="<c:out value="${document.agreementId}statusCode" />" value="<c:out value="${document.statusCode}" />" ><c:out value="${document.statusCode}" /></td>		  
 				</tr>
 			</c:forEach>
@@ -134,6 +138,12 @@
 								<b>Comments:</b>
 								<textarea id="checkerComments" valign="middle" class="pure-input-4-3" disabled rows="2" cols="60"></textarea>
 								&nbsp;
+								<br>
+								<b>Number of Pages:</b>
+								<input type="text" id="numPages">
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								<b>Number of Fields:</b>
+								<input type="text" id="numFields">								
 							</fieldset>
 						</td>
 					</tr>
@@ -163,7 +173,7 @@
 		</div>
 	</div>-->
 </c:when>
-<c:when test="${empty teamDocumentList}">No records available</c:when>
+<c:when test="${empty teamDocumentList}"><h2>No records available</h2></c:when>
 </c:choose>
 <!--<table class="pure-table pure-table-bordered">
 	<thead>

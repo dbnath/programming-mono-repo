@@ -40,6 +40,8 @@
 				<th width="15%"><h3 style="Color:#ffffff">Current Status</h3></th>
 				<th width="18%"><h3 style="Color:#ffffff">QC Details</h3></th>
 				<th width="30%"><h3 style="Color:#ffffff">Error Reason</h3></th>		
+				<th><h3 style="Color:#ffffff">Number of Pages</h3></th>
+				<th><h3 style="Color:#ffffff">Number of Fields</h3></th>
 				<th style="display:none"><h3 style="Color:#ffffff">StatusCode</h3></th>	
 			</tr>
 		</thead>
@@ -55,6 +57,8 @@
 				  <td width="15%" id="<c:out value="${document.agreementId}statusDescription" />"><c:out value="${document.statusDescription}" /></td>
 				  <td width="18%" id="<c:out value="${document.agreementId}checkerComments" />"><c:out value="${document.checkerComments}" /></td>
 				  <td width="30%" id="<c:out value="${document.agreementId}errorReason" />"><c:out value="${document.errorReason}" /></td>		  
+				  <td id="<c:out value="${document.agreementId}numPages" />"><c:out value="${document.numPages}" /></td>		  
+				  <td id="<c:out value="${document.agreementId}numFields" />"><c:out value="${document.numFields}" /></td>		  
 				  <td style="display:none" id="<c:out value="${document.agreementId}statusCode" />" value="<c:out value="${document.statusCode}" />" ><c:out value="${document.statusCode}" /></td>		  
 				</tr>
 			</c:forEach>
@@ -142,7 +146,13 @@
 									<c:forEach items="${errorList}" var="error">
 										<option value="${error.errorTypeId}">${error.errorTypeName}</option>
 									</c:forEach>
-								</select>
+								</select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								
+								<b>Number of Pages:</b>
+								<input type="text" id="numPages">
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								<b>Number of Fields:</b>
+								<input type="text" id="numFields">
 							</fieldset>
 						</td>
 					</tr>
@@ -172,5 +182,5 @@
 		</div>
 	</div>-->
 </c:when>
-<c:when test="${empty teamDocumentList}">No records available</c:when>
+<c:when test="${empty teamDocumentList}"><h2>No records available</h2></c:when>
 </c:choose>

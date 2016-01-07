@@ -70,6 +70,31 @@ public class AgreementStatus implements Serializable, ReverseMappable{
 	public void setIsClockStop(String isClockStop) {
 		this.isClockStop = isClockStop;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((agreementStatusId == null) ? 0 : agreementStatusId.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		AgreementStatus other = (AgreementStatus) obj;
+		if (agreementStatusId == null) {
+			if (other.agreementStatusId != null)
+				return false;
+		} else if (!agreementStatusId.equals(other.agreementStatusId))
+			return false;
+		return true;
+	}
 	
 	
 

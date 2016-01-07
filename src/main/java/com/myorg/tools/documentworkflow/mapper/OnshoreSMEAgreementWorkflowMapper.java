@@ -15,19 +15,21 @@ public class OnshoreSMEAgreementWorkflowMapper implements RowMapper<DocWkflwProc
 			docWorkflow.setAgreementId(rs.getInt("ID_AGRMT"));
 			docWorkflow.setAgreementTypeCode(rs.getInt("ID_AGREEMENT_TYPE"));
 			docWorkflow.setAgreementTypeDesc(rs.getString("TX_AGREEMENT_TYPE"));
-			docWorkflow.setStatusCode(rs.getInt("ID_ROLE"));
+			docWorkflow.setRoleId(rs.getInt("ID_ROLE"));
 			docWorkflow.setStatusCode(rs.getInt("ID_WF_STATUS"));
 			docWorkflow.setStatusDescription(rs.getString("TX_WF_STATUS"));
 			docWorkflow.setCheckerStatusId(rs.getInt("ID_WF_CHECKER_STATUS"));
 			docWorkflow.setCheckerStatus(rs.getString("TX_WF_CHECKER_STATUS"));
 			docWorkflow.setCheckerComments(rs.getString("CHECKER_COM"));
-			docWorkflow.setSmeComments(rs.getString("SME_COM"));
+			docWorkflow.setSmeComments(DocumentWorkflowToolUtility.isEmptyValue(rs.getString("SME_COM"))?"":rs.getString("SME_COM"));
 			docWorkflow.setLob(rs.getString("LOB"));
 		    docWorkflow.setAssignedTo(rs.getString("ASSIGNED_TO"));
 		    docWorkflow.setCreatedBy(rs.getString("CREATED_BY"));
 		    docWorkflow.setCreationDate(rs.getDate("CREATED_DT"));
 		    docWorkflow.setLastUpdatedBy(rs.getString("LAST_UPDATED_BY"));
 		    docWorkflow.setLastUpdationDate(rs.getDate("LAST_UPDATE_DT"));
+		    docWorkflow.setNumPages(rs.getInt("NUM_PAGES"));
+		    docWorkflow.setNumFields(rs.getInt("NUM_FIELDS"));
 		}
 		return docWorkflow;
     }

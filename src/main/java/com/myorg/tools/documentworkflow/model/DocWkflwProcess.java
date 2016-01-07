@@ -42,6 +42,9 @@ public class DocWkflwProcess implements Serializable{
 	private Integer errorReasonCd;
 	private String errorReason;
 	
+	private Integer numPages;
+	private Integer numFields;
+	
 
 	public Integer getAgreementId() {
 		return agreementId;
@@ -209,6 +212,22 @@ public class DocWkflwProcess implements Serializable{
 
 	public void setCheckerStatusId(Integer checkerStatusId) {
 		this.checkerStatusId = checkerStatusId;
+	}
+
+	public Integer getNumPages() {
+		return numPages;
+	}
+
+	public void setNumPages(Integer numPages) {
+		this.numPages = numPages;
+	}
+
+	public Integer getNumFields() {
+		return numFields;
+	}
+
+	public void setNumFields(Integer numFields) {
+		this.numFields = numFields;
 	}
 	
 	

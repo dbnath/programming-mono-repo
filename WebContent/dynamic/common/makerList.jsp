@@ -30,8 +30,12 @@
 		<th><h3 style="Color:#ffffff">Agreement Id</h3></th>
 		<th><h3 style="Color:#ffffff">LOB</h3></th>
 		<th><h3 style="Color:#ffffff">Agreement Type</h3></th>
+		<th style="display:'none'" ><h3 style="Color:#ffffff">Assigned To</h3></th>
 		<th><h3 style="Color:#ffffff">Maker Status</h3></th>
-		<th style="display:'none'"><h3 style="Color:#ffffff">StatusCode</h3></th>	
+		<th><h3 style="Color:#ffffff">Details</h3></th>
+		<th><h3 style="Color:#ffffff">Number of Pages</h3></th>
+		<th><h3 style="Color:#ffffff">Number of Fields</h3></th>
+		<th style="display:'none'" ><h3 style="Color:#ffffff">StatusCode</h3></th>	
 	</tr>
 	</thead>
 	<tbody>
@@ -41,7 +45,11 @@
           <td id="<c:out value="${document.agreementId}agreementId" />"><c:out value="${document.agreementId}" /></td>
 		  <td id="<c:out value="${document.agreementId}lob" />"><c:out value="${document.lob}" /></td>
 		  <td id="<c:out value="${document.agreementId}agreementTypeDesc" />"><c:out value="${document.agreementTypeDesc}" /></td>
+		  <td style="display:'none'" id="<c:out value="${document.agreementId}assignedTo" />"><c:out value="${document.assignedTo}" /></td>
 		  <td id="<c:out value="${document.agreementId}statusDescription" />"><c:out value="${document.statusDescription}" /></td>		  
+		  <td id="<c:out value="${document.agreementId}makerComments" />"><c:out value="${document.makerComments}" /></td>		  
+		  <td id="<c:out value="${document.agreementId}numPages" />"><c:out value="${document.numPages}" /></td>		  
+		  <td id="<c:out value="${document.agreementId}numFields" />"><c:out value="${document.numFields}" /></td>		  
 		  <td style="display:'none'" id="<c:out value="${document.agreementId}statusCode" />" value="<c:out value="${document.statusCode}" />" ><c:out value="${document.statusCode}" /></td>
         </tr>
     </c:forEach>
@@ -100,9 +108,16 @@
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 						<b>Comments:</b>
 						<textarea id="checkerComments" class="pure-input-4-3" disabled rows="2" cols="65"></textarea>
+						<br>
+						<b>Number of Pages:</b>
+						<input type="text" id="numPages">
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<b>Number of Fields:</b>
+						<input type="text" id="numFields">						
 					</fieldset>
 					</td>
 				</tr>
+				
 			</table>
 		</tr>
 	</table>

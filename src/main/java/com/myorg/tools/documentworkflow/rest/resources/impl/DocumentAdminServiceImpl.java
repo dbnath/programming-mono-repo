@@ -27,6 +27,7 @@ import com.myorg.tools.documentworkflow.dao.DocumentAdminDAO;
 import com.myorg.tools.documentworkflow.model.AgreementErrorType;
 import com.myorg.tools.documentworkflow.model.AgreementType;
 import com.myorg.tools.documentworkflow.model.AgreementWorkflow;
+import com.myorg.tools.documentworkflow.model.DocWkflwProcess;
 import com.myorg.tools.documentworkflow.model.DocumentRepository;
 import com.myorg.tools.documentworkflow.model.DocumentSubTagValues;
 import com.myorg.tools.documentworkflow.model.DocumentTag;
@@ -455,10 +456,10 @@ public class DocumentAdminServiceImpl extends BaseResource implements DocumentAd
 	 * @see com.myorg.tools.documentworkflow.rest.resources.DocumentAdminService#getDocTagDump()
 	 */
 	@Override
-	public Response getDocTagDump() {
+	public Response getAgreementDataDump() {
 		
 		try {
-			List<DocumentTagReport> docTagList = documentAdminDAO.extractDocTagInfo();
+			List<DocWkflwProcess> agrmtList = documentAdminDAO.extractAgreementAHTInfo();
 			
 			XSSFWorkbook wb = new XSSFWorkbook();			
 			XSSFSheet sheet = wb.createSheet();
@@ -468,7 +469,7 @@ public class DocumentAdminServiceImpl extends BaseResource implements DocumentAd
 			headerFont.setBold(true);
 			
 			createExcelReportHeader(sheet, headerFont, headerStyle);
-			createExcelReportBody(sheet, docTagList);
+			createExcelReportBody(sheet, agrmtList);
 			
 			File file = new File(this.getAppConfig().getTempFileLocation()+"/report"+System.currentTimeMillis()+".xlsx");
 			
@@ -476,7 +477,7 @@ public class DocumentAdminServiceImpl extends BaseResource implements DocumentAd
 			wb.write(baos);
 			baos.close();
 			
-			return Response.ok(file).header("Content-Disposition", "attachment; filename=\"Document_Tag_Dump.xlsx\"").build();			
+			return Response.ok(file).header("Content-Disposition", "attachment; filename=\"Agreement_Data_Dump.xlsx\"").build();			
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -496,52 +497,119 @@ public class DocumentAdminServiceImpl extends BaseResource implements DocumentAd
 		headerStyle.setFillBackgroundColor(headerColor);
 		headerStyle.setFont(headerFont);
 
-		for (int i = 0; i < 4; i++) {
+		for (int i = 0; i < 15; i++) {
 			XSSFCell cell = headerRow.createCell(i);
 			cell.setCellStyle(headerStyle);
 
 			switch (i) {
 			case 0:
-				cell.setCellValue("Document ID");
+				cell.setCellValue("Agreement ID");
 				break;
 			case 1:
-				cell.setCellValue("Document Name");
+				cell.setCellValue("Agreement Type");
 				break;
 			case 2:
-				cell.setCellValue("Document Tag");
+				cell.setCellValue("LOB");
 				break;
 			case 3:
-				cell.setCellValue("Document SubTag");
+				cell.setCellValue("Num of Pages");
 				break;
+			case 4:
+				cell.setCellValue("Num of Fields");
+				break;				
+			case 5:
+				cell.setCellValue("Maker Status");
+				break;
+			case 6:
+				cell.setCellValue("Maker Comments");
+				break;
+			case 7:
+				cell.setCellValue("Checker Status");
+				break;
+			case 8:
+				cell.setCellValue("Checker Comments");
+				break;	
+			case 9:
+				cell.setCellValue("Latest Status");
+				break;
+			case 10:
+				cell.setCellValue("Onshore SME Comments");
+				break;	
+			case 11:
+				cell.setCellValue("Maker Hold Time");
+				break;	
+			case 12:
+				cell.setCellValue("Checker Hold Time");
+				break;
+			case 13:
+				cell.setCellValue("Onshore Hold Time");
+				break;
+			case 14:
+				cell.setCellValue("Total Hold Time");
+				break;				
 			}
 		}
 		return;
 	}
 	
-	private void createExcelReportBody(XSSFSheet sheet, List<DocumentTagReport> docTagList) {
+	private void createExcelReportBody(XSSFSheet sheet, List<DocWkflwProcess> agrmtList) {
 
-		if(docTagList != null){
+		if(agrmtList != null){
 			int i = 1;
-			for(DocumentTagReport r : docTagList){
+			for(DocWkflwProcess r : agrmtList){
 				XSSFRow row = sheet.createRow(i);
 				
-				for(int j=0; j<4; j++){
+				for(int j=0; j<15; j++){
 					XSSFCell cell = row.createCell(j);
 					
 					switch (j) {
 					case 0:
-						cell.setCellValue(r.getDocId());
+						cell.setCellValue(r.getAgreementId());
 						break;
 					case 1:
-						cell.setCellValue(r.getDocName());
+						cell.setCellValue(r.getAgreementTypeDesc());
 						break;
 					case 2:
-						cell.setCellValue(r.getDocTagDesc());
+						cell.setCellValue(r.getLob());
 						break;
 					case 3:
-						cell.setCellValue(r.getDocSubTagDesc());
+						cell.setCellValue(r.getNumPages());
 						break;
+					case 4:
+						cell.setCellValue(r.getNumFields());
+						break;	
+					case 5:
+						cell.setCellValue(r.getMakerStatus());
+						break;
+					case 6:
+						cell.setCellValue(r.getMakerComments());
+						break;	
+					case 7:
+						cell.setCellValue(r.getCheckerStatus());
+						break;
+					case 8:
+						cell.setCellValue(r.getCheckerComments());
+						break;	
+					case 9:
+						cell.setCellValue(r.getStatusDescription());
+						break;
+					case 10:
+						cell.setCellValue(r.getSmeComments());
+						break;
+					case 11:
+						cell.setCellValue("TBD");
+						break;
+					case 12:
+						cell.setCellValue("TBD");
+						break;
+					case 13:
+						cell.setCellValue("TBD");
+						break;
+					case 14:
+						cell.setCellValue("TBD");
+						break;									
 					}
+					
 				}
 				i++;
 			}

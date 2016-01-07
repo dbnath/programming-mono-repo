@@ -22,7 +22,8 @@ public class AgreementWorkflow implements java.io.Serializable{
 	private Integer versionId; //For audit trail purpose
 	private AgreementWorkflowDetail detail;
 	private String createdBy;
-	private Date createdDt;	
+	private Date createdDt;
+	private Integer roleId;
 	
 	/**
 	 * 
@@ -113,6 +114,12 @@ public class AgreementWorkflow implements java.io.Serializable{
 	}
 	public void setCreatedDt(Date createdDt) {
 		this.createdDt = createdDt;
+	}
+	public Integer getRoleId() {
+		return roleId;
+	}
+	public void setRoleId(Integer roleId) {
+		this.roleId = roleId;
 	}
 	
 	

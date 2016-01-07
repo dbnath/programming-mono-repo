@@ -2,6 +2,7 @@ package com.myorg.tools.documentworkflow.view;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -144,6 +145,68 @@ public class ViewController {
 	@RequestMapping(method = RequestMethod.GET,value = "adminUpdateAgreementView")
 	public ModelAndView getAdminUpdateAgreementView() {
 		ModelAndView modelView = new ModelAndView("admin/updateAgreement");
+		return modelView;
+	}
+	
+	@RequestMapping(method = RequestMethod.POST,value = "adminlandingHome")
+	public ModelAndView getAdminView(HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView modelView = new ModelAndView("landing/adminlanding");
+		return modelView;
+	}
+		
+	@RequestMapping(method = RequestMethod.GET,value = "myAdminDocs")
+	public ModelAndView getAdminDocumentList(HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView modelView = null;
+		DocumentDTO dto = new DocumentDTO();
+		
+		Enumeration<String> params = request.getParameterNames();
+		
+		while(params.hasMoreElements()){
+			System.out.println("###### Param "+params.nextElement());
+		}
+		
+		Integer primaryRole = Integer.valueOf(request.getParameter("u8_input"));
+		System.out.println("###### primaryRole "+primaryRole);
+		
+		try {
+			List<DocumentWorkflowStatus> workflowStatusList = documentDAO.getWorkflowStatusListByRole(primaryRole);
+			DocumentWorkflowStatus blankStatus = new DocumentWorkflowStatus();
+			blankStatus.setStatusCode(-1);
+			blankStatus.setStatusDescription("");
+			workflowStatusList.add(0, blankStatus);
+			
+			List<AgreementErrorType> errorList = null;
+			dto = documentDAO.getAgreementsForAdminUsers(primaryRole);
+			
+			if (Role.ID_ROLE_MAKER.intValue() == primaryRole.intValue()) {
+				//dto = documentDAO.getDocumentsForMaker(dto);
+				modelView = new ModelAndView("common/makerList");
+			} else if (Role.ID_ROLE_CHECKER.intValue() == primaryRole.intValue()) {
+				//dto = documentDAO.getDocumentsForChecker(dto);
+				errorList = documentAdminDAO.populateErrorTypes();
+				AgreementErrorType blankErrorType = new AgreementErrorType();
+				blankErrorType.setErrorTypeId(-1);
+				blankErrorType.setErrorTypeCode("");
+				blankErrorType.setErrorTypeName("");
+				errorList.add(0, blankErrorType);
+				
+				modelView = new ModelAndView("common/checkerList");
+				modelView.addObject("errorList", errorList);
+			} else if (Role.ID_ROLE_QC.intValue() == primaryRole.intValue()) {
+				//dto = documentDAO.getDocumentsForSME(dto);
+				modelView = new ModelAndView("common/qcList");
+			}
+			System.out.println("For Admin View role : "+primaryRole +", documentlist="+dto.getDocList());
+			modelView.addObject("workflowStatusList", workflowStatusList);
+			modelView.addObject("myDocumentList", dto.getDocList() == null ? new ArrayList<DocWkflwProcess>() : dto.getDocList());
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		return modelView;
 	}
 	

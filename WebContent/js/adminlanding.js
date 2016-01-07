@@ -1,7 +1,7 @@
 /**
  * 
  */
-var landing = function () {
+var adminlanding = function () {
 	
 	
 	var $ = getElementById;
@@ -17,40 +17,38 @@ var landing = function () {
 	this.landinginit = landinginit;
 	function landinginit() {
 		serviceObj = new service();
-		if($("selectedRoleId").value == "1") {
-			$("home").style.display = 'none';
-			$("myInboxSwitch").style.display = 'none';
-			$("globalInboxSwitch").style.display = 'none';
-		}
-		if($("home").style.display != 'none') {
-			serviceObj.getTeamDocList(landinginitResponse);
-			$("profile").style.display = 'none';
-			document.getElementById("globalInboxSwitch").style.backgroundColor="#C2C9CC";
-		}
 		
-		serviceObj.getMyDocList(landinginitMyListResponse);		
-	}
-	
-	this.landinginitResponse = landinginitResponse;
-	function landinginitResponse(responseData) {
-		$("teamGrid").innerHTML = responseData.responseText;
-		if($("teamtable")){
-			teamSorter.init();
-		}
+		var inputObj = {};
+		inputObj.roleId = $("viewId").value;
+		
+		serviceObj.getAdminDocList(inputObj,landinginitMyListResponse);	
+		
 	}
 	
 	this.landinginitMyListResponse = landinginitMyListResponse;
 	function landinginitMyListResponse(responseData) {
+		//alert(responseData.responseText);
 		$("myGrid").innerHTML = responseData.responseText;
+		//selectRole(inputObj.roleId);
+		//alert(1);
 		if($("mytable")){
-		//setTimeout(function(){
+			//try{
 			sorter.init();
+			/*} catch(ex){
+				for(var k in ex){
+					alert(k + ex[k]);
+				}
+			}*/
 		}
-		//}, 2000);
-		
+		//alert(2);
 	}
 	
-	this.setAssignment=setAssignment;
+	this.selectRole=selectRole;
+	function selectRole(roleId){
+		$("viewId").value=roleId;
+	}
+	
+	/*this.setAssignment=setAssignment;
 	function setAssignment(control){
 		if(control.checked == true){
 			//selectedItemsTeamList[selectedItemsTeamList.length] = control.value;
@@ -58,23 +56,20 @@ var landing = function () {
 				selectedItemsTeamList.push(control.value);
 			}
 		}
-	}
+	}*/
 	
 	this.assignMe=assignMe;
-	function assignMe(){
-		if(selectedItemsTeamList.length == 0){
-			alert("Please select at least one agreement");
-			return false;
-		}
-		serviceObj.assignToMe(selectedItemsTeamList,assignRespFn);
+	function assignMe(agreementId){
+		var input = [];
+		input.push(agreementId);
+		serviceObj.assignToMe(input,assignRespFn);
 		
 	}
 	
 	this.assignRespFn=assignRespFn;
 	function assignRespFn(responseData){
-		
 		if(responseData.responseText === "true"){
-			alert("Assignments assigned successfully. Please go to My Inbox to process further.");
+			alert("Assignment assigned to you for further action.");
 			//resetAssignmentList();
 			reloadGridData();
 		} else {
@@ -82,13 +77,13 @@ var landing = function () {
 		}
 	}
 	
-	function resetAssignmentList(){
+	/*function resetAssignmentList(){
 		for(var k in selectedItemsTeamList){
 			$(selectedItemsTeamList[k]).disabled = true;
 			selectedItemsTeamList[k]=null;
 		}
 		//alert(selectedItemsTeamList);
-	}
+	}*/
 	
 	this.setMyAssignment=setMyAssignment;
 	function setMyAssignment(control){
@@ -113,8 +108,6 @@ var landing = function () {
 		$('checkerStatus').disabled=true;
 		$('checkerStatus').value=-1;
 		$('checkerComments').value='';
-		//$('numPages').value='';
-		//$('numFields').value='';
 			
 		if(selectedItemsMyList != null){
 			
@@ -134,7 +127,7 @@ var landing = function () {
 			$('numPages').value = numPages;
 			$('numFields').value = numFields;
 			
-			if($("selectedRoleId").value == "1"){
+			if($("viewId").value == "1"){
 				if(statusCd == 1){
 					$('checkerStart').disabled=false;
 					$('checkerHold').disabled=true;
@@ -147,7 +140,7 @@ var landing = function () {
 					$('checkerStatus').disabled=false;
 					$('checkerComments').disabled = false;
 				}
-			} else if($("selectedRoleId").value == "2"){
+			} else if($("viewId").value == "2"){
 				if(statusCd == 16){
 					$('checkerStart').disabled=false;
 					$('checkerHold').disabled=true;
@@ -159,8 +152,11 @@ var landing = function () {
 					$('checkerComplete').disabled=false;
 					$('checkerStatus').disabled=false;
 					$('checkerComments').disabled = false;
-				}				
-			} else if($("selectedRoleId").value == "3"){
+				} else {
+					assignMe(selectedItemsMyList);
+				}
+				
+			} else if($("viewId").value == "3"){
 				if(statusCd == 19){
 					$('checkerStart').disabled=false;
 					$('checkerHold').disabled=true;
@@ -179,11 +175,13 @@ var landing = function () {
 					$('checkerStatus').disabled=true;
 					$('checkerComments').disabled = false;
 					var smeComments = $(selectedItemsMyList+'smeComments').value;
-					if(!smeComments){
+					if (! smeComments) {
 						smeComments = $(selectedItemsMyList+'smeComments').innerHTML;
 					}
 					$('checkerComments').value = smeComments;
-				} 
+				} else {
+					assignMe(selectedItemsMyList);
+				}
 			}
 			
 		} 
@@ -202,16 +200,16 @@ var landing = function () {
 		
 		var inputObj = {};
 		inputObj.agreementId=selectedItemsMyList;//[0];
-		inputObj.roleId=$("selectedRoleId").value;
+		inputObj.roleId=$("viewId").value;
 		
-		if($("selectedRoleId").value == "1"){
+		if($("viewId").value == "1"){
 			inputObj.statusCode=2; //For Maker Start hardcoding the value
-		} else if($("selectedRoleId").value == "2"){
+		} else if($("viewId").value == "2"){
 			inputObj.statusCode=17; //For Checker Start hardcoding the value
-		} else if($("selectedRoleId").value == "3"){
+		} else if($("viewId").value == "3"){
 			inputObj.statusCode=20; //For SME Start hardcoding the value
 		}					
-		inputObj.user={userId:$("selectedUserId").value, roleId:$("selectedRoleId").value};
+		inputObj.user={userId:$("selectedUserId").value, roleId:$("viewId").value};
 		
 		serviceObj.startProcess(inputObj,startRespFn);		
 	}
@@ -237,19 +235,19 @@ var landing = function () {
 					
 					var stsCode = docList[k].statusCode;
 					
-					if($("selectedRoleId").value == "1"){
+					if($("viewId").value == "1"){
 						$(agrId+'makerComments').innerHTML=docList[k].makerComments;
 						if(stsCode != 1 && stsCode != 2){
 							$(agrId).disabled=true;
 						}
-					} else if($("selectedRoleId").value == "2"){
+					} else if($("viewId").value == "2"){
 						$(agrId+'makerStatus').innerHTML=docList[k].makerStatus;
 						$(agrId+'checkerComments').innerHTML=docList[k].checkerComments;
 						$(agrId+'errorReason').innerHTML=docList[k].errorReason;						
 						if(stsCode != 16 && stsCode != 17){
 							$(agrId).disabled=true;
 						}
-					} else if($("selectedRoleId").value == "3"){
+					} else if($("viewId").value == "3"){
 						$(agrId+'checkerComments').innerHTML=docList[k].checkerComments;
 						$(agrId+'smeComments').innerHTML=docList[k].smeComments;
 						if(stsCode != 19 && stsCode != 20 && stsCode != 21){
@@ -283,7 +281,7 @@ var landing = function () {
 		$('numPages').value='';
 		$('numFields').value='';
 		selectedItemsMyList = null;	
-		if($("selectedRoleId").value == "2"){
+		if($("viewId").value == "2"){
 		  $('errorReasonList').value = -1;
 		}
 	}
@@ -299,7 +297,7 @@ var landing = function () {
 			return false;
 		}*/
 		
-		if($("selectedRoleId").value == "2" || $("selectedRoleId").value == "3"){
+		if($("viewId").value == "2" || $("viewId").value == "3"){
 			if ($('numPages').value == null || $('numPages').value == '' || $('numPages').value == 0) {
 				alert("Please fill up Number of Pages in Comment Section befor marking the agreement as Complete...");
 				return false;
@@ -313,22 +311,21 @@ var landing = function () {
 				return false;
 			}
 		}
-		
 		var inputObj = {};
 		inputObj.agreementId=selectedItemsMyList;//[0];
-		inputObj.roleId=$("selectedRoleId").value;
+		inputObj.roleId=$("viewId").value;
 		inputObj.comment=$('checkerComments').value;
 		inputObj.numPages=$('numPages').value;
 		inputObj.numFields=$('numFields').value;
 		
-		if($("selectedRoleId").value == "1"){
+		if($("viewId").value == "1"){
 			inputObj.statusCode=3; //For Maker Complete hardcoding the value
-		} else if($("selectedRoleId").value == "2"){
+		} else if($("viewId").value == "2"){
 			inputObj.statusCode=18; //For Checker Complete hardcoding the value
-		} else if($("selectedRoleId").value == "3"){
+		} else if($("viewId").value == "3"){
 			inputObj.statusCode=22; //For SME Complete hardcoding the value
 		}
-		inputObj.user={userId:$("selectedUserId").value, roleId:$("selectedRoleId").value};
+		inputObj.user={userId:$("selectedUserId").value, roleId:$("viewId").value};
 		
 		serviceObj.completeProcess(inputObj,completeRespFn);		
 	}
@@ -355,12 +352,12 @@ var landing = function () {
 					$(agrId+'statusCode').value=docList[k].statusCode;
 					
 					var stsCode = docList[k].statusCode;
-					if($("selectedRoleId").value == "1"){
+					if($("viewId").value == "1"){
 						$(agrId+'makerComments').innerHTML=docList[k].makerComments;
 						if(stsCode != 1 && stsCode != 2){
 							$(agrId).disabled=true;
 						}
-					} else if($("selectedRoleId").value == "2"){
+					} else if($("viewId").value == "2"){
 						$(agrId+'makerStatus').innerHTML=docList[k].makerStatus;
 						$(agrId+'checkerComments').innerHTML=docList[k].checkerComments;
 						$(agrId+'errorReason').innerHTML=docList[k].errorReason;
@@ -368,7 +365,7 @@ var landing = function () {
 						if(stsCode != 16 && stsCode != 17){
 							$(agrId).disabled=true;
 						}
-					} else if($("selectedRoleId").value == "3"){
+					} else if($("viewId").value == "3"){
 						$(agrId+'checkerComments').innerHTML=docList[k].checkerComments;
 						$(agrId+'smeComments').innerHTML=docList[k].smeComments;					
 						if(stsCode != 19 && stsCode != 20 && stsCode != 21){
@@ -402,21 +399,21 @@ var landing = function () {
 			return false;
 		}*/
 		//jDialog('Do you realy want to hold it?',function(){
-			if($("selectedRoleId").value == "1" && $('checkerStatus').value == 15){				
+			if($("viewId").value == "1" && $('checkerStatus').value == 15){				
 				if($('checkerComments').value == null || $('checkerComments').value == ''){
 					alert('Please fill in comments section');
 					return false;
 				}
 			}
 	
-			if($("selectedRoleId").value == "2" && $('checkerStatus').value == 15){
+			if($("viewId").value == "2" && $('checkerStatus').value == 15){
 				if($('checkerComments').value == null || $('checkerComments').value == '' || $('errorReasonList').value == -1){
 					alert('Please fill in both comments section and Error Reason');
 					return false;
 				}
 			}
 			
-			if($("selectedRoleId").value == "3" && $('checkerStatus').value == 21){
+			if($("viewId").value == "3" && $('checkerStatus').value == 21){
 				if($('checkerComments').value == null || $('checkerComments').value == ''){
 					alert('Please fill in comments section');
 					return false;
@@ -426,11 +423,11 @@ var landing = function () {
 			
 			var inputObj = {};
 			inputObj.agreementId=selectedItemsMyList;//[0];
-			inputObj.roleId=$("selectedRoleId").value;
+			inputObj.roleId=$("viewId").value;
 			inputObj.statusCode=$('checkerStatus').value;
-			inputObj.user={userId:$("selectedUserId").value, roleId:$("selectedRoleId").value};
+			inputObj.user={userId:$("selectedUserId").value, roleId:$("viewId").value};
 			inputObj.comment=$('checkerComments').value;
-			if($("selectedRoleId").value == "2"){
+			if($("viewId").value == "2"){
 			  inputObj.errorReasonCode=$('errorReasonList').value;
 			}
 			inputObj.numPages=$('numPages').value;
@@ -462,19 +459,19 @@ var landing = function () {
 					$(agrId+'statusCode').value=docList[k].statusCode;
 					
 					var stsCode = docList[k].statusCode;
-					if($("selectedRoleId").value == "1"){
+					if($("viewId").value == "1"){
 						$(agrId+'makerComments').innerHTML=docList[k].makerComments;
 						if(stsCode != 1 && stsCode != 2){
 							$(agrId).disabled=true;
 						}
-					} else if($("selectedRoleId").value == "2"){
+					} else if($("viewId").value == "2"){
 						$(agrId+'makerStatus').innerHTML=docList[k].makerStatus;
 						$(agrId+'checkerComments').innerHTML=docList[k].checkerComments;
 						$(agrId+'errorReason').innerHTML=docList[k].errorReason;
 						if(stsCode != 16 && stsCode != 17){
 							$(agrId).disabled=true;
 						}
-					} else if($("selectedRoleId").value == "3"){
+					} else if($("viewId").value == "3"){
 						$(agrId+'checkerComments').innerHTML=docList[k].checkerComments;
 						$(agrId+'smeComments').innerHTML=docList[k].smeComments;
 					
@@ -503,8 +500,10 @@ var landing = function () {
 	
 	this.reloadGridData=reloadGridData
 	function reloadGridData(){
-		serviceObj.getTeamDocList(landinginitResponse);
-		serviceObj.getMyDocList(landinginitMyListResponse);
+		//serviceObj.getTeamDocList(landinginitResponse);
+		var inputObj = {};
+		inputObj.roleId=$("viewId").value;
+		serviceObj.getAdminDocList(inputObj,landinginitMyListResponse);
 		selectedItemsMyList = null;
 	}
 	
@@ -516,7 +515,7 @@ var landing = function () {
 			$('checkerStart').disabled=true;
 			$('checkerComplete').disabled=false;
 			$('checkerComments').disabled=false;
-			if($("selectedRoleId").value == "2"){
+			if($("viewId").value == "2"){
 				$('errorReasonList').disabled=false;
 			}
 		}

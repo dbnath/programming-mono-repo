@@ -26,13 +26,15 @@
 			<th><h3 style="Color:#ffffff">Current Status</h3></th>
 			<th><h3 style="Color:#ffffff">QC Details</h3></th>
 			<th><h3 style="Color:#ffffff">Error Reason</h3></th>		
+			<th><h3 style="Color:#ffffff">Number of Pages</h3></th>
+			<th><h3 style="Color:#ffffff">Number of Fields</h3></th>
 		</tr>
 		</thead>
 		<tbody>
 
 		<c:forEach items="${teamDocumentList}" var="document">
 			<tr>
-			  <td><input type="checkbox" id="<c:out value="${document.agreementId}" />" name="docId" value="<c:out value="${document.agreementId}" />"  onclick="landingObj.setAssignment(this)" /> </td>
+			  <td><input type="checkbox" id="<c:out value="${document.agreementId}" />Team" name="docId" value="<c:out value="${document.agreementId}" />"  onclick="landingObj.setAssignment(this)" /> </td>
 			  <td><c:out value="${document.agreementId}" /></td>
 			  <td><c:out value="${document.lob}" /></td>
 			  <td><c:out value="${document.agreementTypeDesc}" /></td>
@@ -42,6 +44,8 @@
 			  <td><c:out value="${document.statusDescription}" /></td>
 			  <td><c:out value="${document.checkerComments}" /></td>
 			  <td><c:out value="${document.errorReason}" /></td>
+			  <td><c:out value="${document.numPages}" /></td>
+			  <td><c:out value="${document.numFields}" /></td>
 			</tr>
 		</c:forEach>
 	   </tbody>   
@@ -78,11 +82,14 @@
     </div>
 
 	<div class="col-xs-4">
-          <a class="btn btn-primary btn-block" href="#" onclick="landingObj.assignMe()" >
+          <!--<a class="btn btn-primary btn-block" href="#" onclick="landingObj.assignMe()" >
             <i class="glyphicon glyphicon-hand-up"></i> 
             <span>Assign to Me</span>
-          </a>
+          </a>-->
+		<button  class="button-secondary pure-button" id="assign" onclick="landingObj.assignMe()" >
+			<b>Assign to Me</b>
+		</button >
 	</div>
 </c:when>
-<c:when test="${empty teamDocumentList}">No records available</c:when>
+<c:when test="${empty teamDocumentList}"><h2>No records available</h2></c:when>
 </c:choose>

@@ -219,6 +219,8 @@ CREATE TABLE WF_PROCESS
 	-- Last Updated Timestamp
 	LAST_UPDATE_DT datetime COMMENT 'Last Updated Timestamp',
 	ID_ROLE int,
+	NUM_PAGES int NULL,
+	NUM_FIELDS int NULL,
 	PRIMARY KEY (ID_AGRMT)
 );
 
@@ -246,6 +248,8 @@ CREATE TABLE WF_PROCESS_AUDIT
 	-- Last Updated Timestamp
 	LAST_UPDATE_DT datetime COMMENT 'Last Updated Timestamp',
 	ID_ROLE int,
+	NUM_PAGES int NULL,
+	NUM_FIELDS int NULL,
 	PRIMARY KEY (ID_AGRMT,ID_VER)
 );
 
