@@ -8,7 +8,7 @@
 
 <script language="Javascript" src="<%=request.getContextPath()%>/js/landing.js?ver=<%=ver%>"></script>
   <!-- slide in menu (mobile only) -->
-  <div class="container bootcards-container" id="main" style="padding-top:40px">
+  <div class="container bootcards-container" id="main" style="padding-top:120px">
     
 			  <!--<a class="btn btn-primary" href="#" onclick="landingObj.reloadGridData()" >
 				<i class="glyphicon glyphicon-refresh"></i> 
@@ -16,20 +16,21 @@
 			  </a><br><br>-->			  
 	<!--<div class="row">-->
 		<!--<div width="100%">-->
-		<div class="pure-menu pure-menu-horizontal" id="myTabs" style="height: 80px;align:center;" border="1">
+		<div class="pure-menu pure-menu-horizontal" id="myTabs" style="height: 34px;align:center;border-bottom-color:rgb(194, 201, 204);;border-bottom-width: 8px;border-bottom-style: solid;">
 		    <ul class="pure-menu-list">
 		        <li id="globalInboxSwitch" class="pure-menu-item"><a href="javascript:activateTab('home')" class="pure-menu-link">Global Inbox<span class="badge" id="teamCount">&nbsp;</span></a></li>
 		        <li id="myInboxSwitch" class="pure-menu-item"><a href="javascript:activateTab('profile')" class="pure-menu-link">My Inbox</span><span class="badge" id="myCount">&nbsp;</span></a></li>
 		    </ul>
 		</div>
 		
-		
 		<div align="center" id="myTabContent" width="100%">
+			<br>
 	       	<div id="home" width="100%">
 	         	<div id="teamGrid" class="documentlist_div_parent">
 	          	</div>
 	       	</div>
-	       	<div id="profile" width="100%">			
+	       	<div id="profile" width="100%">	
+	       	<br>		
 	          <div id="myGrid" class="documentlist_div_parent">         
 	          </div>
 		   	</div>
