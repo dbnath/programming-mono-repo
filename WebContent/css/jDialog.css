@@ -5,9 +5,9 @@
   border-radius: 5px;
   border: 1px solid #ddd;
   overflow: hidden;
-  width: 90%;
+  width: 30%;
   position: absolute;
-  left: 50%;
+  left: 70%;
   margin-left: -45%;
   opacity: 1;
   -webkit-transition: -webkit-transform 0.15s ease-in-out;
