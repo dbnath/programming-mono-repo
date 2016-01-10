@@ -10,6 +10,11 @@ var landing = function () {
 	function getElementById(elemId){
 		return document.getElementById(elemId);
 	}
+	
+	function isIE () {
+		  var myNav = navigator.userAgent.toLowerCase();
+		  return (myNav.indexOf('msie') != -1) ? parseInt(myNav.split('msie')[1]) : false;
+	}
 
 	var selectedItemsTeamList = [];
 	var selectedItemsMyList = null;
@@ -99,8 +104,16 @@ var landing = function () {
 			if(selectedItemsMyList == null){
 				selectedItemsMyList = control.value;
 			} else {
-				alert('You can work on one agreement at a time');
-				//jDialog('You can work on one agreement at a time.');
+				if(isIE () && isIE () < 9) {
+					alert('You can work on one agreement at a time');
+				}
+				else {
+					jDialog('You can work on one agreement at a time.');
+					jDialog({
+					  title:"Start",
+					  content:"You can work on one agreement at a time."
+					});
+				}
 				control.checked=false;
 				return false;
 			}
@@ -401,43 +414,65 @@ var landing = function () {
 			alert("You can work with only one Agreement at a time");
 			return false;
 		}*/
-		//jDialog('Do you realy want to hold it?',function(){
-			if($("selectedRoleId").value == "1" && $('checkerStatus').value == 15){				
-				if($('checkerComments').value == null || $('checkerComments').value == ''){
-					alert('Please fill in comments section');
-					return false;
-				}
+		if(isIE () && isIE () < 9) {
+			var result = confirm("Do you realy want to hold it?");
+			if (result) {
+				holdwork();
 			}
+		}
+		else {
+			/*jDialog('Do you realy want to hold it?',function(){
+				holdwork();
+				jDialog.currentDialog.remove();
+			});*/
+			jDialog({
+			  title:"Hold",
+			  content:"Do you realy want to hold it?",
+			  callBack:function(){
+				  holdwork();
+				  jDialog.currentDialog.remove();
+			  }
+			});
+		}
+		
+	}
 	
-			if($("selectedRoleId").value == "2" && $('checkerStatus').value == 15){
-				if($('checkerComments').value == null || $('checkerComments').value == '' || $('errorReasonList').value == -1){
-					alert('Please fill in both comments section and Error Reason');
-					return false;
-				}
+	this.holdwork=holdwork;
+	function holdwork() {
+		if($("selectedRoleId").value == "1" && $('checkerStatus').value == 15){				
+			if($('checkerComments').value == null || $('checkerComments').value == ''){
+				alert('Please fill in comments section');
+				return false;
 			}
-			
-			if($("selectedRoleId").value == "3" && $('checkerStatus').value == 21){
-				if($('checkerComments').value == null || $('checkerComments').value == ''){
-					alert('Please fill in comments section');
-					return false;
-				}
-			}		
-			
-			
-			var inputObj = {};
-			inputObj.agreementId=selectedItemsMyList;//[0];
-			inputObj.roleId=$("selectedRoleId").value;
-			inputObj.statusCode=$('checkerStatus').value;
-			inputObj.user={userId:$("selectedUserId").value, roleId:$("selectedRoleId").value};
-			inputObj.comment=$('checkerComments').value;
-			if($("selectedRoleId").value == "2"){
-			  inputObj.errorReasonCode=$('errorReasonList').value;
+		}
+
+		if($("selectedRoleId").value == "2" && $('checkerStatus').value == 15){
+			if($('checkerComments').value == null || $('checkerComments').value == '' || $('errorReasonList').value == -1){
+				alert('Please fill in both comments section and Error Reason');
+				return false;
 			}
-			inputObj.numPages=$('numPages').value;
-			inputObj.numFields=$('numFields').value;
-			serviceObj.holdProcess(inputObj,holdRespFn);
-			//jDialog.currentDialog.remove();
-		//});
+		}
+		
+		if($("selectedRoleId").value == "3" && $('checkerStatus').value == 21){
+			if($('checkerComments').value == null || $('checkerComments').value == ''){
+				alert('Please fill in comments section');
+				return false;
+			}
+		}		
+		
+		
+		var inputObj = {};
+		inputObj.agreementId=selectedItemsMyList;//[0];
+		inputObj.roleId=$("selectedRoleId").value;
+		inputObj.statusCode=$('checkerStatus').value;
+		inputObj.user={userId:$("selectedUserId").value, roleId:$("selectedRoleId").value};
+		inputObj.comment=$('checkerComments').value;
+		if($("selectedRoleId").value == "2"){
+		  inputObj.errorReasonCode=$('errorReasonList').value;
+		}
+		inputObj.numPages=$('numPages').value;
+		inputObj.numFields=$('numFields').value;
+		serviceObj.holdProcess(inputObj,holdRespFn);
 	}
 	
 	this.holdRespFn=holdRespFn;

@@ -96,4 +96,6 @@ var commonframework = function() {
 		}
 		return ajaxObject;
 	}
+	
+
 }
