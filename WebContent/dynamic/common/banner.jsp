@@ -44,45 +44,28 @@
 
 <body>
 
-<div class="header">
+<div>
     <div class="home-menu pure-menu pure-menu-horizontal pure-menu-fixed" style="height:60px;">
-        <a class="pure-menu-heading" href="">AM Remediation Workflow</a>
-
-        <ul class="pure-menu-list">
+		<table style="width:100%; height:100%;">
+			<tr>
+				<td style="width:50%;text-align:left;vertical-align:center;">
+					<a class="pure-menu-heading" style="text-transform:capitalize;" href="">AM Remediation Workflow</a>
+				</td>
+				<td style="width:50%;text-align:right;vertical-align:center;">
             <!-- <li class="pure-menu-item pure-menu-selected"><a href="#" class="pure-menu-link">Home</a></li>
             <li class="pure-menu-item"><a href="#" class="pure-menu-link">Help</a></li> -->
             <c:if test="${userDetails != null}">
-            <li class="pure-menu-item">
-            	<a href="#" class="pure-menu-link" style="font-size: 12px;">Welcome <c:out value="${userDetails.userName}" /> (<c:out value="${userDetails.userRoleList[0].roleName}" />)</a>            
-            </li>
-            <li class="pure-menu-item"><a href="#" onclick="logout()" style="font-size: 12px;">Logout</a></li>
+							<span style="font-size: 12px;font-color:#ffffff;">Welcome <c:out value="${userDetails.userName}" /> (<c:out value="${userDetails.userRoleList[0].roleName}" />)</span><br>
+							<a href="#" onclick="logout()" style="font-size: 12px;">Logout</a>
             </c:if>
-        </ul>
+				</td>
+			</tr>
+		</table>
     </div>
 </div>
 
 
-<%-- <table border="1" style="width:100%; background-color:#000099;height:50px">
-	<tr>
-		<td style="width:60%;font-family:'Arial Bold', 'Arial';font-weight:500;font-style:normal;font-size:20px;color:#ffffff;text-align:right;padding-left:100px;line-height:normal;" >AM Remediation Workflow</td>
-		<td style="width:40%;text-align:right;" align="right">
-			<c:if test="${userDetails != null}">
-			<nav id="docworkflow_nav_wrap">
-				<ul>
-					<li class="current-menu-item" style="background-color:#000099;">
-						<a href="#" class="dropdown-toggle">
-					Welcome <c:out value="${userDetails.userName}" /> (<c:out value="${userDetails.userRoleList[0].roleName}" />) <span class="caret"></span></a>
-						<ul style="color:#ffffff;background-color:#000099;">
-							<li><a href="#" onclick="logout()" style="color:#ffffff;">Logout</a></li>
-				</ul>
-			</li>           			
-          </ul>
-			</nav>  
-		  </c:if>
       
-		</td>
-	</tr>
-</table> --%>
 <input type="hidden" id="selectedUserId" name="selectedUserId" value="<c:out value="${userDetails.userId}" />">
 <input type="hidden" id="selectedRoleId" name="selectedRoleId" value="<c:out value="${userDetails.userRoleList[0].roleId}" />">
 
