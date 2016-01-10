@@ -80,9 +80,6 @@
             </div>
         </div>
     </div>
-	<div class="pure-g">
-	    <div class="pure-u-1-8"><p>Thirds</p></div>
-	</div>
 	<div class="col-xs-6" style="text-align: left;margin-left: 195px;">
 		<button  class="button-secondary pure-button" id="assign" onclick="landingObj.assignMe()" >
 			<b>Assign to Me</b>

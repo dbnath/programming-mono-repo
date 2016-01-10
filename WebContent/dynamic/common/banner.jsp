@@ -45,7 +45,7 @@
 <body>
 
 <div class="header">
-    <div class="home-menu pure-menu pure-menu-horizontal pure-menu-fixed" style="height:80px;">
+    <div class="home-menu pure-menu pure-menu-horizontal pure-menu-fixed" style="height:60px;">
         <a class="pure-menu-heading" href="">AM Remediation Workflow</a>
 
         <ul class="pure-menu-list">
