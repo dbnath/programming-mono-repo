@@ -80,12 +80,10 @@
             </div>
         </div>
     </div>
-
-	<div class="col-xs-4">
-          <!--<a class="btn btn-primary btn-block" href="#" onclick="landingObj.assignMe()" >
-            <i class="glyphicon glyphicon-hand-up"></i> 
-            <span>Assign to Me</span>
-          </a>-->
+	<div class="pure-g">
+	    <div class="pure-u-1-8"><p>Thirds</p></div>
+	</div>
+	<div class="col-xs-6" style="text-align: left;margin-left: 195px;">
 		<button  class="button-secondary pure-button" id="assign" onclick="landingObj.assignMe()" >
 			<b>Assign to Me</b>
 		</button >

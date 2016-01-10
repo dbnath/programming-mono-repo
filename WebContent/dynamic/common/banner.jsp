@@ -1,3 +1,4 @@
+<!doctype html>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <HTML>
 <HEAD>
@@ -14,7 +15,6 @@
 	<link rel="stylesheet" href="<%=request.getContextPath()%>/css/pure-release-0.6.0/pure-min.css">
 
 
-
 <!--[if lte IE 8]>
   
     <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/grids-responsive-old-ie-min.css">
@@ -25,6 +25,9 @@
     <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/grids-responsive-min.css">
   
 <!--<![endif]-->
+
+	<link rel="stylesheet" href="<%=request.getContextPath()%>/static/TinyTableV3/style.css" />
+	<script type="text/javascript" src="<%=request.getContextPath()%>/static/TinyTableV3/script.js"></script>
 	
 	 <!--[if lte IE 8]>
         <link rel="stylesheet" href="<%=request.getContextPath()%>/css/mainstyle-old-ie.css">
@@ -32,9 +35,10 @@
     <!--[if gt IE 8]><!-->
         <link rel="stylesheet" href="<%=request.getContextPath()%>/css/mainstyle.css">
     <!--<![endif]-->
+
+	<link rel="stylesheet" href="<%=request.getContextPath()%>/css/jDialog.css">
+	<script language="Javascript" src="<%=request.getContextPath()%>/css/jDialog.js"></script>
 	
-	<link rel="stylesheet" href="<%=request.getContextPath()%>/static/TinyTableV3/style.css" />
-	<script type="text/javascript" src="<%=request.getContextPath()%>/static/TinyTableV3/script.js"></script>
 	
 </head>
 
