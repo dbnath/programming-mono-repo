@@ -8,7 +8,8 @@
 
 <script language="Javascript" src="<%=request.getContextPath()%>/js/admin.js?ver=<%=ver%>"></script>
 <form id="adminViewForm" name="adminViewForm" >
-<div id="adminUpdate" ng-init="admupdctrl.init();" style="padding-top:10px; padding-left:10px; padding-right:10px">
+<br><br><br><br><br>
+<div id="adminUpdate" style="padding-top:10px; padding-left:10px; padding-right:10px">
 	<table border="0" style="width:100%; height:50px">
 		<tr>
 			<td style="text-align:right;padding:2px;width:120px;font-family:'Arial Bold', 'Arial';font-style:bold;font-size:18px;">
