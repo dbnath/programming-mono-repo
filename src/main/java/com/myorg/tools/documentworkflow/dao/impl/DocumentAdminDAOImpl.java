@@ -19,6 +19,8 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import com.myorg.tools.documentworkflow.constant.DocumentWorkflowToolConstant;
 import com.myorg.tools.documentworkflow.dao.DocumentAdminDAO;
+import com.myorg.tools.documentworkflow.model.AHTBean;
+import com.myorg.tools.documentworkflow.model.AHTWrapper;
 import com.myorg.tools.documentworkflow.model.AgreementErrorType;
 import com.myorg.tools.documentworkflow.model.AgreementStatus;
 import com.myorg.tools.documentworkflow.model.AgreementType;
@@ -395,6 +397,39 @@ public class DocumentAdminDAOImpl extends BaseJDBCTemplate implements DocumentAd
 		return false;
 	}
 	
+	@Override
+	public boolean uploadAgreementTypes(List<AgreementType> docList, String userId) throws SQLException, Exception {
+		
+		if(docList != null){
+			JdbcTemplate jdbcTemplate = this.getJdbcTemplateObject();
+			TransactionDefinition def = new DefaultTransactionDefinition();
+			TransactionStatus status = this.getTransactionManager().getTransaction(def);
+			int counter = 0;
+			try {
+				for(AgreementType agrType : docList){
+					counter++;
+					if(agrType != null){
+						if(!DocumentWorkflowToolUtility.isEmptyValue(agrType.getAgreementTypeId())){
+							System.out.println("###### Updating row "+counter);
+							updateAgreementType(agrType, jdbcTemplate);
+						} else {
+							System.out.println("###### Inserting row "+counter);
+							insertAgreementType(agrType, jdbcTemplate);
+						}
+					}
+				}
+				this.getTransactionManager().commit(status);
+				return true;
+			} catch (SQLException e) {
+				System.err.println("Error occurred while processing entry "+(counter+1));
+				e.printStackTrace();
+				this.getTransactionManager().rollback(status);
+				return false;
+			}			
+		}
+		return false;
+	}	
+	
 	
 	private void updateErrorReason(AgreementErrorType type,JdbcTemplate jdbcTemplate ) throws SQLException, Exception{
 		String UPD_SQL = DocumentWorkflowToolConstant.UPD_ERR_REASON;
@@ -410,63 +445,135 @@ public class DocumentAdminDAOImpl extends BaseJDBCTemplate implements DocumentAd
 		if(errTypId != null) {
 			jdbcTemplate.update(INS_SQL, errTypId +1, type.getErrorTypeCode(),type.getErrorTypeName());
 		}
+	}
+	
+	private void updateAgreementType(AgreementType type,JdbcTemplate jdbcTemplate ) throws SQLException, Exception{
+		String UPD_SQL = DocumentWorkflowToolConstant.UPD_AGR_TYPE;
+		jdbcTemplate.update(UPD_SQL, type.getAgrementTypeName(),type.getAgreementTypeId());
+	}
+	
+	private void insertAgreementType(AgreementType type,JdbcTemplate jdbcTemplate ) throws SQLException, Exception{
+		String INS_SQL = DocumentWorkflowToolConstant.INS_AGR_TYPE;
+		String SEL_SQL = DocumentWorkflowToolConstant.SEL_AGR_TYPE_CD;
+		
+		Integer agrTypeId = jdbcTemplate.queryForInt(SEL_SQL);
+		
+		if(agrTypeId != null) {
+			jdbcTemplate.update(INS_SQL, agrTypeId +1, type.getAgrementTypeName());
+		}
 	}	
 	
-	public List<DocWkflwProcess> extractAgreementAHTInfo() throws SQLException, Exception {
+	public AHTWrapper extractAgreementAHTInfo() throws SQLException, Exception {
 		String SQL = DocumentWorkflowToolConstant.AGRMT_DATA_DUMP;
+		String SQL1 = DocumentWorkflowToolConstant.QUERY_FOR_AHT;
+		
+		AHTWrapper ahtWrapper = new AHTWrapper();
 		List<DocWkflwProcess> docRepoList = null;
+		List<AHTBean> ahtList = null;
 		try{
 			docRepoList = this.getJdbcTemplateObject().query(SQL, new AgreementDumpMapper());
+			ahtList = this.getJdbcTemplateObject().query(SQL1, new AHTRowMapper());
+			
+			Map<Integer, AHTBean> ahtMap = calculateAHT(ahtList);
+			
+			ahtWrapper.setAhtMap(ahtMap);
+			ahtWrapper.setDocRepoList(docRepoList);
+			
 		} catch(EmptyResultDataAccessException e) {
 			docRepoList = null;
 		}
-		return docRepoList;
+		return ahtWrapper;
 	}
 	
-	private void calculateAHT(List<AgreementWorkflow> docList){
-		
-		try {
-			List<AgreementStatus> agrStatusList = populateAgreementStatus();
-			
-			HashMap<Integer,AgreementStatus> statusMap = new HashMap<Integer, AgreementStatus>();
-			
-			for(int i=0; i<agrStatusList.size(); i++) {
-				AgreementStatus status = agrStatusList.get(i);
-				statusMap.put(status.getAgreementStatusId(), status);
-			}
-			
-			
-			
-			
-			
-			
+	private Map<Integer, AHTBean> calculateAHT(List<AHTBean> ahtList){
 			Date startTime = null;
+			Date stopTime = null;
 			Integer currentRole = 0;
+			Integer currentAgrId = 0;
+			Date ageStartTime = null;
+			Date ageStopTime = null;
+			Double makerHeldTime = 0.0;
+			Double checkerHeldTime = 0.0;
+			Double smeHeldTime = 0.0;
+			Double ahtAge = 0.0;
 			
-			for(int i=0; i< docList.size(); i++){
+			Map<Integer, AHTBean> ahtMap = new HashMap<Integer, AHTBean>();
+			
+			for(int i=0; i< ahtList.size(); i++){
 				
-				AgreementWorkflow agrmt = docList.get(i);
+				AHTBean aht = ahtList.get(i);
+				System.out.println("i..."+i);
 				
-				if("Y".equalsIgnoreCase(statusMap.get(agrmt.getWfStatusId()).getIsClockStart())){
-					startTime = agrmt.getLastUpdateDt();
-					currentRole = agrmt.getRoleId();
+				if(currentAgrId != aht.getAgreementId()) {
+					currentAgrId = aht.getAgreementId();
+					ageStartTime = aht.getLastUpdationDate();
+					aht.setAgeStartTime(ageStartTime);
+					ahtMap.put(currentAgrId, aht);
+					if (i>0){
+						ageStopTime = (ahtList.get(i-1)).getLastUpdationDate();
+						ahtAge = DocumentWorkflowToolUtility.getTimeDifferenceInMin(ageStartTime, ageStopTime);
+						ahtMap.get((ahtList.get(i-1)).getAgreementId()).setAge(ahtAge);
+					}
+				} else if (i==(ahtList.size()-1)){
+					System.out.println("ageStartTime ####"+ahtMap.get((ahtList.get(i)).getAgreementId()).getAgeStartTime());
+					ageStopTime = (ahtList.get(i)).getLastUpdationDate();
+					ahtAge = DocumentWorkflowToolUtility.getTimeDifferenceInMin(ahtMap.get((ahtList.get(i)).getAgreementId()).getAgeStartTime(), ageStopTime);
+					ahtMap.get(aht.getAgreementId()).setAge(ahtAge);
 				}
 				
 				
+				if("Y".equalsIgnoreCase(aht.getIsClockStart())){
+					startTime = aht.getLastUpdationDate();
+					currentRole = aht.getRoleId();
+					continue;
+				}
 				
+				if("Y".equalsIgnoreCase(aht.getIsClockStop())){
+					stopTime = aht.getLastUpdationDate();
+					
+					Double ahtTime = DocumentWorkflowToolUtility.getTimeDifferenceInMin(startTime, stopTime);
+					AHTBean ahtTemp = ahtMap.get(aht.getAgreementId());
+					
+					if (aht.getStatusCode() == 22){
+						currentRole = aht.getRoleId();
+					}
+					
+					switch(currentRole){
+					
+					case 1:
+						makerHeldTime = ahtTime;
+						break;
+					case 2:
+						checkerHeldTime = ahtTime;
+						if (ahtTemp.getStatusCode()==18) {
+							ahtTemp.setMakerHeldTime(makerHeldTime);
+							ahtTemp.setCheckerHeldTime(checkerHeldTime);
+							ahtTemp.setTotalHeldTime(ahtTemp.getTotalHeldTime()+makerHeldTime+checkerHeldTime);
+							makerHeldTime = 0.0;
+							checkerHeldTime = 0.0;
+						}
+						break;
+					case 3:
+						smeHeldTime = ahtTime;
+						ahtTemp.setMakerHeldTime(makerHeldTime);
+						ahtTemp.setCheckerHeldTime(checkerHeldTime);
+						ahtTemp.setSmeHeldTime(smeHeldTime);
+						ahtTemp.setTotalHeldTime(ahtTemp.getTotalHeldTime()+makerHeldTime+checkerHeldTime+smeHeldTime);
+						if (ahtTemp.getStatusCode()==22){
+							makerHeldTime = 0.0;
+							checkerHeldTime = 0.0;
+							smeHeldTime = 0.0;
+						}
+						break;
+					}
+					
+					startTime = null;
+					stopTime = null;
+					currentRole = 0;
+				}
 				
 			}
-			
-			
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		
-		
+			return ahtMap;
 		
 	}
 	

@@ -18,6 +18,14 @@ var admin = function () {
       home.uploadErrorReasons =function(contextPath){
 			window.open(contextPath+'/jsp/errReasonUpload.jsp?userId='+home.userId);
       }; 
+      
+      home.uploadagreementTypes =function(contextPath){
+			window.open(contextPath+'/jsp/agrTypeUpload.jsp?userId='+home.userId);
+    };  
+    
+    home.uploadUserRoles = function(contextPath){
+    	window.open(contextPath+'/jsp/userRoleUpload.jsp?userId='+home.userId);
+    };
 	  
 	this.loadView=loadView;
 	function loadView(){

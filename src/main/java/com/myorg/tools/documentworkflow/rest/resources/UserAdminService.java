@@ -1,9 +1,11 @@
 package com.myorg.tools.documentworkflow.rest.resources;
 
+import java.io.InputStream;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
@@ -12,6 +14,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 
 import com.myorg.tools.documentworkflow.model.User;
+import com.sun.jersey.core.header.FormDataContentDisposition;
+import com.sun.jersey.multipart.FormDataParam;
 
 @Provider
 @Path("/useradmin")
@@ -46,6 +50,18 @@ public interface UserAdminService {
 	   @Path("/unmappedroleuser")
 	   @Produces(MediaType.APPLICATION_JSON)	   
 	   public Response populateUnmappedRoleUserbase(@QueryParam("roleId") Integer roleId);
+	   
+	   @GET
+	   @Path("/alluserrole")
+	   @Produces("application/vnd.ms-excel")	   	   
+	   public Response populateAllRoleUserMapping();
+	   
+	   @POST
+	   @Path("/uploaduserrole")
+	   @Consumes(MediaType.MULTIPART_FORM_DATA)
+	   @Produces(MediaType.TEXT_HTML)	   
+	   public Response uploadUserRoles(@FormDataParam("file") InputStream uploadedInputStream,  @FormDataParam("file") FormDataContentDisposition fileDetail, @FormDataParam("path") String path, @FormDataParam("userId") String userId);
+	   
 
 /*	    To update Role User Mapping 
 	   @GET

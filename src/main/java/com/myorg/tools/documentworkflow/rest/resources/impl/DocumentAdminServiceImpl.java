@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.ws.rs.core.Response;
 
@@ -24,6 +25,8 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.myorg.tools.documentworkflow.dao.DocumentAdminDAO;
+import com.myorg.tools.documentworkflow.model.AHTBean;
+import com.myorg.tools.documentworkflow.model.AHTWrapper;
 import com.myorg.tools.documentworkflow.model.AgreementErrorType;
 import com.myorg.tools.documentworkflow.model.AgreementType;
 import com.myorg.tools.documentworkflow.model.AgreementWorkflow;
@@ -31,11 +34,11 @@ import com.myorg.tools.documentworkflow.model.DocWkflwProcess;
 import com.myorg.tools.documentworkflow.model.DocumentRepository;
 import com.myorg.tools.documentworkflow.model.DocumentSubTagValues;
 import com.myorg.tools.documentworkflow.model.DocumentTag;
-import com.myorg.tools.documentworkflow.model.DocumentTagReport;
 import com.myorg.tools.documentworkflow.model.DocumentTagSubTagMapping;
 import com.myorg.tools.documentworkflow.model.DocumentType;
 import com.myorg.tools.documentworkflow.model.DocumentTypeTagMapping;
 import com.myorg.tools.documentworkflow.model.DocumentTypeTagSubTagsMap;
+import com.myorg.tools.documentworkflow.model.User;
 import com.myorg.tools.documentworkflow.rest.resources.BaseResource;
 import com.myorg.tools.documentworkflow.rest.resources.DocumentAdminService;
 import com.myorg.tools.documentworkflow.util.DocumentWorkflowToolUtility;
@@ -147,8 +150,8 @@ public class DocumentAdminServiceImpl extends BaseResource implements DocumentAd
 		
 		try {
 			
-			/*User user = getLoggedInUser();
-			String userId = user.getUserId();*/
+			User user = getLoggedInUser();
+			userId = user.getUserId();
 			
 			List<AgreementWorkflow> docList = parseBulkUploadFile(uploadedInputStream);
 			//documentAdminDAO.uploadDocumentInformation(docList, userId);
@@ -183,6 +186,24 @@ public class DocumentAdminServiceImpl extends BaseResource implements DocumentAd
 			return Response.serverError().entity("Documents failed to upload").build();
 		}
 	}
+	
+	public Response uploadAgreementType(@FormDataParam("file") InputStream uploadedInputStream,  @FormDataParam("file") FormDataContentDisposition fileDetail, @FormDataParam("path") String path, @FormDataParam("userId") String userId){
+		
+		try {
+			ExcelUtil util = new ExcelUtil();
+			List<AgreementType> docList = util.parseAgreementTypeUploadFile(uploadedInputStream);
+			documentAdminDAO.uploadAgreementTypes(docList, userId);
+			
+			return Response.ok().entity("<html><head><script>function refreshParent(){window.close();}</script></head><body><div>Document Uploaded Successfully</div><input type=\"Button\" value=\"Close Window\" onclick=\"refreshParent()\" /></body></html>").build();
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+			return Response.serverError().entity("Documents failed to upload").build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.serverError().entity("Documents failed to upload").build();
+		}
+	}	
 	
 	
 	private List<AgreementWorkflow> parseBulkUploadFile(InputStream stream) throws IOException {
@@ -315,6 +336,32 @@ public class DocumentAdminServiceImpl extends BaseResource implements DocumentAd
 			baos.close();			
 			
 			return Response.ok(file).header("Content-Disposition", "attachment; filename=\"ErrorTypeUploadTemplate.xlsx\"").build();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return Response.status(404).entity("Template Not Available: ").type("text/plain").build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(404).entity("Template Not Available: ").type("text/plain").build();
+		}
+		
+	}	
+	
+	@Override
+	public Response getArgmtTypeUploadTemplate() {
+		
+		try {
+			List<AgreementType> agrTypList = documentAdminDAO.populateAgreementTypes();
+			ExcelUtil util = new ExcelUtil();
+			XSSFWorkbook wb = util.generateAgreementTypeUploadTemplate(agrTypList);
+			
+			File file = new File(this.getAppConfig().getTempFileLocation()+"/AgreementTypeUploadTemplate"+System.currentTimeMillis()+".xlsx");
+			
+			FileOutputStream baos = new FileOutputStream(file);
+			wb.write(baos);
+			baos.close();			
+			
+			return Response.ok(file).header("Content-Disposition", "attachment; filename=\"AgreementTypeUploadTemplate.xlsx\"").build();
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -459,7 +506,11 @@ public class DocumentAdminServiceImpl extends BaseResource implements DocumentAd
 	public Response getAgreementDataDump() {
 		
 		try {
-			List<DocWkflwProcess> agrmtList = documentAdminDAO.extractAgreementAHTInfo();
+			AHTWrapper ahtWrapper = documentAdminDAO.extractAgreementAHTInfo();
+			
+			List<DocWkflwProcess> agrmtList = ahtWrapper.getDocRepoList();
+			Map<Integer, AHTBean> ahtMap  = ahtWrapper.getAhtMap();
+			System.out.println("agrmtList size..."+agrmtList.size()+"#### ahtMap size..."+ahtMap.size());
 			
 			XSSFWorkbook wb = new XSSFWorkbook();			
 			XSSFSheet sheet = wb.createSheet();
@@ -469,7 +520,7 @@ public class DocumentAdminServiceImpl extends BaseResource implements DocumentAd
 			headerFont.setBold(true);
 			
 			createExcelReportHeader(sheet, headerFont, headerStyle);
-			createExcelReportBody(sheet, agrmtList);
+			createExcelReportBody(sheet, agrmtList,ahtMap);
 			
 			File file = new File(this.getAppConfig().getTempFileLocation()+"/report"+System.currentTimeMillis()+".xlsx");
 			
@@ -497,7 +548,7 @@ public class DocumentAdminServiceImpl extends BaseResource implements DocumentAd
 		headerStyle.setFillBackgroundColor(headerColor);
 		headerStyle.setFont(headerFont);
 
-		for (int i = 0; i < 15; i++) {
+		for (int i = 0; i < 16; i++) {
 			XSSFCell cell = headerRow.createCell(i);
 			cell.setCellStyle(headerStyle);
 
@@ -536,30 +587,33 @@ public class DocumentAdminServiceImpl extends BaseResource implements DocumentAd
 				cell.setCellValue("Onshore SME Comments");
 				break;	
 			case 11:
-				cell.setCellValue("Maker Hold Time");
+				cell.setCellValue("Maker Hold Time (Min)");
 				break;	
 			case 12:
-				cell.setCellValue("Checker Hold Time");
+				cell.setCellValue("Checker Hold Time (Min)");
 				break;
 			case 13:
-				cell.setCellValue("Onshore Hold Time");
+				cell.setCellValue("Onshore Hold Time (Min)");
 				break;
 			case 14:
-				cell.setCellValue("Total Hold Time");
+				cell.setCellValue("Total Hold Time (Min)");
+				break;	
+			case 15:
+				cell.setCellValue("Age (Min)");
 				break;				
 			}
 		}
 		return;
 	}
 	
-	private void createExcelReportBody(XSSFSheet sheet, List<DocWkflwProcess> agrmtList) {
+	private void createExcelReportBody(XSSFSheet sheet, List<DocWkflwProcess> agrmtList, Map<Integer, AHTBean> ahtMap) {
 
 		if(agrmtList != null){
 			int i = 1;
 			for(DocWkflwProcess r : agrmtList){
 				XSSFRow row = sheet.createRow(i);
 				
-				for(int j=0; j<15; j++){
+				for(int j=0; j<16; j++){
 					XSSFCell cell = row.createCell(j);
 					
 					switch (j) {
@@ -597,17 +651,20 @@ public class DocumentAdminServiceImpl extends BaseResource implements DocumentAd
 						cell.setCellValue(r.getSmeComments());
 						break;
 					case 11:
-						cell.setCellValue("TBD");
+						cell.setCellValue(ahtMap.get(r.getAgreementId()).getMakerHeldTime());
 						break;
 					case 12:
-						cell.setCellValue("TBD");
+						cell.setCellValue(ahtMap.get(r.getAgreementId()).getCheckerHeldTime());
 						break;
 					case 13:
-						cell.setCellValue("TBD");
+						cell.setCellValue(ahtMap.get(r.getAgreementId()).getSmeHeldTime());
 						break;
 					case 14:
-						cell.setCellValue("TBD");
-						break;									
+						cell.setCellValue(ahtMap.get(r.getAgreementId()).getTotalHeldTime());
+						break;	
+					case 15:
+						cell.setCellValue(ahtMap.get(r.getAgreementId()).getAge());
+						break;						
 					}
 					
 				}

@@ -85,6 +85,11 @@ public interface DocumentAdminService {
 	   @Produces(MediaType.TEXT_HTML)	   
 	   public Response uploadErrReasons(@FormDataParam("file") InputStream uploadedInputStream,  @FormDataParam("file") FormDataContentDisposition fileDetail, @FormDataParam("path") String path, @FormDataParam("userId") String userId);
 
+	   @POST
+	   @Path("/uploadagrtype")
+	   @Consumes(MediaType.MULTIPART_FORM_DATA)
+	   @Produces(MediaType.TEXT_HTML)	   
+	   public Response uploadAgreementType(@FormDataParam("file") InputStream uploadedInputStream,  @FormDataParam("file") FormDataContentDisposition fileDetail, @FormDataParam("path") String path, @FormDataParam("userId") String userId);
 	   
 	   @GET
 	   @Path("/template")
@@ -99,7 +104,12 @@ public interface DocumentAdminService {
 	   @GET
 	   @Path("/errtemplate")
 	   @Produces("application/vnd.ms-excel")	   
-	   public Response getErrTypeUploadTemplate();	   
+	   public Response getErrTypeUploadTemplate();
+	   
+	   @GET
+	   @Path("/agrtemplate")
+	   @Produces("application/vnd.ms-excel")	   
+	   public Response getArgmtTypeUploadTemplate();		   
 	   
 
 	   @GET

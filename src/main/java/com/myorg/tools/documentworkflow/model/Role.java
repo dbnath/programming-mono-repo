@@ -2,7 +2,7 @@ package com.myorg.tools.documentworkflow.model;
 
 import java.io.Serializable;
 
-public class Role implements Serializable {
+public class Role implements Serializable, ReverseMappable {
 	
 	/**
 	 * 
@@ -54,5 +54,16 @@ public class Role implements Serializable {
 	public void setRoleDesc(String roleDesc) {
 		this.roleDesc = roleDesc;
 	}
+	@Override
+	public String getMapKey() {
+		
+		return roleDesc;
+	}
+	@Override
+	public Integer getCode() {
+		return roleId;
+	}
+	
+	
 	
 }

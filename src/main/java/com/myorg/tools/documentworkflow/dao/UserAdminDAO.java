@@ -6,6 +6,7 @@ import java.util.List;
 import javax.naming.AuthenticationException;
 
 import com.myorg.tools.documentworkflow.model.Role;
+import com.myorg.tools.documentworkflow.model.RoleUser;
 import com.myorg.tools.documentworkflow.model.RoleUsersMapping;
 import com.myorg.tools.documentworkflow.model.User;
 import com.sun.jersey.api.NotFoundException;
@@ -25,4 +26,9 @@ public interface UserAdminDAO {
 	public RoleUsersMapping populateRoleUserbaseMap(Integer roleId) throws SQLException, Exception;
 
 	public List<User> populateUnmappedRoleUserbase(Integer roleId) throws SQLException, Exception;
+	
+	public List<RoleUser> populateAllUserRole() throws SQLException, Exception;
+	
+	public boolean uploadUserRoleMappings(List<RoleUser> roleUserList, String userId) throws SQLException, Exception;
+	
 }

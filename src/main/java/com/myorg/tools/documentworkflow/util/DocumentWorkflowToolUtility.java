@@ -1,5 +1,7 @@
 package com.myorg.tools.documentworkflow.util;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -127,6 +129,21 @@ public class DocumentWorkflowToolUtility {
 		response.setResponseMessage(responseMessage);
 		dto.setResponse(response);
 		return dto;
+	}
+	
+	public static Double getTimeDifferenceInMin(Date date1, Date date2){
+		
+		if (!isEmpty(date1) && !isEmpty(date2)) {
+			Calendar cal1 = Calendar.getInstance();
+			cal1.setTime(date1);
+			Calendar cal2 = Calendar.getInstance();
+			cal2.setTime(date2);
+			
+			Double timeDiff = Math.abs(Double.valueOf((cal2.getTimeInMillis() - cal1.getTimeInMillis())/ (1000 * 60)));
+
+			return timeDiff;
+		}
+		return 0.0;
 	}
 	
 	

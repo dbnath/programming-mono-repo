@@ -3,10 +3,10 @@ package com.myorg.tools.documentworkflow.dao;
 import java.sql.SQLException;
 import java.util.List;
 
+import com.myorg.tools.documentworkflow.model.AHTWrapper;
 import com.myorg.tools.documentworkflow.model.AgreementErrorType;
 import com.myorg.tools.documentworkflow.model.AgreementType;
 import com.myorg.tools.documentworkflow.model.AgreementWorkflow;
-import com.myorg.tools.documentworkflow.model.DocWkflwProcess;
 import com.myorg.tools.documentworkflow.model.Document;
 import com.myorg.tools.documentworkflow.model.DocumentRepository;
 import com.myorg.tools.documentworkflow.model.DocumentSubTagValues;
@@ -40,13 +40,15 @@ public interface DocumentAdminDAO {
 
 	public boolean uploadDocumentInformation(List<Document> docList, String userId) throws SQLException, Exception;
 	
-	public List<DocWkflwProcess> extractAgreementAHTInfo() throws SQLException, Exception;
+	public AHTWrapper extractAgreementAHTInfo() throws SQLException, Exception;
 	
 	public boolean uploadAgreementInformation(List<AgreementWorkflow> docList, String userId) throws SQLException, Exception;
 	
 	public List<AgreementErrorType> populateErrorTypes() throws SQLException, Exception;
 	
 	public boolean uploadErrorReasons(List<AgreementErrorType> docList, String userId) throws SQLException, Exception;
+	
+	public boolean uploadAgreementTypes(List<AgreementType> docList, String userId) throws SQLException, Exception;
 
 	/*public Boolean updateDocumentTypes(List<DocumentType> docTypeList) throws SQLException, Exception;
 

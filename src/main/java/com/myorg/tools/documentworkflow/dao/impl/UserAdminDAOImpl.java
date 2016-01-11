@@ -2,19 +2,25 @@ package com.myorg.tools.documentworkflow.dao.impl;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-import javax.naming.AuthenticationException;
-
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.simple.SimpleJdbcCall;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import com.myorg.tools.documentworkflow.constant.DocumentWorkflowToolConstant;
 import com.myorg.tools.documentworkflow.dao.UserAdminDAO;
+import com.myorg.tools.documentworkflow.model.AgreementWorkflow;
+import com.myorg.tools.documentworkflow.model.ReverseMappable;
 import com.myorg.tools.documentworkflow.model.Role;
+import com.myorg.tools.documentworkflow.model.RoleUser;
 import com.myorg.tools.documentworkflow.model.RoleUsersMapping;
 import com.myorg.tools.documentworkflow.model.User;
 import com.myorg.tools.documentworkflow.util.DocumentWorkflowToolUtility;
-import com.sun.jersey.api.NotFoundException;
 
 public class UserAdminDAOImpl extends BaseJDBCTemplate implements UserAdminDAO {
 
@@ -118,5 +124,74 @@ public class UserAdminDAOImpl extends BaseJDBCTemplate implements UserAdminDAO {
 			}
 		}
 		return null;
+	}
+	
+	public List<RoleUser> populateAllUserRole() throws SQLException, Exception {
+		String SQL = DocumentWorkflowToolConstant.FETCH_ALL_ROLE_USER_MAP;
+		List<RoleUser> usersList = null;
+		try{
+			usersList = this.getJdbcTemplateObject().query(SQL, new UserRoleMapper());
+		} catch(EmptyResultDataAccessException e) {
+			usersList = null;
+		}
+		return usersList;
+	}
+	
+	 
+	
+	@Override
+	public boolean uploadUserRoleMappings(List<RoleUser> roleUserList, String userId)  {
+		
+		if(roleUserList != null){
+
+			JdbcTemplate jdbcTemplate = this.getJdbcTemplateObject();
+			TransactionDefinition def = new DefaultTransactionDefinition();
+			TransactionStatus status = this.getTransactionManager().getTransaction(def);			
+			try {
+				HashMap<String, Integer> roleMap = DocumentWorkflowToolUtility.mapByValue(new ArrayList<ReverseMappable>(populateMasterRoleList()));	
+				System.out.println("###### roleMap "+roleMap);
+				for(RoleUser doc : roleUserList){
+					if(doc != null){
+						System.out.println("###### roleName "+doc.getRoleName());
+						doc.setRoleId(roleMap.get(doc.getRoleName()));
+						updateUserRoleInDB(doc, jdbcTemplate, userId);
+					}
+				}
+				this.getTransactionManager().commit(status);
+				return true;
+
+			} catch (SQLException e) {
+				e.printStackTrace();
+				this.getTransactionManager().rollback(status);
+				return false;
+			} catch (Exception e) {
+				e.printStackTrace();
+				this.getTransactionManager().rollback(status);
+				return false;				
+			}			
+		}
+		return false;
+	}
+	
+	private void updateUserRoleInDB(RoleUser roleUser, JdbcTemplate jdbcTemplate, String userId){
+		
+		String INS_SQL = DocumentWorkflowToolConstant.INS_USER;
+		String INS_ROLE_MAP = DocumentWorkflowToolConstant.INS_USER_ROLE;
+		String SEL_SQL = DocumentWorkflowToolConstant.FETCH_USER;
+		String UPD_SQL = DocumentWorkflowToolConstant.UPD_USER;
+		String UPD_ROLE_MAP = DocumentWorkflowToolConstant.UPD_USER_ROLE;
+		
+		Integer userCnt = jdbcTemplate.queryForInt(SEL_SQL,roleUser.getUserId());
+		
+		String tempPassword = "password";
+		
+		if(userCnt == 0) {
+			jdbcTemplate.update(INS_SQL, roleUser.getUserId(), roleUser.getUserName(),tempPassword,"T",roleUser.getUserStatus(),userId,new java.util.Date(),null,userId,new java.util.Date());
+			jdbcTemplate.update(INS_ROLE_MAP, roleUser.getUserId(), roleUser.getRoleId(),userId,new java.util.Date(),userId,new java.util.Date());
+		} else {
+			jdbcTemplate.update(UPD_SQL, roleUser.getUserName(),roleUser.getUserStatus(),userId,new java.util.Date(),roleUser.getUserId());
+			jdbcTemplate.update(UPD_ROLE_MAP, roleUser.getRoleId(),userId,new java.util.Date(),roleUser.getUserId());
+		}
+		
 	}
 }
