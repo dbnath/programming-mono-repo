@@ -142,6 +142,13 @@ public class ViewController {
 		return modelView;
 	}
 	
+	@RequestMapping(method = RequestMethod.GET,value = "adminHome")
+	public ModelAndView backToAdminHomeView() {
+		System.out.println("Inside getAdminHomeView");
+		ModelAndView modelView = new ModelAndView("admin/adminHome");
+		return modelView;
+	}	
+	
 	@RequestMapping(method = RequestMethod.GET,value = "adminUpdateAgreementView")
 	public ModelAndView getAdminUpdateAgreementView() {
 		ModelAndView modelView = new ModelAndView("admin/updateAgreement");
