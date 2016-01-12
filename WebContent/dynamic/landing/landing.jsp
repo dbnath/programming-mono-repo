@@ -8,7 +8,7 @@
 
 <script language="Javascript" src="<%=request.getContextPath()%>/js/landing.js?ver=<%=ver%>"></script>
   <!-- slide in menu (mobile only) -->
-  <div class="container bootcards-container" id="main" style="padding-top:120px">
+  <div class="container bootcards-container" id="main" style="padding-top:80px">
     
 			  <!--<a class="btn btn-primary" href="#" onclick="landingObj.reloadGridData()" >
 				<i class="glyphicon glyphicon-refresh"></i> 
