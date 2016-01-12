@@ -146,13 +146,15 @@ public class DocumentAdminServiceImpl extends BaseResource implements DocumentAd
 		}
 	}
 	
-	public Response uploadDocuments(@FormDataParam("file") InputStream uploadedInputStream,  @FormDataParam("file") FormDataContentDisposition fileDetail, @FormDataParam("path") String path, @FormDataParam("userId") String userId){
+	//public Response uploadDocuments(@FormDataParam("file") InputStream uploadedInputStream,  @FormDataParam("file") FormDataContentDisposition fileDetail, @FormDataParam("path") String path, @FormDataParam("userId") String userId){
+	public Response uploadDocuments(@FormDataParam("file") InputStream uploadedInputStream,  @FormDataParam("userId") String userId){
 		
 		try {
 			
-			User user = getLoggedInUser();
-			userId = user.getUserId();
+			/*User user = getLoggedInUser();
+			userId = user.getUserId();*/
 			
+			System.out.println("###### User id to upload doc "+userId);
 			List<AgreementWorkflow> docList = parseBulkUploadFile(uploadedInputStream);
 			//documentAdminDAO.uploadDocumentInformation(docList, userId);
 			documentAdminDAO.uploadAgreementInformation(docList, userId);

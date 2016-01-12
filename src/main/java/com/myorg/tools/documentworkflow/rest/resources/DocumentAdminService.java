@@ -77,7 +77,8 @@ public interface DocumentAdminService {
 	   @Path("/uploaddoc")
 	   @Consumes(MediaType.MULTIPART_FORM_DATA)
 	   @Produces(MediaType.TEXT_HTML)	   
-	   public Response uploadDocuments(@FormDataParam("file") InputStream uploadedInputStream,  @FormDataParam("file") FormDataContentDisposition fileDetail, @FormDataParam("path") String path, @FormDataParam("userId") String userId);
+	   //public Response uploadDocuments(@FormDataParam("file") InputStream uploadedInputStream,  @FormDataParam("file") FormDataContentDisposition fileDetail, @FormDataParam("path") String path, @FormDataParam("userId") String userId);
+	   public Response uploadDocuments(@FormDataParam("file") InputStream uploadedInputStream,  @FormDataParam("userId") String userId);
 	   
 	   @POST
 	   @Path("/uploaderr")

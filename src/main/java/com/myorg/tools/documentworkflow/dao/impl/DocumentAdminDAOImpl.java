@@ -489,38 +489,16 @@ public class DocumentAdminDAOImpl extends BaseJDBCTemplate implements DocumentAd
 			Date startTime = null;
 			Date stopTime = null;
 			Integer currentRole = 0;
-			Integer currentAgrId = 0;
-			Date ageStartTime = null;
-			Date ageStopTime = null;
 			Double makerHeldTime = 0.0;
 			Double checkerHeldTime = 0.0;
 			Double smeHeldTime = 0.0;
-			Double ahtAge = 0.0;
 			
 			Map<Integer, AHTBean> ahtMap = new HashMap<Integer, AHTBean>();
+			calculateAge(ahtMap, ahtList);
 			
 			for(int i=0; i< ahtList.size(); i++){
 				
 				AHTBean aht = ahtList.get(i);
-				System.out.println("i..."+i);
-				
-				if(currentAgrId != aht.getAgreementId()) {
-					currentAgrId = aht.getAgreementId();
-					ageStartTime = aht.getLastUpdationDate();
-					aht.setAgeStartTime(ageStartTime);
-					ahtMap.put(currentAgrId, aht);
-					if (i>0){
-						ageStopTime = (ahtList.get(i-1)).getLastUpdationDate();
-						ahtAge = DocumentWorkflowToolUtility.getTimeDifferenceInMin(ageStartTime, ageStopTime);
-						ahtMap.get((ahtList.get(i-1)).getAgreementId()).setAge(ahtAge);
-					}
-				} else if (i==(ahtList.size()-1)){
-					System.out.println("ageStartTime ####"+ahtMap.get((ahtList.get(i)).getAgreementId()).getAgeStartTime());
-					ageStopTime = (ahtList.get(i)).getLastUpdationDate();
-					ahtAge = DocumentWorkflowToolUtility.getTimeDifferenceInMin(ahtMap.get((ahtList.get(i)).getAgreementId()).getAgeStartTime(), ageStopTime);
-					ahtMap.get(aht.getAgreementId()).setAge(ahtAge);
-				}
-				
 				
 				if("Y".equalsIgnoreCase(aht.getIsClockStart())){
 					startTime = aht.getLastUpdationDate();
@@ -542,23 +520,35 @@ public class DocumentAdminDAOImpl extends BaseJDBCTemplate implements DocumentAd
 					
 					case 1:
 						makerHeldTime = ahtTime;
+						System.out.println(aht.getAgreementId()+"...MakerStartTime..."+startTime+"...MakerClockStopTime..."+stopTime+"...MakerHeldTime..."+ahtTemp.getMakerHeldTime());
 						break;
 					case 2:
 						checkerHeldTime = ahtTime;
+						System.out.println(aht.getAgreementId()+"...MakerHeldTime..."+ahtTemp.getMakerHeldTime());
+						System.out.println(aht.getAgreementId()+"...CheckerStartTime..."+startTime+"...CheckerClockStopTime..."+stopTime+"...CheckerHeldTime..."+ahtTemp.getCheckerHeldTime());
 						if (ahtTemp.getStatusCode()==18) {
 							ahtTemp.setMakerHeldTime(makerHeldTime);
 							ahtTemp.setCheckerHeldTime(checkerHeldTime);
 							ahtTemp.setTotalHeldTime(ahtTemp.getTotalHeldTime()+makerHeldTime+checkerHeldTime);
 							makerHeldTime = 0.0;
 							checkerHeldTime = 0.0;
+							System.out.println(aht.getAgreementId()+"...TotalHoldTime..."+ahtTemp.getTotalHeldTime());
 						}
 						break;
 					case 3:
 						smeHeldTime = ahtTime;
 						ahtTemp.setMakerHeldTime(makerHeldTime);
 						ahtTemp.setCheckerHeldTime(checkerHeldTime);
-						ahtTemp.setSmeHeldTime(smeHeldTime);
-						ahtTemp.setTotalHeldTime(ahtTemp.getTotalHeldTime()+makerHeldTime+checkerHeldTime+smeHeldTime);
+						if (Double.valueOf(ahtTemp.getSmeHeldTime()).doubleValue()==0) {
+							ahtTemp.setSmeHeldTime(smeHeldTime);
+						}
+						if (Double.valueOf(ahtTemp.getTotalHeldTime()).doubleValue()==0) {
+							ahtTemp.setTotalHeldTime(ahtTemp.getTotalHeldTime()+makerHeldTime+checkerHeldTime+smeHeldTime);
+						}
+						System.out.println(aht.getAgreementId()+"...MakerHeldTime..."+ahtTemp.getMakerHeldTime());
+						System.out.println(aht.getAgreementId()+"...CheckerHeldTime..."+ahtTemp.getCheckerHeldTime());
+						System.out.println(aht.getAgreementId()+"...SMEStartTime..."+startTime+"...SMEClockStopTime..."+stopTime+"...SMEHeldTime..."+ahtTemp.getSmeHeldTime());
+						System.out.println(aht.getAgreementId()+"...TotalHoldTime..."+ahtTemp.getTotalHeldTime());
 						if (ahtTemp.getStatusCode()==22){
 							makerHeldTime = 0.0;
 							checkerHeldTime = 0.0;
@@ -575,6 +565,38 @@ public class DocumentAdminDAOImpl extends BaseJDBCTemplate implements DocumentAd
 			}
 			return ahtMap;
 		
+	}
+	
+	private void calculateAge(Map<Integer, AHTBean> ahtMap, List<AHTBean> ahtList) {
+		Date ageStartTime = null;
+		Date ageStopTime = null;
+		Double ahtAge = 0.0;
+		AHTBean aht = null;
+		AHTBean ahtTemp = null;
+		for(int i=0; i< ahtList.size(); i++){
+			
+			aht = ahtList.get(i);
+			
+			if(!ahtMap.containsKey(aht.getAgreementId())) {
+				ageStartTime = aht.getLastUpdationDate();
+				aht.setAgeStartTime(ageStartTime);
+				ahtMap.put(aht.getAgreementId(), aht);
+				if (i>0){
+					ahtTemp = ahtList.get(i-1);
+					ageStopTime = ahtTemp.getLastUpdationDate();
+					ahtAge = DocumentWorkflowToolUtility.getTimeDifferenceInMin(ageStartTime, ageStopTime);
+					ahtMap.get(ahtTemp.getAgreementId()).setAge(ahtAge);
+					System.out.println("AgreementID ..."+ahtTemp.getAgreementId()+":: AgeStartTime :: "+ageStartTime+"::AgeStopTime :: "+ageStopTime+" Age..."+ahtAge);
+				}
+		    }
+			if (i==(ahtList.size()-1)){
+				ageStopTime = aht.getLastUpdationDate();
+				ahtAge = DocumentWorkflowToolUtility.getTimeDifferenceInMin(ahtMap.get(aht.getAgreementId()).getAgeStartTime(), ageStopTime);
+				ahtMap.get(aht.getAgreementId()).setAge(ahtAge);
+				System.out.println("AgreementID ..."+aht.getAgreementId()+":: AgeStartTime :: "+ageStartTime+"::AgeStopTime :: "+ageStopTime+" Age..."+ahtAge);
+			}
+			
+		}
 	}
 	
 }
