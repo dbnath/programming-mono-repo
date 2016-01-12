@@ -4,16 +4,16 @@ public class DocWkflwComments {
 
 	private static final long serialVersionUID = 1518388687498835566L;
 	
-	private Integer agreementId;
+	private String agreementId;
 	private String comments;
 	private Integer errorReasonCd;
 	private String errorReason;
 	private Integer idRole;
 	
-	public Integer getAgreementId() {
+	public String getAgreementId() {
 		return agreementId;
 	}
-	public void setAgreementId(Integer agreementId) {
+	public void setAgreementId(String agreementId) {
 		this.agreementId = agreementId;
 	}
 	public String getComments() {

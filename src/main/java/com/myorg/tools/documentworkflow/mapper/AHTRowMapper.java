@@ -1,8 +1,7 @@
-package com.myorg.tools.documentworkflow.dao.impl;
+package com.myorg.tools.documentworkflow.mapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Calendar;
 
 import org.springframework.jdbc.core.RowMapper;
 

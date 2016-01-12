@@ -19,6 +19,16 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import com.myorg.tools.documentworkflow.constant.DocumentWorkflowToolConstant;
 import com.myorg.tools.documentworkflow.dao.DocumentAdminDAO;
+import com.myorg.tools.documentworkflow.mapper.AHTRowMapper;
+import com.myorg.tools.documentworkflow.mapper.AgreementAuditTrailMapper;
+import com.myorg.tools.documentworkflow.mapper.AgreementDumpMapper;
+import com.myorg.tools.documentworkflow.mapper.AgreementErrorTypeMapper;
+import com.myorg.tools.documentworkflow.mapper.AgreementStatusMapper;
+import com.myorg.tools.documentworkflow.mapper.AgreementTypeMapper;
+import com.myorg.tools.documentworkflow.mapper.DocumentRepositoryMapper;
+import com.myorg.tools.documentworkflow.mapper.DocumentSubTagValuesMapper;
+import com.myorg.tools.documentworkflow.mapper.DocumentTagMapper;
+import com.myorg.tools.documentworkflow.mapper.DocumentTypeMapper;
 import com.myorg.tools.documentworkflow.model.AHTBean;
 import com.myorg.tools.documentworkflow.model.AHTWrapper;
 import com.myorg.tools.documentworkflow.model.AgreementErrorType;
@@ -436,6 +446,7 @@ public class DocumentAdminDAOImpl extends BaseJDBCTemplate implements DocumentAd
 		jdbcTemplate.update(UPD_SQL, type.getErrorTypeCode(),type.getErrorTypeName(),type.getErrorTypeId());
 	}
 	
+	@SuppressWarnings("deprecation")
 	private void insertErrorReason(AgreementErrorType type,JdbcTemplate jdbcTemplate ) throws SQLException, Exception{
 		String INS_SQL = DocumentWorkflowToolConstant.INS_ERR_REASON;
 		String SEL_SQL = DocumentWorkflowToolConstant.SEL_ERR_REASON_CD;
@@ -452,6 +463,7 @@ public class DocumentAdminDAOImpl extends BaseJDBCTemplate implements DocumentAd
 		jdbcTemplate.update(UPD_SQL, type.getAgrementTypeName(),type.getAgreementTypeId());
 	}
 	
+	@SuppressWarnings("deprecation")
 	private void insertAgreementType(AgreementType type,JdbcTemplate jdbcTemplate ) throws SQLException, Exception{
 		String INS_SQL = DocumentWorkflowToolConstant.INS_AGR_TYPE;
 		String SEL_SQL = DocumentWorkflowToolConstant.SEL_AGR_TYPE_CD;
@@ -474,7 +486,7 @@ public class DocumentAdminDAOImpl extends BaseJDBCTemplate implements DocumentAd
 			docRepoList = this.getJdbcTemplateObject().query(SQL, new AgreementDumpMapper());
 			ahtList = this.getJdbcTemplateObject().query(SQL1, new AHTRowMapper());
 			
-			Map<Integer, AHTBean> ahtMap = calculateAHT(ahtList);
+			Map<String, AHTBean> ahtMap = calculateAHT(ahtList);
 			
 			ahtWrapper.setAhtMap(ahtMap);
 			ahtWrapper.setDocRepoList(docRepoList);
@@ -485,7 +497,7 @@ public class DocumentAdminDAOImpl extends BaseJDBCTemplate implements DocumentAd
 		return ahtWrapper;
 	}
 	
-	private Map<Integer, AHTBean> calculateAHT(List<AHTBean> ahtList){
+	private Map<String, AHTBean> calculateAHT(List<AHTBean> ahtList){
 			Date startTime = null;
 			Date stopTime = null;
 			Integer currentRole = 0;
@@ -493,7 +505,7 @@ public class DocumentAdminDAOImpl extends BaseJDBCTemplate implements DocumentAd
 			Double checkerHeldTime = 0.0;
 			Double smeHeldTime = 0.0;
 			
-			Map<Integer, AHTBean> ahtMap = new HashMap<Integer, AHTBean>();
+			Map<String, AHTBean> ahtMap = new HashMap<String, AHTBean>();
 			calculateAge(ahtMap, ahtList);
 			
 			for(int i=0; i< ahtList.size(); i++){
@@ -515,48 +527,7 @@ public class DocumentAdminDAOImpl extends BaseJDBCTemplate implements DocumentAd
 					if (aht.getStatusCode() == 22){
 						currentRole = aht.getRoleId();
 					}
-					
-					switch(currentRole){
-					
-					case 1:
-						makerHeldTime = ahtTime;
-						System.out.println(aht.getAgreementId()+"...MakerStartTime..."+startTime+"...MakerClockStopTime..."+stopTime+"...MakerHeldTime..."+ahtTemp.getMakerHeldTime());
-						break;
-					case 2:
-						checkerHeldTime = ahtTime;
-						System.out.println(aht.getAgreementId()+"...MakerHeldTime..."+ahtTemp.getMakerHeldTime());
-						System.out.println(aht.getAgreementId()+"...CheckerStartTime..."+startTime+"...CheckerClockStopTime..."+stopTime+"...CheckerHeldTime..."+ahtTemp.getCheckerHeldTime());
-						if (ahtTemp.getStatusCode()==18) {
-							ahtTemp.setMakerHeldTime(makerHeldTime);
-							ahtTemp.setCheckerHeldTime(checkerHeldTime);
-							ahtTemp.setTotalHeldTime(ahtTemp.getTotalHeldTime()+makerHeldTime+checkerHeldTime);
-							makerHeldTime = 0.0;
-							checkerHeldTime = 0.0;
-							System.out.println(aht.getAgreementId()+"...TotalHoldTime..."+ahtTemp.getTotalHeldTime());
-						}
-						break;
-					case 3:
-						smeHeldTime = ahtTime;
-						ahtTemp.setMakerHeldTime(makerHeldTime);
-						ahtTemp.setCheckerHeldTime(checkerHeldTime);
-						if (Double.valueOf(ahtTemp.getSmeHeldTime()).doubleValue()==0) {
-							ahtTemp.setSmeHeldTime(smeHeldTime);
-						}
-						if (Double.valueOf(ahtTemp.getTotalHeldTime()).doubleValue()==0) {
-							ahtTemp.setTotalHeldTime(ahtTemp.getTotalHeldTime()+makerHeldTime+checkerHeldTime+smeHeldTime);
-						}
-						System.out.println(aht.getAgreementId()+"...MakerHeldTime..."+ahtTemp.getMakerHeldTime());
-						System.out.println(aht.getAgreementId()+"...CheckerHeldTime..."+ahtTemp.getCheckerHeldTime());
-						System.out.println(aht.getAgreementId()+"...SMEStartTime..."+startTime+"...SMEClockStopTime..."+stopTime+"...SMEHeldTime..."+ahtTemp.getSmeHeldTime());
-						System.out.println(aht.getAgreementId()+"...TotalHoldTime..."+ahtTemp.getTotalHeldTime());
-						if (ahtTemp.getStatusCode()==22){
-							makerHeldTime = 0.0;
-							checkerHeldTime = 0.0;
-							smeHeldTime = 0.0;
-						}
-						break;
-					}
-					
+					setAHTBeanHeldTime(ahtTemp, currentRole, ahtTime, makerHeldTime, checkerHeldTime, smeHeldTime);
 					startTime = null;
 					stopTime = null;
 					currentRole = 0;
@@ -567,7 +538,42 @@ public class DocumentAdminDAOImpl extends BaseJDBCTemplate implements DocumentAd
 		
 	}
 	
-	private void calculateAge(Map<Integer, AHTBean> ahtMap, List<AHTBean> ahtList) {
+	private void setAHTBeanHeldTime(AHTBean ahtTemp, Integer currentRole, Double ahtTime, Double makerHeldTime, Double checkerHeldTime, Double smeHeldTime) {
+		switch(currentRole){
+		case 1:
+			makerHeldTime = ahtTime;
+			ahtTemp.setMakerHeldTime(makerHeldTime);
+			System.out.println(ahtTemp.getAgreementId()+"...MakerHeldTime..."+ahtTemp.getMakerHeldTime());
+			break;
+		case 2:
+			checkerHeldTime = ahtTime;
+			ahtTemp.setCheckerHeldTime(checkerHeldTime);
+			System.out.println(ahtTemp.getAgreementId()+"...MakerHeldTime..."+ahtTemp.getMakerHeldTime()+"...CheckerHeldTime..."+ahtTemp.getCheckerHeldTime());
+			break;
+		case 3:
+			smeHeldTime = ahtTime;
+			if (Double.valueOf(smeHeldTime).doubleValue()>0.0) {
+				ahtTemp.setSmeHeldTime(smeHeldTime);
+			}
+			System.out.println(ahtTemp.getAgreementId()+"...MakerHeldTime..."+ahtTemp.getMakerHeldTime()+"...CheckerHeldTime..."+ahtTemp.getCheckerHeldTime()+"...SMEHeldTime..."+ahtTemp.getSmeHeldTime());
+			break;
+		}
+		ahtTemp.setTotalHeldTime(ahtTemp.getMakerHeldTime()+ahtTemp.getCheckerHeldTime()+ahtTemp.getSmeHeldTime());
+		System.out.println(ahtTemp.getAgreementId()+"...TotalHoldTime..."+ahtTemp.getTotalHeldTime());
+		resetMakerCheckerSmeHeldTime(ahtTemp, makerHeldTime, checkerHeldTime, smeHeldTime);
+	}
+	
+	private void resetMakerCheckerSmeHeldTime(AHTBean ahtTemp, Double makerHeldTime, Double checkerHeldTime, Double smeHeldTime) {
+		if (ahtTemp.getStatusCode()==18 || ahtTemp.getStatusCode()==22) {
+			makerHeldTime = 0.0;
+			checkerHeldTime = 0.0;
+			if (ahtTemp.getStatusCode()==22){
+				smeHeldTime = 0.0;
+			}
+		}
+	}
+	
+	private void calculateAge(Map<String, AHTBean> ahtMap, List<AHTBean> ahtList) {
 		Date ageStartTime = null;
 		Date ageStopTime = null;
 		Double ahtAge = 0.0;
@@ -597,6 +603,18 @@ public class DocumentAdminDAOImpl extends BaseJDBCTemplate implements DocumentAd
 			}
 			
 		}
+	}
+	
+	public List<DocWkflwProcess> extractAgreementsAuditTrail() throws SQLException, Exception {
+		String SQL = DocumentWorkflowToolConstant.QUERY_FOR_AUDITTRAIL;
+		
+		List<DocWkflwProcess> docRepoList = null;
+		try{
+			docRepoList = this.getJdbcTemplateObject().query(SQL, new AgreementAuditTrailMapper());
+		} catch(EmptyResultDataAccessException e) {
+			docRepoList = null;
+		}
+		return docRepoList;
 	}
 	
 }

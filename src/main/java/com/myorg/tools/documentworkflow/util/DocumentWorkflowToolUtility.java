@@ -112,7 +112,7 @@ public class DocumentWorkflowToolUtility {
 		return null;
 	}
 	
-	public static String joinString(List<Integer> objs, String toAppend) {
+	public static String joinAsString(List<Integer> objs, String toAppend) {
 		StringBuilder sb = new StringBuilder();
 		if (! isEmptyList(objs)) {
 			for (@SuppressWarnings("unused") Integer i : objs){
@@ -122,6 +122,17 @@ public class DocumentWorkflowToolUtility {
 		}
 		return (! isEmptyValue(sb.toString())) ? sb.toString().substring(0, sb.toString().lastIndexOf(", ")) : null;
 	}
+	
+	public static String joinString(List<String> objs, String toAppend) {
+		StringBuilder sb = new StringBuilder();
+		if (! isEmptyList(objs)) {
+			for (@SuppressWarnings("unused") String i : objs){
+				sb.append(toAppend);
+				sb.append(", ");
+			}
+		}
+		return (! isEmptyValue(sb.toString())) ? sb.toString().substring(0, sb.toString().lastIndexOf(", ")) : null;
+	}	
 	
 	public static <T extends BaseDTO> T setResponse(T dto, String responseCode, String responseMessage){
 		Response response = new Response();

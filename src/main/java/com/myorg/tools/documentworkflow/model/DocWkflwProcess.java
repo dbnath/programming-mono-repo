@@ -2,13 +2,14 @@ package com.myorg.tools.documentworkflow.model;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 public class DocWkflwProcess implements Serializable{
 	
 	private static final long serialVersionUID = 1518388687498835566L;
 	
-	private Integer agreementId;
+	private String agreementId;
+	
+	private Integer versionId;
 	
 	private Integer agreementTypeCode;
 	
@@ -45,13 +46,23 @@ public class DocWkflwProcess implements Serializable{
 	private Integer numPages;
 	private Integer numFields;
 	
+	private String comments;
+	
 
-	public Integer getAgreementId() {
+	public String getAgreementId() {
 		return agreementId;
 	}
 
-	public void setAgreementId(Integer agreementId) {
+	public void setAgreementId(String agreementId) {
 		this.agreementId = agreementId;
+	}
+
+	public Integer getVersionId() {
+		return versionId;
+	}
+
+	public void setVersionId(Integer versionId) {
+		this.versionId = versionId;
 	}
 
 	public Integer getAgreementTypeCode() {
@@ -228,6 +239,14 @@ public class DocWkflwProcess implements Serializable{
 
 	public void setNumFields(Integer numFields) {
 		this.numFields = numFields;
+	}
+
+	public String getComments() {
+		return comments;
+	}
+
+	public void setComments(String comments) {
+		this.comments = comments;
 	}
 	
 	

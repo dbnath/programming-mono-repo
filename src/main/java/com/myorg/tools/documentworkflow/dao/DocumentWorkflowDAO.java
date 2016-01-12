@@ -40,7 +40,7 @@ public interface DocumentWorkflowDAO {
 	  * @param docIds
 	  * @return true if assignment can be done successfully, else false
 	  */
-	 public List<DocWkflwProcess> fetchDocumentWorkflows(List<Integer> docIds) throws SQLException, Exception;
+	 public List<DocWkflwProcess> fetchDocumentWorkflows(List<String> docIds) throws SQLException, Exception;
 	 
 	 /**
 	  * 

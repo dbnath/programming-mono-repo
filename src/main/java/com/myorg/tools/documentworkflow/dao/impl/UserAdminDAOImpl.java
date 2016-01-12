@@ -7,14 +7,15 @@ import java.util.List;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import com.myorg.tools.documentworkflow.constant.DocumentWorkflowToolConstant;
 import com.myorg.tools.documentworkflow.dao.UserAdminDAO;
-import com.myorg.tools.documentworkflow.model.AgreementWorkflow;
+import com.myorg.tools.documentworkflow.mapper.RoleMapper;
+import com.myorg.tools.documentworkflow.mapper.UserMapper;
+import com.myorg.tools.documentworkflow.mapper.UserRoleMapper;
 import com.myorg.tools.documentworkflow.model.ReverseMappable;
 import com.myorg.tools.documentworkflow.model.Role;
 import com.myorg.tools.documentworkflow.model.RoleUser;
@@ -181,6 +182,7 @@ public class UserAdminDAOImpl extends BaseJDBCTemplate implements UserAdminDAO {
 		String UPD_SQL = DocumentWorkflowToolConstant.UPD_USER;
 		String UPD_ROLE_MAP = DocumentWorkflowToolConstant.UPD_USER_ROLE;
 		
+		@SuppressWarnings("deprecation")
 		Integer userCnt = jdbcTemplate.queryForInt(SEL_SQL,roleUser.getUserId());
 		
 		String tempPassword = "password";

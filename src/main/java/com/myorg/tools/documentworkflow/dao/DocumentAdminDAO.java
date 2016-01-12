@@ -7,6 +7,7 @@ import com.myorg.tools.documentworkflow.model.AHTWrapper;
 import com.myorg.tools.documentworkflow.model.AgreementErrorType;
 import com.myorg.tools.documentworkflow.model.AgreementType;
 import com.myorg.tools.documentworkflow.model.AgreementWorkflow;
+import com.myorg.tools.documentworkflow.model.DocWkflwProcess;
 import com.myorg.tools.documentworkflow.model.Document;
 import com.myorg.tools.documentworkflow.model.DocumentRepository;
 import com.myorg.tools.documentworkflow.model.DocumentSubTagValues;
@@ -44,6 +45,8 @@ public interface DocumentAdminDAO {
 	
 	public boolean uploadAgreementInformation(List<AgreementWorkflow> docList, String userId) throws SQLException, Exception;
 	
+	public List<DocWkflwProcess> extractAgreementsAuditTrail() throws SQLException, Exception;
+
 	public List<AgreementErrorType> populateErrorTypes() throws SQLException, Exception;
 	
 	public boolean uploadErrorReasons(List<AgreementErrorType> docList, String userId) throws SQLException, Exception;

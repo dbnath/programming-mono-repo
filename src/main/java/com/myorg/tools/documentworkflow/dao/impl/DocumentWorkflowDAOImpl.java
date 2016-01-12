@@ -16,6 +16,10 @@ import com.myorg.tools.documentworkflow.constant.DocumentWorkflowToolConstant;
 import com.myorg.tools.documentworkflow.dao.DocumentWorkflowDAO;
 import com.myorg.tools.documentworkflow.dto.DocumentDTO;
 import com.myorg.tools.documentworkflow.mapper.CheckerAgreementWorkflowMapper;
+import com.myorg.tools.documentworkflow.mapper.DocumentMapper;
+import com.myorg.tools.documentworkflow.mapper.DocumentTagRelationshipMapper;
+import com.myorg.tools.documentworkflow.mapper.DocumentWorkflowDetailMapper;
+import com.myorg.tools.documentworkflow.mapper.DocumentWorkflowMapper;
 import com.myorg.tools.documentworkflow.mapper.DocumentWorkflowStatusMapper;
 import com.myorg.tools.documentworkflow.mapper.MakerAgreementWkflwMapper;
 import com.myorg.tools.documentworkflow.mapper.OnshoreSMEAgreementWorkflowMapper;
@@ -217,7 +221,7 @@ public class DocumentWorkflowDAOImpl extends BaseJDBCTemplate implements Documen
 		 return status;
 	 }*/
 	 
-	 public List<DocWkflwProcess> fetchDocumentWorkflows(List<Integer> docIds) throws SQLException, Exception {
+	 public List<DocWkflwProcess> fetchDocumentWorkflows(List<String> docIds) throws SQLException, Exception {
 		 String SQL = DocumentWorkflowToolConstant.FETCH_DOC_WFL_SQL + "("+DocumentWorkflowToolUtility.joinString(docIds, "?")+")";
 		 List<DocWkflwProcess> docWorkflowList = null;
 		 if (! DocumentWorkflowToolUtility.isEmptyList(docIds)){
@@ -363,7 +367,7 @@ public class DocumentWorkflowDAOImpl extends BaseJDBCTemplate implements Documen
 	
 	private DocumentDTO getLatestAgreement(DocumentDTO documentDTO, Integer roleId) throws SQLException, Exception {
 		List<DocWkflwProcess> docList = null;
-	    Integer agreementId = null;
+	    String agreementId = null;
 	    String SQL = null;
 	    Object[] inputParameters = null;
 	    MakerAgreementWkflwMapper mapper = null;
@@ -433,7 +437,7 @@ public class DocumentWorkflowDAOImpl extends BaseJDBCTemplate implements Documen
 	
 	private void startProcessExecuteQueries(DocumentDTO documentDTO) throws SQLException, Exception { 
 		Integer statusCode = documentDTO.getStatusCode();
-		Integer agreementId = documentDTO.getAgreementId();
+		String agreementId = documentDTO.getAgreementId();
 		Integer roleId = documentDTO.getRoleId();
 		String userId = documentDTO.getUser().getUserId();
 		Integer numPages = documentDTO.getNumPages();
@@ -484,7 +488,7 @@ public class DocumentWorkflowDAOImpl extends BaseJDBCTemplate implements Documen
 	
 	private void completeProcessExecuteQueries(DocumentDTO documentDTO) throws SQLException, Exception{
 		Integer statusCode = documentDTO.getStatusCode();
-		Integer agreementId = documentDTO.getAgreementId();
+		String agreementId = documentDTO.getAgreementId();
 		Integer roleId = documentDTO.getRoleId(); //Integer.valueOf(documentDTO.getUser().getRoleId());
 		String userId = documentDTO.getUser().getUserId();
 		String comment = documentDTO.getComment();
@@ -531,7 +535,7 @@ public class DocumentWorkflowDAOImpl extends BaseJDBCTemplate implements Documen
 	
 	private void holdProcessExecuteQueries(DocumentDTO documentDTO) throws SQLException, Exception{
 		Integer statusCode = documentDTO.getStatusCode();
-		Integer agreementId = documentDTO.getAgreementId();
+		String agreementId = documentDTO.getAgreementId();
 		String comment = documentDTO.getComment();
 		Integer errReasonCode = documentDTO.getErrorReasonCode();
 		Integer roleId = documentDTO.getRoleId();
@@ -562,7 +566,7 @@ public class DocumentWorkflowDAOImpl extends BaseJDBCTemplate implements Documen
 	
 	 private void assignWorkflowProcess(JdbcTemplate jdbcTemplate, DocWkflwProcess docObj, TransactionStatus status, User user) throws SQLException, Exception {
 			Integer statusCode = docObj.getStatusCode();
-			Integer agreementId = docObj.getAgreementId();
+			String agreementId = docObj.getAgreementId();
 			Integer roleId = DocumentWorkflowToolUtility.equalStrings("4", user.getRoleId(), false, true)? docObj.getRoleId() : Integer.valueOf(user.getRoleId()); //Integer.valueOf(documentDTO.getUser().getRoleId());
 			Date currentDate = Calendar.getInstance().getTime();
 			String userId = user.getUserId();

@@ -19,6 +19,7 @@ import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFColor;
+import org.apache.poi.xssf.usermodel.XSSFCreationHelper;
 import org.apache.poi.xssf.usermodel.XSSFDataValidationHelper;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -38,7 +39,6 @@ import com.myorg.tools.documentworkflow.model.DocumentTagSubTagMapping;
 import com.myorg.tools.documentworkflow.model.DocumentType;
 import com.myorg.tools.documentworkflow.model.DocumentTypeTagMapping;
 import com.myorg.tools.documentworkflow.model.DocumentTypeTagSubTagsMap;
-import com.myorg.tools.documentworkflow.model.User;
 import com.myorg.tools.documentworkflow.rest.resources.BaseResource;
 import com.myorg.tools.documentworkflow.rest.resources.DocumentAdminService;
 import com.myorg.tools.documentworkflow.util.DocumentWorkflowToolUtility;
@@ -157,7 +157,11 @@ public class DocumentAdminServiceImpl extends BaseResource implements DocumentAd
 			System.out.println("###### User id to upload doc "+userId);
 			List<AgreementWorkflow> docList = parseBulkUploadFile(uploadedInputStream);
 			//documentAdminDAO.uploadDocumentInformation(docList, userId);
-			documentAdminDAO.uploadAgreementInformation(docList, userId);
+			boolean uploadStatus = documentAdminDAO.uploadAgreementInformation(docList, userId);
+			
+			if(!uploadStatus){
+				throw new Exception("Issue with Bulk Upload");
+			}			
 			
 			return Response.ok().entity("<html><head><script>function refreshParent(){window.close();}</script></head><body><div>Document Uploaded Successfully</div><input type=\"Button\" value=\"Close Window\" onclick=\"refreshParent()\" /></body></html>").build();
 			
@@ -176,7 +180,11 @@ public class DocumentAdminServiceImpl extends BaseResource implements DocumentAd
 		try {
 			ExcelUtil util = new ExcelUtil();
 			List<AgreementErrorType> docList = util.parseErrReasonUploadFile(uploadedInputStream);
-			documentAdminDAO.uploadErrorReasons(docList, userId);
+			boolean uploadStatus = documentAdminDAO.uploadErrorReasons(docList, userId);
+			
+			if(!uploadStatus){
+				throw new Exception("Issue with Bulk Upload");
+			}
 			
 			return Response.ok().entity("<html><head><script>function refreshParent(){window.close();}</script></head><body><div>Document Uploaded Successfully</div><input type=\"Button\" value=\"Close Window\" onclick=\"refreshParent()\" /></body></html>").build();
 			
@@ -194,7 +202,11 @@ public class DocumentAdminServiceImpl extends BaseResource implements DocumentAd
 		try {
 			ExcelUtil util = new ExcelUtil();
 			List<AgreementType> docList = util.parseAgreementTypeUploadFile(uploadedInputStream);
-			documentAdminDAO.uploadAgreementTypes(docList, userId);
+			boolean uploadStatus = documentAdminDAO.uploadAgreementTypes(docList, userId);
+			
+			if(!uploadStatus){
+				throw new Exception("Issue with Bulk Upload");
+			}
 			
 			return Response.ok().entity("<html><head><script>function refreshParent(){window.close();}</script></head><body><div>Document Uploaded Successfully</div><input type=\"Button\" value=\"Close Window\" onclick=\"refreshParent()\" /></body></html>").build();
 			
@@ -511,7 +523,7 @@ public class DocumentAdminServiceImpl extends BaseResource implements DocumentAd
 			AHTWrapper ahtWrapper = documentAdminDAO.extractAgreementAHTInfo();
 			
 			List<DocWkflwProcess> agrmtList = ahtWrapper.getDocRepoList();
-			Map<Integer, AHTBean> ahtMap  = ahtWrapper.getAhtMap();
+			Map<String, AHTBean> ahtMap  = ahtWrapper.getAhtMap();
 			System.out.println("agrmtList size..."+agrmtList.size()+"#### ahtMap size..."+ahtMap.size());
 			
 			XSSFWorkbook wb = new XSSFWorkbook();			
@@ -608,7 +620,7 @@ public class DocumentAdminServiceImpl extends BaseResource implements DocumentAd
 		return;
 	}
 	
-	private void createExcelReportBody(XSSFSheet sheet, List<DocWkflwProcess> agrmtList, Map<Integer, AHTBean> ahtMap) {
+	private void createExcelReportBody(XSSFSheet sheet, List<DocWkflwProcess> agrmtList, Map<String, AHTBean> ahtMap) {
 
 		if(agrmtList != null){
 			int i = 1;
@@ -678,8 +690,160 @@ public class DocumentAdminServiceImpl extends BaseResource implements DocumentAd
 	}	
 	
 	
+	@Override
+	public Response getAgreementsAuditTrail() {
+		
+		try {
+			List<DocWkflwProcess> agrmtList = documentAdminDAO.extractAgreementsAuditTrail();
+			
+			System.out.println("agrmtList size..."+agrmtList.size());
+			
+			XSSFWorkbook wb = new XSSFWorkbook();			
+			XSSFSheet sheet = wb.createSheet();
+			XSSFCellStyle headerStyle = wb.createCellStyle();
+			
+			Font headerFont = wb.createFont();
+			headerFont.setBold(true);
+			
+			createAuditTrailExcelReportHeader(sheet, headerFont, headerStyle);
+			createAuditTrailExcelReportBody(wb, sheet, agrmtList);
+			
+			File file = new File(this.getAppConfig().getTempFileLocation()+"/report"+System.currentTimeMillis()+".xlsx");
+			
+			FileOutputStream baos = new FileOutputStream(file);
+			wb.write(baos);
+			baos.close();
+			
+			return Response.ok(file).header("Content-Disposition", "attachment; filename=\"Agreements_Audit_Trail_Dump.xlsx\"").build();			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}	
 	
 	
+	private void createAuditTrailExcelReportHeader(XSSFSheet sheet, Font headerFont, XSSFCellStyle headerStyle) {
+
+		XSSFRow headerRow = sheet.createRow(0);
+
+		XSSFColor headerColor = new XSSFColor(Color.DARK_GRAY);
+		headerStyle.setFillBackgroundColor(headerColor);
+		headerStyle.setFont(headerFont);
+
+		for (int i = 0; i < 16; i++) {
+			XSSFCell cell = headerRow.createCell(i);
+			cell.setCellStyle(headerStyle);
+
+			switch (i) {
+			case 0:
+				cell.setCellValue("Agreement ID");
+				break;
+			case 1:
+				cell.setCellValue("Vesrion ID");
+				break;
+			case 2:
+				cell.setCellValue("Agreement Type");
+				break;
+			case 3:
+				cell.setCellValue("LOB");
+				break;
+			case 4:
+				cell.setCellValue("Num of Pages");
+				break;
+			case 5:
+				cell.setCellValue("Num of Fields");
+				break;				
+			case 6:
+				cell.setCellValue("Latest Status");
+				break;
+			case 7:
+				cell.setCellValue("Comments");
+				break;	
+			case 8:
+				cell.setCellValue("Agreement Workflow Created By");
+				break;	
+			case 9:
+				cell.setCellValue("Agreement Workflow Created Date");
+				break;
+			case 10:
+				cell.setCellValue("Agreement Workflow Last Updated By");
+				break;
+			case 11:
+				cell.setCellValue("Agreement Workflow Last Updated Date");
+				break;	
+			}
+		}
+		return;
+	}
+	
+	private void createAuditTrailExcelReportBody(XSSFWorkbook wb, XSSFSheet sheet, List<DocWkflwProcess> agrmtList) {
+
+		if(agrmtList != null){
+			int i = 1;
+			XSSFCellStyle cellStyle         = wb.createCellStyle();
+			for(DocWkflwProcess r : agrmtList){
+				XSSFRow row = sheet.createRow(i);
+				
+				for(int j=0; j<16; j++){
+					XSSFCell cell = row.createCell(j);
+					
+					switch (j) {
+					case 0:
+						cell.setCellValue(r.getAgreementId());
+						break;
+					case 1:
+						cell.setCellValue(r.getVersionId());
+						break;
+					case 2:
+						cell.setCellValue(r.getAgreementTypeDesc());
+						break;
+					case 3:
+						cell.setCellValue(r.getLob());
+						break;
+					case 4:
+						cell.setCellValue(r.getNumPages());
+						break;
+					case 5:
+						cell.setCellValue(r.getNumFields());
+						break;	
+					case 6:
+						cell.setCellValue(r.getStatusDescription());
+						break;
+					case 7:
+						cell.setCellValue(r.getComments());
+						break;
+					case 8:
+						cell.setCellValue(r.getCreatedBy());
+						break;
+					case 9:
+						short df = wb.createDataFormat().getFormat("mm/dd/yyyy h:mm");
+						cellStyle.setDataFormat(df);
+						cell.setCellStyle(cellStyle);						
+						cell.setCellValue(r.getCreationDate());
+						break;
+					case 10:
+						cell.setCellValue(r.getLastUpdatedBy());
+						break;
+					case 11:
+						short sdf = wb.createDataFormat().getFormat("mm/dd/yyyy h:mm");
+						cellStyle.setDataFormat(sdf);
+						cell.setCellStyle(cellStyle);						
+						cell.setCellValue(r.getLastUpdationDate());
+						break;	
+					}
+					
+				}
+				i++;
+			}
+		}
+	
+		return;
+	}	
+
 	/*public Response updateDocTypes(List<DocumentType> docTypeList){
 		return Response.ok().entity(Boolean.TRUE).build();
 	}

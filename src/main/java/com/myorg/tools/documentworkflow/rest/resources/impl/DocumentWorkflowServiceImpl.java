@@ -301,7 +301,7 @@ public class DocumentWorkflowServiceImpl extends BaseResource implements Documen
 		return Response.ok(documentDTO).build();
 	}
 	
-	public Response assignWorkflows(List<Integer> docIds) {
+	public Response assignWorkflows(List<String> docIds) {
 		try {
 			List<DocWkflwProcess> docs = documentDAO.fetchDocumentWorkflows(docIds);
 			User user = getLoggedInUser();

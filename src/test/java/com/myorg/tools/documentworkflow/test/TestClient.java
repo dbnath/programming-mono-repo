@@ -33,7 +33,7 @@ public class TestClient {
 
 		//Maker in Progress
 		documentDTO.setStatusCode(2);
-		documentDTO.setAgreementId(123456);
+		documentDTO.setAgreementId("123456");
 		documentDTO.setUser(new User("ARDHENDU","APM","1"));
 		documentDTO.setRoleId(1); 
 		startProcess(documentDTO);
@@ -42,7 +42,7 @@ public class TestClient {
 		//Maker Complete
 		documentDTO = new DocumentDTO(); 
 		documentDTO.setStatusCode(3);
-		documentDTO.setAgreementId(123456);
+		documentDTO.setAgreementId("123456");
 		documentDTO.setUser(new User("ARDHENDU","APM","1"));
 		documentDTO.setRoleId(1); 
 		completeProcess(documentDTO);

@@ -118,6 +118,10 @@ public interface DocumentAdminService {
 	   @Produces("application/vnd.ms-excel")	   
 	   public Response getAgreementDataDump();
 
+	   @GET
+	   @Path("/auditdump")
+	   @Produces("application/vnd.ms-excel")	   
+	   public Response getAgreementsAuditTrail();
 	   
 	   /*@POST
 	   @Path("/updatedoctypes")

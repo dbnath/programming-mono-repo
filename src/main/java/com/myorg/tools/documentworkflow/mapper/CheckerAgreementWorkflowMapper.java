@@ -12,7 +12,7 @@ public class CheckerAgreementWorkflowMapper implements RowMapper<DocWkflwProcess
 	public DocWkflwProcess mapRow(ResultSet rs, int rowNum) throws SQLException {
 		DocWkflwProcess docWorkflow = new DocWkflwProcess();
 		if (!DocumentWorkflowToolUtility.isEmpty(rs)) {
-			docWorkflow.setAgreementId(rs.getInt("ID_AGRMT"));
+			docWorkflow.setAgreementId(rs.getString("ID_AGRMT"));
 			docWorkflow.setAgreementTypeCode(rs.getInt("ID_AGREEMENT_TYPE"));
 			docWorkflow.setAgreementTypeDesc(rs.getString("TX_AGREEMENT_TYPE"));
 			docWorkflow.setRoleId(rs.getInt("ID_ROLE"));

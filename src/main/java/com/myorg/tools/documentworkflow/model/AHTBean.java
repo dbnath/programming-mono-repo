@@ -7,7 +7,7 @@ public class AHTBean implements Serializable {
 	
 	private static final long serialVersionUID = 1518388687498835566L;
 	
-	private Integer agreementId;
+	private String agreementId;
 	
 	private Integer statusCode;
 	
@@ -32,11 +32,11 @@ public class AHTBean implements Serializable {
 	private Double age = 0.0;
 	
 
-	public Integer getAgreementId() {
+	public String getAgreementId() {
 		return agreementId;
 	}
 
-	public void setAgreementId(Integer agreementId) {
+	public void setAgreementId(String agreementId) {
 		this.agreementId = agreementId;
 	}
 

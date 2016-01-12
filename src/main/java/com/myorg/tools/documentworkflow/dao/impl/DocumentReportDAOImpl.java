@@ -4,9 +4,8 @@ import java.util.List;
 
 import com.myorg.tools.documentworkflow.constant.DocumentWorkflowToolConstant;
 import com.myorg.tools.documentworkflow.dao.DocumentReportDAO;
+import com.myorg.tools.documentworkflow.mapper.DocumentCompletionReportMapper;
 import com.myorg.tools.documentworkflow.model.DonutReport;
-import com.myorg.tools.documentworkflow.model.DocumentWorkflow;
-import com.myorg.tools.documentworkflow.util.DocumentWorkflowToolUtility;
 
 public class DocumentReportDAOImpl extends BaseJDBCTemplate implements DocumentReportDAO {
 

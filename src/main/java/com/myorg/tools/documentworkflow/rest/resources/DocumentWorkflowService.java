@@ -55,7 +55,7 @@ public interface DocumentWorkflowService {
 	   @Path("/assignWorkflows")
 	   @Consumes(MediaType.APPLICATION_JSON)
 	   @Produces(MediaType.APPLICATION_JSON)	   
-	   public Response assignWorkflows(List<Integer> docIds);
+	   public Response assignWorkflows(List<String> docIds);
 	   
 	   @POST
 	   @Path("/getAgreementsForAdminUsers")

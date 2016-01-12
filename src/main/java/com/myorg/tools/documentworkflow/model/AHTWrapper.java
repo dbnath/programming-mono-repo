@@ -7,7 +7,7 @@ public class AHTWrapper {
 	
 	private List<DocWkflwProcess> docRepoList ;
 	
-	private Map<Integer, AHTBean> ahtMap;
+	private Map<String, AHTBean> ahtMap;
 
 	public List<DocWkflwProcess> getDocRepoList() {
 		return docRepoList;
@@ -17,11 +17,11 @@ public class AHTWrapper {
 		this.docRepoList = docRepoList;
 	}
 
-	public Map<Integer, AHTBean> getAhtMap() {
+	public Map<String, AHTBean> getAhtMap() {
 		return ahtMap;
 	}
 
-	public void setAhtMap(Map<Integer, AHTBean> ahtMap) {
+	public void setAhtMap(Map<String, AHTBean> ahtMap) {
 		this.ahtMap = ahtMap;
 	}
 	

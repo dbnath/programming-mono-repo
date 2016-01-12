@@ -19,7 +19,7 @@ public class DocumentDTO extends BaseDTO implements Serializable {
 	
 	private Integer statusCode;
 	
-	private Integer agreementId;
+	private String agreementId;
 	
 	private String docStatus;
 	
@@ -69,11 +69,11 @@ public class DocumentDTO extends BaseDTO implements Serializable {
 		this.statusCode = statusCode;
 	}
 
-	public Integer getAgreementId() {
+	public String getAgreementId() {
 		return agreementId;
 	}
 
-	public void setAgreementId(Integer agreementId) {
+	public void setAgreementId(String agreementId) {
 		this.agreementId = agreementId;
 	}
 
