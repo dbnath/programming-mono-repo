@@ -87,7 +87,7 @@
     </div>
 	<br><br>
 	<div id="makerActionPanel" >
-		<table align="left" width="100%">
+		<%-- <table align="left" width="100%">
 			<tr>
 				<table>
 					<tr>
@@ -116,7 +116,40 @@
 					</tr>
 				</table>
 			</tr>
-		</table>
+		</table> --%>
+		<form class="pure-form pure-form-stacked">
+		    <fieldset>
+		        <legend>Comments Section:</legend>
+		
+		        <div class="pure-g" style="text-align: left;">
+		            <div class="pure-u-1 pure-u-md-1-3">
+		                <label for="checkerStatus">Status</label>
+		                <select id="checkerStatus" onchange="landingObj.setHoldStatus(this)" disabled>
+		                    <c:forEach items="${workflowStatusList}" var="status">
+								<option value="${status.statusCode}">${status.statusDescription}</option>
+							</c:forEach>
+		                </select>
+		            </div>
+		
+		            <div class="pure-u-1 pure-u-md-2-3">
+		                <label for="checkerComments">Comments</label>
+		                <textarea id="checkerComments" disabled rows="2" cols="75" disabled></textarea>
+		            </div>		            
+		
+		            <div class="pure-u-1 pure-u-md-3-24">
+		                <label for="numPages">Number of Pages</label>		                
+		                <input type="text" id="numPages">
+		            </div>
+		            <div class="pure-u-1 pure-u-md-5-24">
+		            </div>
+		            <div class="pure-u-1 pure-u-md-3-24">
+		                <label for="numFields">Number of Fields</label>		                
+		                <input type="text" id="numFields" class="pure-input-1-2">
+		            </div>
+		        </div>
+		
+		    </fieldset>
+		</form>
 	</div>
 </div>
 <br>
