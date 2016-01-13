@@ -39,6 +39,7 @@
 	<link rel="stylesheet" href="<%=request.getContextPath()%>/css/jDialog.css">
 	<script language="Javascript" src="<%=request.getContextPath()%>/css/jDialog.js"></script>
 	
+	<link rel="stylesheet" href="<%=request.getContextPath()%>/css/pikaday.css">
 	
 </head>
 
