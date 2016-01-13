@@ -7,9 +7,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
 import org.apache.poi.ss.usermodel.DataValidation;
@@ -517,10 +519,20 @@ public class DocumentAdminServiceImpl extends BaseResource implements DocumentAd
 	 * @see com.myorg.tools.documentworkflow.rest.resources.DocumentAdminService#getDocTagDump()
 	 */
 	@Override
-	public Response getAgreementDataDump() {
+	public Response getAgreementDataDump(Date rptFromDt, Date rptToDt) {
 		
 		try {
-			AHTWrapper ahtWrapper = documentAdminDAO.extractAgreementAHTInfo();
+			if (DocumentWorkflowToolUtility.isEmpty(rptFromDt)) {
+				rptFromDt = new Date();
+			}
+			if (DocumentWorkflowToolUtility.isEmpty(rptToDt)) {
+				rptToDt = new Date();
+			}
+			rptFromDt = DocumentWorkflowToolUtility.populateDateTime(rptFromDt, 0, 0, 0);
+			String rptFromDate = DocumentWorkflowToolUtility.convertDateToString(rptFromDt);
+			rptToDt = DocumentWorkflowToolUtility.populateDateTime(rptToDt, 23, 59, 59);
+			String rptToDate = DocumentWorkflowToolUtility.convertDateToString(rptToDt);
+			AHTWrapper ahtWrapper = documentAdminDAO.extractAgreementAHTInfo(rptFromDate, rptToDate);
 			
 			List<DocWkflwProcess> agrmtList = ahtWrapper.getDocRepoList();
 			Map<String, AHTBean> ahtMap  = ahtWrapper.getAhtMap();
@@ -691,10 +703,20 @@ public class DocumentAdminServiceImpl extends BaseResource implements DocumentAd
 	
 	
 	@Override
-	public Response getAgreementsAuditTrail() {
+	public Response getAgreementsAuditTrail(Date rptFromDt, Date rptToDt) {
 		
 		try {
-			List<DocWkflwProcess> agrmtList = documentAdminDAO.extractAgreementsAuditTrail();
+			if (DocumentWorkflowToolUtility.isEmpty(rptFromDt)) {
+				rptFromDt = new Date();
+			}
+			if (DocumentWorkflowToolUtility.isEmpty(rptToDt)) {
+				rptToDt = new Date();
+			}
+			rptFromDt = DocumentWorkflowToolUtility.populateDateTime(rptFromDt, 0, 0, 0);
+			String rptFromDate = DocumentWorkflowToolUtility.convertDateToString(rptFromDt);
+			rptToDt = DocumentWorkflowToolUtility.populateDateTime(rptToDt, 23, 59, 59);
+			String rptToDate = DocumentWorkflowToolUtility.convertDateToString(rptToDt);
+			List<DocWkflwProcess> agrmtList = documentAdminDAO.extractAgreementsAuditTrail(rptFromDate, rptToDate);
 			
 			System.out.println("agrmtList size..."+agrmtList.size());
 			
@@ -734,7 +756,7 @@ public class DocumentAdminServiceImpl extends BaseResource implements DocumentAd
 		headerStyle.setFillBackgroundColor(headerColor);
 		headerStyle.setFont(headerFont);
 
-		for (int i = 0; i < 16; i++) {
+		for (int i = 0; i < 12; i++) {
 			XSSFCell cell = headerRow.createCell(i);
 			cell.setCellStyle(headerStyle);
 
@@ -788,7 +810,7 @@ public class DocumentAdminServiceImpl extends BaseResource implements DocumentAd
 			for(DocWkflwProcess r : agrmtList){
 				XSSFRow row = sheet.createRow(i);
 				
-				for(int j=0; j<16; j++){
+				for(int j=0; j<12; j++){
 					XSSFCell cell = row.createCell(j);
 					
 					switch (j) {

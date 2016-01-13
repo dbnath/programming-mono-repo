@@ -475,26 +475,50 @@ public class DocumentAdminDAOImpl extends BaseJDBCTemplate implements DocumentAd
 		}
 	}	
 	
-	public AHTWrapper extractAgreementAHTInfo() throws SQLException, Exception {
+	public AHTWrapper extractAgreementAHTInfo(String rptFromDate, String rptToDate) throws SQLException, Exception {
 		String SQL = DocumentWorkflowToolConstant.AGRMT_DATA_DUMP;
 		String SQL1 = DocumentWorkflowToolConstant.QUERY_FOR_AHT;
 		
 		AHTWrapper ahtWrapper = new AHTWrapper();
 		List<DocWkflwProcess> docRepoList = null;
+		List<DocWkflwProcess> updatedAgreementDump = null;
 		List<AHTBean> ahtList = null;
+		Map<String, AHTBean> ahtMap = null;
 		try{
-			docRepoList = this.getJdbcTemplateObject().query(SQL, new AgreementDumpMapper());
-			ahtList = this.getJdbcTemplateObject().query(SQL1, new AHTRowMapper());
+			docRepoList = this.getJdbcTemplateObject().query(SQL, new Object[]{rptFromDate, rptToDate}, new AgreementDumpMapper());
+			ahtList = this.getJdbcTemplateObject().query(SQL1, new Object[]{rptFromDate, rptToDate}, new AHTRowMapper());
 			
-			Map<String, AHTBean> ahtMap = calculateAHT(ahtList);
-			
+			if (!DocumentWorkflowToolUtility.isEmptyList(docRepoList)) {
+				updatedAgreementDump = populateFinalAgreementDump(docRepoList);
+			}
+			if (!DocumentWorkflowToolUtility.isEmptyList(ahtList)) {
+				ahtMap = calculateAHT(ahtList);
+			}
 			ahtWrapper.setAhtMap(ahtMap);
-			ahtWrapper.setDocRepoList(docRepoList);
+			ahtWrapper.setDocRepoList(updatedAgreementDump);
 			
 		} catch(EmptyResultDataAccessException e) {
 			docRepoList = null;
+			ahtList = null;
 		}
 		return ahtWrapper;
+	}
+	
+	private List<DocWkflwProcess> populateFinalAgreementDump(List<DocWkflwProcess> docRepoList) {
+		String currAgrId = "";
+		String smeComments = "";
+		for(int i=0; i< docRepoList.size(); i++){
+			
+			DocWkflwProcess docWkflwPr = docRepoList.get(i);
+			if (DocumentWorkflowToolUtility.equalStrings(currAgrId, docWkflwPr.getAgreementId(), false, true)) {
+				smeComments = smeComments + " | "+docWkflwPr.getSmeComments();
+				docWkflwPr.setSmeComments(smeComments);
+				docRepoList.remove(i-1);
+			}
+			currAgrId = docWkflwPr.getAgreementId();
+			smeComments = docWkflwPr.getSmeComments();
+		}
+		return docRepoList;
 	}
 	
 	private Map<String, AHTBean> calculateAHT(List<AHTBean> ahtList){
@@ -527,6 +551,7 @@ public class DocumentAdminDAOImpl extends BaseJDBCTemplate implements DocumentAd
 					if (aht.getStatusCode() == 22){
 						currentRole = aht.getRoleId();
 					}
+					System.out.println(ahtTemp.getAgreementId()+"...startTime..."+startTime+"...StopTime..."+stopTime);
 					setAHTBeanHeldTime(ahtTemp, currentRole, ahtTime, makerHeldTime, checkerHeldTime, smeHeldTime);
 					startTime = null;
 					stopTime = null;
@@ -605,12 +630,12 @@ public class DocumentAdminDAOImpl extends BaseJDBCTemplate implements DocumentAd
 		}
 	}
 	
-	public List<DocWkflwProcess> extractAgreementsAuditTrail() throws SQLException, Exception {
+	public List<DocWkflwProcess> extractAgreementsAuditTrail(String rptFromDate, String rptToDate) throws SQLException, Exception {
 		String SQL = DocumentWorkflowToolConstant.QUERY_FOR_AUDITTRAIL;
 		
 		List<DocWkflwProcess> docRepoList = null;
 		try{
-			docRepoList = this.getJdbcTemplateObject().query(SQL, new AgreementAuditTrailMapper());
+			docRepoList = this.getJdbcTemplateObject().query(SQL, new Object[]{rptFromDate, rptToDate}, new AgreementAuditTrailMapper());
 		} catch(EmptyResultDataAccessException e) {
 			docRepoList = null;
 		}

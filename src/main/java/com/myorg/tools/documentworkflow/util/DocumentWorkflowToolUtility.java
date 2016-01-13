@@ -1,5 +1,7 @@
 package com.myorg.tools.documentworkflow.util;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -157,5 +159,24 @@ public class DocumentWorkflowToolUtility {
 		return 0.0;
 	}
 	
+	public static Date populateDateTime(Date dt, Integer hour, Integer min, Integer sec) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(dt);
+		//cal.set(Calendar.DAY_OF_MONTH, 12);
+		cal.set(Calendar.HOUR_OF_DAY, hour);
+		cal.set(Calendar.MINUTE, min);
+		cal.set(Calendar.SECOND, sec);
+		return cal.getTime();
+	}
 	
+	public static String convertDateToString(Date dt){
+		String strDate = "";
+		try{
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			strDate = dateFormat.format(dt);	
+		}catch(Exception e){
+			
+		}
+		return strDate;
+    }
 }

@@ -1,6 +1,7 @@
 package com.myorg.tools.documentworkflow.rest.resources;
 
 import java.io.InputStream;
+import java.util.Date;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -116,12 +117,12 @@ public interface DocumentAdminService {
 	   @GET
 	   @Path("/dump")
 	   @Produces("application/vnd.ms-excel")	   
-	   public Response getAgreementDataDump();
+	   public Response getAgreementDataDump(@QueryParam("rptFromDt") Date rptFromDt, @QueryParam("rptToDt") Date rptToDt);
 
 	   @GET
 	   @Path("/auditdump")
 	   @Produces("application/vnd.ms-excel")	   
-	   public Response getAgreementsAuditTrail();
+	   public Response getAgreementsAuditTrail(@QueryParam("rptFromDt") Date rptFromDt, @QueryParam("rptToDt") Date rptToDt);
 	   
 	   /*@POST
 	   @Path("/updatedoctypes")

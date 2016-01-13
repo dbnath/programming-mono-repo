@@ -41,11 +41,11 @@ public interface DocumentAdminDAO {
 
 	public boolean uploadDocumentInformation(List<Document> docList, String userId) throws SQLException, Exception;
 	
-	public AHTWrapper extractAgreementAHTInfo() throws SQLException, Exception;
+	public AHTWrapper extractAgreementAHTInfo(String rptFromDate, String rptToDate) throws SQLException, Exception;
 	
 	public boolean uploadAgreementInformation(List<AgreementWorkflow> docList, String userId) throws SQLException, Exception;
 	
-	public List<DocWkflwProcess> extractAgreementsAuditTrail() throws SQLException, Exception;
+	public List<DocWkflwProcess> extractAgreementsAuditTrail(String rptFromDate, String rptToDate) throws SQLException, Exception;
 
 	public List<AgreementErrorType> populateErrorTypes() throws SQLException, Exception;
 	
