@@ -43,7 +43,7 @@
 
 </div> <!-- end of main container -->
 <div id="reportInput" style="padding-top:10px; padding-left:10px; padding-right:10px">
-	<table border="0" style="width:35%; height:50px">
+	<!-- <table border="0" style="width:35%; height:50px">
 		<tr>
 			<td style="text-align:left;padding:2px;width:120px;font-family:'Arial Bold', 'Arial';font-style:bold;font-size:16px;" colspan="4" >
 				<b>Select Date:</b>
@@ -54,9 +54,9 @@
 		</tr>		
 		<tr>
 			<td style="text-align:right;padding-left:10px;"><b>From Date:</b></td>		
-			<td><input type="text" value="Replace with Date Picker"></td>	
+			<td><input type="text" value="" id="fromdate"></td>	
 			<td style="text-align:right;padding-left:10px;"><b>To Date:</b></td>		
-			<td><input type="text" value="Replace with Date Picker"></td>			
+			<td><input type="text" value="" id="todate"></td>			
 		</tr>
 		<tr>
 			<td colspan="4">&nbsp;</td>
@@ -68,11 +68,59 @@
 			</button>
 			</td>
 		</tr>		
-	</table>
+	</table> -->
+	
+	<form class="pure-form" onsubmit="return false;">
+	    <fieldset>
+	        <legend>Report</legend>
+	        <div class="pure-control-group pure-u-1-6">
+				<label for="fromdate">From Date</label>
+		        <input type="text" placeholder="From Date" id="fromdate">
+		    </div>
+		    <div class="pure-control-group pure-u-1-6">
+		        <label for="todate">To Date</label>
+		        <input type="text" placeholder="To Date" id="todate">		        
+		    </div>
+	    	<button class="pure-button" id="submitRpt" onclick="getReport();" style="margin-top: 15px">Submit Report</button>
+	    </fieldset>
+	</form>
+	
 </div> <!-- end of main container -->
 
 <%@ include file="../common/footer.jsp" %>
 
+<script language="Javascript" src="<%=request.getContextPath()%>/css/pikaday.js"></script>
+
 <script>
 	ahc = new admin();
+
+    var picker = new Pikaday(
+    {
+        field: document.getElementById('fromdate'),
+        firstDay: 1,
+        minDate: new Date(2000, 0, 1),
+        maxDate: new Date(2020, 12, 31),
+        yearRange: [2000,2020]
+    });
+    
+    var picker = new Pikaday(
+    {
+        field: document.getElementById('todate'),
+        firstDay: 1,
+        minDate: new Date(2000, 0, 1),
+        maxDate: new Date(2020, 12, 31),
+        yearRange: [2000,2020]
+    });
+	
+    /*
+    	check https://github.com/dbushell/Pikaday for further implementation
+    	but be careful to include oter js e.g. moment.js that may screw up ie8 support
+    */
+    //move it to admin.js
+    //make from date and to date disabled to avoid hand validation
+	function getReport() {
+		alert(document.getElementById('fromdate').value);
+		return false;
+	}
+    
 </script>
