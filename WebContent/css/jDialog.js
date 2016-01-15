@@ -123,10 +123,6 @@ https://github.com/litson/jDialog
         //
         self.content(options.content);
     
-        self.addButton('Cancel', 'destory', function () {
-            self.remove();
-        });
-    
         //
         if (options.modal) {
             self.showModal();
@@ -138,8 +134,15 @@ https://github.com/litson/jDialog
     
         //
         if (options.callBack) {
-            self.addButton('Okey', 'apply', options.callBack);
-        }
+			self.addButton('Cancel', 'destory', function () {
+				self.remove();
+			});	            
+			self.addButton('Ok', 'apply', options.callBack);		
+        } else {
+			self.addButton('Ok', 'destory', function () {
+				self.remove();
+			});		
+		}
     
         wrapper.addEventListener('click', _eventRouter.bind(self), false);
         wrapper.addEventListener('touchstart', _toggleClass, false);
@@ -444,7 +447,7 @@ https://github.com/litson/jDialog
             // æ¨¡æ‹Ÿé‡è½½
             var fnKey = ("jDialog" + Math.random()).replace(/\D/g, '');
     
-            var defaultText = 'Okey';
+            var defaultText = 'Ok';
     
             // å¦‚æžœç¬¬ä¸€ä¸ªå‚æ•°æ˜¯ä¸€ä¸ªfunction
             if (isFunction(text)) {

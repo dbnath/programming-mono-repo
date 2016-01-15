@@ -15,7 +15,6 @@ public class AgreementErrorTypeMapper implements RowMapper<AgreementErrorType> {
       if (! DocumentWorkflowToolUtility.isEmpty(rs)) {
     	  docType.setErrorTypeId(rs.getInt("ID_ERR_REASON"));
     	  docType.setErrorTypeName(rs.getString("TX_ERR_REASON"));
-    	  docType.setErrorTypeCode(rs.getString("NM_ERR_REASON"));
       }
       return docType;
     }

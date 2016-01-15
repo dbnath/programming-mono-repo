@@ -48,11 +48,8 @@ var landing = function () {
 	function landinginitMyListResponse(responseData) {
 		$("myGrid").innerHTML = responseData.responseText;
 		if($("mytable")){
-		//setTimeout(function(){
 			sorter.init();
 		}
-		//}, 2000);
-		
 	}
 	
 	this.setAssignment=setAssignment;
@@ -68,7 +65,7 @@ var landing = function () {
 	this.assignMe=assignMe;
 	function assignMe(){
 		if(selectedItemsTeamList.length == 0){
-			alert("Please select at least one agreement");
+			showMessage("Please select at least one agreement",'Select Agreement');
 			return false;
 		}
 		serviceObj.assignToMe(selectedItemsTeamList,assignRespFn);
@@ -79,11 +76,11 @@ var landing = function () {
 	function assignRespFn(responseData){
 		
 		if(responseData.responseText === "true"){
-			alert("Assignments assigned successfully. Please go to My Inbox to process further.");
+			showMessage("Assignments assigned successfully. Please check My Inbox","SUCCESS");
 			//resetAssignmentList();
 			reloadGridData();
 		} else {
-			alert("There was an error in the process. Please try again.");
+			showMessage("There was an error in the process. <br> Please try again.","Error");
 		}
 	}
 	
@@ -104,16 +101,7 @@ var landing = function () {
 			if(selectedItemsMyList == null){
 				selectedItemsMyList = control.value;
 			} else {
-				if(isIE () && isIE () < 9) {
-					alert('You can work on one agreement at a time');
-				}
-				else {
-					jDialog('You can work on one agreement at a time.');
-					jDialog({
-					  title:"Start",
-					  content:"You can work on one agreement at a time."
-					});
-				}
+				showMessage('You can work on one agreement at a time','Select Agreement');
 				control.checked=false;
 				return false;
 			}
@@ -204,15 +192,6 @@ var landing = function () {
 	
 	this.startClick=startClick;
 	function startClick(){
-		/*if(selectedItemsMyList.length == 0){
-			alert("Please select an agreement");
-			return false;
-		}
-		if(selectedItemsMyList.length > 1){
-			alert("You can work with only one Agreement at a time");
-			return false;
-		}*/
-		
 		var inputObj = {};
 		inputObj.agreementId=selectedItemsMyList;//[0];
 		inputObj.roleId=$("selectedRoleId").value;
@@ -271,16 +250,8 @@ var landing = function () {
 					}				
 				}
 			}
-			/*$('checkerStart').disabled=true;
-			$('checkerComplete').disabled=false;
-			$('checkerStatus').disabled=false;
-			$('checkerComments').value='';
-			$('checkerStatus').value=-1;			
-			selectedItemsMyList = null;*/
-			
 			disableAll();
 			
-			//$('makerActionsPanel').style="display:none";
 		}
 		
 	}
@@ -303,26 +274,18 @@ var landing = function () {
 	
 	this.completeClick=completeClick;
 	function completeClick(){
-		/*if(selectedItemsMyList.length == 0){
-			alert("Please select an agreement");
-			return false;
-		}
-		if(selectedItemsMyList.length > 1){
-			alert("You can work with only one Agreement at a time");
-			return false;
-		}*/
 		
 		if($("selectedRoleId").value == "2" || $("selectedRoleId").value == "3"){
 			if ($('numPages').value == null || $('numPages').value == '' || $('numPages').value == 0) {
-				alert("Please fill up Number of Pages in Comment Section befor marking the agreement as Complete...");
+				showMessage("Please fill up Number of Pages in Comment Section...","Alert");
 				return false;
 			}
 			if ($('numFields').value == null || $('numFields').value == '' || $('numFields').value == 0) {
-				alert("Please fill up Number of Fields in Comment Section befor marking the agreement as Complete...");
+				showMessage("Please fill up Number of Fields in Comment Section...","Alert");
 				return false;
 			}
 			if ($('checkerComments').value == null || $('checkerComments').value == '') {
-				alert("Please fill up Comments in Comment Section befor marking the agreement as Complete...");
+				showMessage("Please fill up Comments in Comment Section...","Alert");
 				return false;
 			}
 		}
@@ -390,44 +353,43 @@ var landing = function () {
 					}
 				}
 			}
-			/*$('checkerStart').disabled=true;
-			$('checkerHold').disabled=true;
-			$('checkerComplete').disabled=true;
-			$('checkerStatus').disabled=true;	
-			$('checkerComments').disabled=true;	
-			$('checkerComments').value='';
-			$('checkerStatus').value=-1;
-			
-			selectedItemsMyList = null;*/
-			
 			disableAll();
 		}
 	}	
 	
 	this.holdClick=holdClick;
 	function holdClick(){
-		/*if(selectedItemsMyList.length == 0){
-			alert("Please select an agreement");
-			return false;
+		if($("selectedRoleId").value == "1" && $('checkerStatus').value == 15){				
+			if($('checkerComments').value == null || $('checkerComments').value == ''){
+				showMessage('Please fill in Comments Section','Alert');
+				return false;
+			}
 		}
-		if(selectedItemsMyList.length > 1){
-			alert("You can work with only one Agreement at a time");
-			return false;
-		}*/
+
+		if($("selectedRoleId").value == "2" && $('checkerStatus').value == 15){
+			if($('checkerComments').value == null || $('checkerComments').value == '' || $('errorReasonList').value == -1){
+				showMessage('Please fill in both Comments Section and Error Reason','Alert');
+				return false;
+			}
+		}
+		
+		if($("selectedRoleId").value == "3" && $('checkerStatus').value == 21){
+			if($('checkerComments').value == null || $('checkerComments').value == ''){
+				showMessage('Please fill in Comments Section','Alert');
+				return false;
+			}
+		}	
+		
 		if(isIE () && isIE () < 9) {
-			var result = confirm("Do you realy want to hold it?");
+			var result = confirm("Hold Agreement. Are you sure?");
 			if (result) {
 				holdwork();
 			}
 		}
 		else {
-			/*jDialog('Do you realy want to hold it?',function(){
-				holdwork();
-				jDialog.currentDialog.remove();
-			});*/
 			jDialog({
-			  title:"Hold",
-			  content:"Do you realy want to hold it?",
+			  title:"Hold Agreement",
+			  content:"Hold Agreement. Are you sure?",
 			  callBack:function(){
 				  holdwork();
 				  jDialog.currentDialog.remove();
@@ -439,28 +401,7 @@ var landing = function () {
 	
 	this.holdwork=holdwork;
 	function holdwork() {
-		if($("selectedRoleId").value == "1" && $('checkerStatus').value == 15){				
-			if($('checkerComments').value == null || $('checkerComments').value == ''){
-				alert('Please fill in comments section');
-				return false;
-			}
-		}
-
-		if($("selectedRoleId").value == "2" && $('checkerStatus').value == 15){
-			if($('checkerComments').value == null || $('checkerComments').value == '' || $('errorReasonList').value == -1){
-				alert('Please fill in both comments section and Error Reason');
-				return false;
-			}
-		}
-		
-		if($("selectedRoleId").value == "3" && $('checkerStatus').value == 21){
-			if($('checkerComments').value == null || $('checkerComments').value == ''){
-				alert('Please fill in comments section');
-				return false;
-			}
-		}		
-		
-		
+	
 		var inputObj = {};
 		inputObj.agreementId=selectedItemsMyList;//[0];
 		inputObj.roleId=$("selectedRoleId").value;
@@ -519,19 +460,6 @@ var landing = function () {
 					}
 				}
 			}
-			/*$('checkerStart').disabled=true;
-			$('checkerHold').disabled=true;
-			$('checkerComplete').disabled=true;
-			$('checkerStatus').disabled=true;	
-			$('checkerComments').disabled=true;	
-			$('checkerComments').value='';
-			$('checkerStatus').value=-1;
-			
-			if($("selectedRoleId").value == "3"){
-				$('checkerComplete').disabled=false;
-			}
-			selectedItemsMyList = null;*/
-			
 			disableAll();
 		}
 	}	
@@ -557,18 +485,17 @@ var landing = function () {
 		}
 	}
 	
-	function showMessage(msg,msgType){
-		//if($('msgPanel')){
-			//document.getElementById('msgPanel').style="display:''";
-			/*if(msgType === 'I'){
-				$('msgPanel').style="color:Blue";
-			}
-			if(msgType === 'E'){
-				$('msgPanel').style="color:Red";
-			}*/
-			//$('msgPanel').outerHTML = "<div style='display:visible'>"+msg+"</div>";
-		//}
-		window.showModalDialog(msg);
+	function showMessage(msg,msgTitle){
+		if(isIE () && isIE () < 9) {
+			alert(msg);
+		}
+		else {
+			jDialog({
+			  title:msgTitle,
+			  content:msg				  
+			});
+		}
+		
 	}	
 	  
 } 

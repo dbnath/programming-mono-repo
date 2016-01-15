@@ -32,7 +32,7 @@ var commonframework = function() {
 			postBody = requestObject.postBody;
 		}
 		if(requestObject.headers) {
-			for ( var prop in requestObject.headers) {
+			for ( var prop in requestObject.headers) {				
 				ajaxObject.setRequestHeader(prop, requestObject.headers[prop]);	
 			}
 		}

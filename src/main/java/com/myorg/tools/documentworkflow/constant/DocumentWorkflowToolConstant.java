@@ -85,8 +85,8 @@ public class DocumentWorkflowToolConstant {
 	
 	public static String ERR_TYPE_POPULATE_SQL = "select * from ERR_REASON";
 	
-	public static String UPD_ERR_REASON = "UPDATE ERR_REASON SET NM_ERR_REASON = ?, TX_ERR_REASON = ? WHERE ID_ERR_REASON = ?";
-	public static String INS_ERR_REASON = "INSERT INTO ERR_REASON (ID_ERR_REASON, NM_ERR_REASON, TX_ERR_REASON) VALUES (?,?,?)";
+	public static String UPD_ERR_REASON = "UPDATE ERR_REASON SET TX_ERR_REASON = ? WHERE ID_ERR_REASON = ?";
+	public static String INS_ERR_REASON = "INSERT INTO ERR_REASON (ID_ERR_REASON, TX_ERR_REASON) VALUES (?,?)";
 	public static String SEL_ERR_REASON_CD = "SELECT MAX(ID_ERR_REASON) FROM ERR_REASON";	
 	
 	public static String UPD_AGR_TYPE = "UPDATE AGREEMENT_TYPE SET TX_AGREEMENT_TYPE = ? WHERE ID_AGREEMENT_TYPE = ?";
@@ -124,5 +124,7 @@ public class DocumentWorkflowToolConstant {
 	public static String UPD_USER = "UPDATE USER SET NM_USER = ?, USER_STATUS = ? , UPDATED_BY = ?, UPDATE_DT = ? WHERE ID_USER = ?";
 	
 	public static String UPD_USER_ROLE = "UPDATE USER_ROLE_MAP SET ID_ROLE=?,UPDATED_BY=?, UPDATE_DT=? WHERE ID_USER = ?";
+	
+	public static String GET_ACTIVE_MAKER_LIST = "SELECT a.ID_USER FROM USER a, USER_ROLE_MAP b WHERE a.ID_USER=b.ID_USER AND a.USER_STATUS= 'Active' AND b.ID_ROLE=1";
 	
 }

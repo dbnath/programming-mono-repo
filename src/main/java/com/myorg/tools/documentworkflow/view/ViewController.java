@@ -112,7 +112,6 @@ public class ViewController {
 				errorList = documentAdminDAO.populateErrorTypes();
 				AgreementErrorType blankErrorType = new AgreementErrorType();
 				blankErrorType.setErrorTypeId(-1);
-				blankErrorType.setErrorTypeCode("");
 				blankErrorType.setErrorTypeName("");
 				errorList.add(0, blankErrorType);
 				
@@ -193,7 +192,6 @@ public class ViewController {
 				errorList = documentAdminDAO.populateErrorTypes();
 				AgreementErrorType blankErrorType = new AgreementErrorType();
 				blankErrorType.setErrorTypeId(-1);
-				blankErrorType.setErrorTypeCode("");
 				blankErrorType.setErrorTypeName("");
 				errorList.add(0, blankErrorType);
 				

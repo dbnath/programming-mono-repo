@@ -69,7 +69,18 @@ public class DocumentAdminDAOImpl extends BaseJDBCTemplate implements DocumentAd
 			docTypeList = null;
 		}
 		return docTypeList;
-	}	
+	}
+	
+	public List<String> populateMakerList() throws SQLException, Exception{
+		String SQL = DocumentWorkflowToolConstant.GET_ACTIVE_MAKER_LIST;
+		List<String> makerList = null;
+		try{
+			makerList = this.getJdbcTemplateObject().queryForList(SQL, String.class);
+		} catch(EmptyResultDataAccessException e) {
+			makerList = new ArrayList<String>();
+		}
+		return makerList;		
+	}
 	
 	public List<AgreementErrorType> populateErrorTypes() throws SQLException, Exception {
 		String SQL = DocumentWorkflowToolConstant.ERR_TYPE_POPULATE_SQL;
@@ -443,7 +454,7 @@ public class DocumentAdminDAOImpl extends BaseJDBCTemplate implements DocumentAd
 	
 	private void updateErrorReason(AgreementErrorType type,JdbcTemplate jdbcTemplate ) throws SQLException, Exception{
 		String UPD_SQL = DocumentWorkflowToolConstant.UPD_ERR_REASON;
-		jdbcTemplate.update(UPD_SQL, type.getErrorTypeCode(),type.getErrorTypeName(),type.getErrorTypeId());
+		jdbcTemplate.update(UPD_SQL, type.getErrorTypeName(),type.getErrorTypeId());
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -454,7 +465,7 @@ public class DocumentAdminDAOImpl extends BaseJDBCTemplate implements DocumentAd
 		Integer errTypId = jdbcTemplate.queryForInt(SEL_SQL);
 		
 		if(errTypId != null) {
-			jdbcTemplate.update(INS_SQL, errTypId +1, type.getErrorTypeCode(),type.getErrorTypeName());
+			jdbcTemplate.update(INS_SQL, errTypId +1, type.getErrorTypeName());
 		}
 	}
 	

@@ -46,7 +46,8 @@
   text-indent: 1em;
   height: 3em;
   line-height: 3em;
-  background-color: #f7f7f7;
+  background-color: #9BA7EB;
+  font-weight:bold;
 }
 .dialog-body {
   padding: .5em;
@@ -69,6 +70,11 @@
   padding: .8em 0;
   margin: .8em;
   -webkit-user-select: none;
+  background-color: #CCE1E8;
+  width: 20%;
+  position: relative;
+  left: 10em;
+  font-weight: bold;
 }
 .dialog-btn.active {
   opacity: .7;

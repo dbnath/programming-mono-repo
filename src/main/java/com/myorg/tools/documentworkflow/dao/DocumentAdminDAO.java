@@ -52,6 +52,8 @@ public interface DocumentAdminDAO {
 	public boolean uploadErrorReasons(List<AgreementErrorType> docList, String userId) throws SQLException, Exception;
 	
 	public boolean uploadAgreementTypes(List<AgreementType> docList, String userId) throws SQLException, Exception;
+	
+	public List<String> populateMakerList() throws SQLException, Exception;
 
 	/*public Boolean updateDocumentTypes(List<DocumentType> docTypeList) throws SQLException, Exception;
 

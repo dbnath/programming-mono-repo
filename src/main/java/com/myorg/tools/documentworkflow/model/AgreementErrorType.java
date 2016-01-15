@@ -8,7 +8,7 @@ public class AgreementErrorType implements Serializable, ReverseMappable{
 	
 	private Integer errorTypeId;
 	private String errorTypeName;
-	private String errorTypeCode;
+	//private String errorTypeCode;
 	
 	
 	
@@ -48,15 +48,4 @@ public class AgreementErrorType implements Serializable, ReverseMappable{
 	public void setErrorTypeName(String errorTypeName) {
 		this.errorTypeName = errorTypeName;
 	}
-
-	public String getErrorTypeCode() {
-		return errorTypeCode;
-	}
-
-	public void setErrorTypeCode(String errorTypeCode) {
-		this.errorTypeCode = errorTypeCode;
-	}
-	
-	
-
 }

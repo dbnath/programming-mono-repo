@@ -69,11 +69,11 @@ var adminlanding = function () {
 	this.assignRespFn=assignRespFn;
 	function assignRespFn(responseData){
 		if(responseData.responseText === "true"){
-			alert("Assignment assigned to you for further action.");
+			showMessage("Assignment assigned to you for further action.","Notification");
 			//resetAssignmentList();
 			reloadGridData();
 		} else {
-			alert("There was an error in the process. Please try again.");
+			showMessage("There was an error in the process. Please try again.","Error");
 		}
 	}
 	
@@ -94,7 +94,7 @@ var adminlanding = function () {
 			if(selectedItemsMyList == null){
 				selectedItemsMyList = control.value;
 			} else {
-				alert('You can work on one agreement at a time');
+				showMessage('You can work on one agreement at a time','Select Agreement');
 				//jDialog('You can work on one agreement at a time.');
 				control.checked=false;
 				return false;
@@ -189,15 +189,6 @@ var adminlanding = function () {
 	
 	this.startClick=startClick;
 	function startClick(){
-		/*if(selectedItemsMyList.length == 0){
-			alert("Please select an agreement");
-			return false;
-		}
-		if(selectedItemsMyList.length > 1){
-			alert("You can work with only one Agreement at a time");
-			return false;
-		}*/
-		
 		var inputObj = {};
 		inputObj.agreementId=selectedItemsMyList;//[0];
 		inputObj.roleId=$("viewId").value;
@@ -256,16 +247,7 @@ var adminlanding = function () {
 					}				
 				}
 			}
-			/*$('checkerStart').disabled=true;
-			$('checkerComplete').disabled=false;
-			$('checkerStatus').disabled=false;
-			$('checkerComments').value='';
-			$('checkerStatus').value=-1;			
-			selectedItemsMyList = null;*/
-			
 			disableAll();
-			
-			//$('makerActionsPanel').style="display:none";
 		}
 		
 	}
@@ -288,26 +270,17 @@ var adminlanding = function () {
 	
 	this.completeClick=completeClick;
 	function completeClick(){
-		/*if(selectedItemsMyList.length == 0){
-			alert("Please select an agreement");
-			return false;
-		}
-		if(selectedItemsMyList.length > 1){
-			alert("You can work with only one Agreement at a time");
-			return false;
-		}*/
-		
 		if($("viewId").value == "2" || $("viewId").value == "3"){
 			if ($('numPages').value == null || $('numPages').value == '' || $('numPages').value == 0) {
-				alert("Please fill up Number of Pages in Comment Section befor marking the agreement as Complete...");
+				showMessage("Please fill up Number of Pages in Comment Section...","Alert");
 				return false;
 			}
 			if ($('numFields').value == null || $('numFields').value == '' || $('numFields').value == 0) {
-				alert("Please fill up Number of Fields in Comment Section befor marking the agreement as Complete...");
+				showMessage("Please fill up Number of Fields in Comment Section...","Alert");
 				return false;
 			}
 			if ($('checkerComments').value == null || $('checkerComments').value == '') {
-				alert("Please fill up Comments in Comment Section befor marking the agreement as Complete...");
+				showMessage("Please fill up Comments in Comment Section...","Alert");
 				return false;
 			}
 		}
@@ -374,52 +347,51 @@ var adminlanding = function () {
 					}
 				}
 			}
-			/*$('checkerStart').disabled=true;
-			$('checkerHold').disabled=true;
-			$('checkerComplete').disabled=true;
-			$('checkerStatus').disabled=true;	
-			$('checkerComments').disabled=true;	
-			$('checkerComments').value='';
-			$('checkerStatus').value=-1;
-			
-			selectedItemsMyList = null;*/
-			
 			disableAll();
 		}
 	}	
 	
 	this.holdClick=holdClick;
 	function holdClick(){
-		/*if(selectedItemsMyList.length == 0){
-			alert("Please select an agreement");
-			return false;
-		}
-		if(selectedItemsMyList.length > 1){
-			alert("You can work with only one Agreement at a time");
-			return false;
-		}*/
+
 		//jDialog('Do you realy want to hold it?',function(){
 			if($("viewId").value == "1" && $('checkerStatus').value == 15){				
 				if($('checkerComments').value == null || $('checkerComments').value == ''){
-					alert('Please fill in comments section');
+					showMessage('Please fill in Comments Section','Alert');
 					return false;
 				}
 			}
 	
 			if($("viewId").value == "2" && $('checkerStatus').value == 15){
 				if($('checkerComments').value == null || $('checkerComments').value == '' || $('errorReasonList').value == -1){
-					alert('Please fill in both comments section and Error Reason');
+					showMessage('Please fill in bothComments Section and Error Reason','Alert');
 					return false;
 				}
 			}
 			
 			if($("viewId").value == "3" && $('checkerStatus').value == 21){
 				if($('checkerComments').value == null || $('checkerComments').value == ''){
-					alert('Please fill in comments section');
+					showMessage('Please fill in Comments Section','Alert');
 					return false;
 				}
 			}		
 			
+			if(isIE () && isIE () < 9) {
+				var result = confirm("Hold Agreement. Are you sure?");
+				if (result) {
+					holdwork();
+				}
+			}
+			else {
+				jDialog({
+				  title:"Hold Agreement",
+				  content:"Hold Agreement. Are you sure?",
+				  callBack:function(){
+					  holdwork();
+					  jDialog.currentDialog.remove();
+				  }
+				});
+			}			
 			
 			var inputObj = {};
 			inputObj.agreementId=selectedItemsMyList;//[0];
@@ -433,9 +405,24 @@ var adminlanding = function () {
 			inputObj.numPages=$('numPages').value;
 			inputObj.numFields=$('numFields').value;
 			serviceObj.holdProcess(inputObj,holdRespFn);
-			//jDialog.currentDialog.remove();
-		//});
+
 	}
+	
+	this.holdwork=holdwork;
+	function holdwork() {
+		var inputObj = {};
+		inputObj.agreementId=selectedItemsMyList;//[0];
+		inputObj.roleId=$("viewId").value;
+		inputObj.statusCode=$('checkerStatus').value;
+		inputObj.user={userId:$("selectedUserId").value, roleId:$("viewId").value};
+		inputObj.comment=$('checkerComments').value;
+		if($("viewId").value == "2"){
+		  inputObj.errorReasonCode=$('errorReasonList').value;
+		}
+		inputObj.numPages=$('numPages').value;
+		inputObj.numFields=$('numFields').value;
+		serviceObj.holdProcess(inputObj,holdRespFn);
+	}	
 	
 	this.holdRespFn=holdRespFn;
 	function holdRespFn(responseData){
@@ -481,19 +468,6 @@ var adminlanding = function () {
 					}
 				}
 			}
-			/*$('checkerStart').disabled=true;
-			$('checkerHold').disabled=true;
-			$('checkerComplete').disabled=true;
-			$('checkerStatus').disabled=true;	
-			$('checkerComments').disabled=true;	
-			$('checkerComments').value='';
-			$('checkerStatus').value=-1;
-			
-			if($("selectedRoleId").value == "3"){
-				$('checkerComplete').disabled=false;
-			}
-			selectedItemsMyList = null;*/
-			
 			disableAll();
 		}
 	}	
@@ -521,18 +495,17 @@ var adminlanding = function () {
 		}
 	}
 	
-	function showMessage(msg,msgType){
-		//if($('msgPanel')){
-			//document.getElementById('msgPanel').style="display:''";
-			/*if(msgType === 'I'){
-				$('msgPanel').style="color:Blue";
-			}
-			if(msgType === 'E'){
-				$('msgPanel').style="color:Red";
-			}*/
-			//$('msgPanel').outerHTML = "<div style='display:visible'>"+msg+"</div>";
-		//}
-		window.showModalDialog(msg);
+	function showMessage(msg,msgTitle){
+		if(isIE () && isIE () < 9) {
+			alert(msg);
+		}
+		else {
+			jDialog({
+			  title:msgTitle,
+			  content:msg				  
+			});
+		}
+		
 	}	
 	  
 } 

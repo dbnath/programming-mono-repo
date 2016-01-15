@@ -17,7 +17,9 @@ import javax.ws.rs.core.Response;
 import org.apache.poi.ss.usermodel.DataValidation;
 import org.apache.poi.ss.usermodel.DataValidationConstraint;
 import org.apache.poi.ss.usermodel.DataValidationHelper;
+import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFColor;
@@ -65,7 +67,7 @@ public class DocumentAdminServiceImpl extends BaseResource implements DocumentAd
 		this.documentAdminDAO = documentAdminDAO;
 	}
 	
-	public Response populateDocType() {
+/*	public Response populateDocType() {
 		try{
 			List<DocumentType> docTypeList = documentAdminDAO.populateDocumentTypes();
 			return Response.ok().entity(docTypeList).build();
@@ -146,7 +148,7 @@ public class DocumentAdminServiceImpl extends BaseResource implements DocumentAd
 			e.printStackTrace();
 			return Response.serverError().build();			
 		}
-	}
+	}*/
 	
 	//public Response uploadDocuments(@FormDataParam("file") InputStream uploadedInputStream,  @FormDataParam("file") FormDataContentDisposition fileDetail, @FormDataParam("path") String path, @FormDataParam("userId") String userId){
 	public Response uploadDocuments(@FormDataParam("file") InputStream uploadedInputStream,  @FormDataParam("userId") String userId){
@@ -237,8 +239,10 @@ public class DocumentAdminServiceImpl extends BaseResource implements DocumentAd
 				if (row != null) {
 
 					AgreementWorkflow doc = new AgreementWorkflow();
+					
+					doc.setWfStatusDesc("New");
 
-					for (int j = 0; j < 5; j++) {
+					for (int j = 0; j < 4; j++) {
 						XSSFCell cell = row.getCell(j);
 
 						if (cell != null) {
@@ -283,11 +287,11 @@ public class DocumentAdminServiceImpl extends BaseResource implements DocumentAd
 								doc.setLob(s);
 								System.out.println("###### lob "+s);
 								break;
-							case 3:
+							/*case 3:
 								doc.setWfStatusDesc(DocumentWorkflowToolUtility.isEmpty(s) ? "New" : s);
 								System.out.println("###### status id "+s);
-								break;
-							case 4:
+								break;*/
+							case 3:
 								doc.setAssignedTo(s);
 								System.out.println("###### assigned to "+s);
 								break;
@@ -313,8 +317,9 @@ public class DocumentAdminServiceImpl extends BaseResource implements DocumentAd
 		
 		try {
 			List<AgreementType> agrTypList = documentAdminDAO.populateAgreementTypes();
+			List<String> makerList = documentAdminDAO.populateMakerList();
 			ExcelUtil util = new ExcelUtil();
-			XSSFWorkbook wb = util.generateDocUploadTemplate(agrTypList);
+			XSSFWorkbook wb = util.generateDocUploadTemplate(agrTypList, makerList);
 			
 			File file = new File(this.getAppConfig().getTempFileLocation()+"/AgreementUploadTemplate"+System.currentTimeMillis()+".xlsx");
 			
@@ -534,19 +539,18 @@ public class DocumentAdminServiceImpl extends BaseResource implements DocumentAd
 			String rptToDate = DocumentWorkflowToolUtility.convertDateToString(rptToDt);
 			AHTWrapper ahtWrapper = documentAdminDAO.extractAgreementAHTInfo(rptFromDate, rptToDate);
 			
+			System.out.println(rptFromDate + "######" + rptToDate);
 			List<DocWkflwProcess> agrmtList = ahtWrapper.getDocRepoList();
 			Map<String, AHTBean> ahtMap  = ahtWrapper.getAhtMap();
-			System.out.println("agrmtList size..."+agrmtList.size()+"#### ahtMap size..."+ahtMap.size());
+			//System.out.println("agrmtList size..."+agrmtList.size()+"#### ahtMap size..."+ahtMap.size());
 			
 			XSSFWorkbook wb = new XSSFWorkbook();			
 			XSSFSheet sheet = wb.createSheet();
-			XSSFCellStyle headerStyle = wb.createCellStyle();
-			
-			Font headerFont = wb.createFont();
-			headerFont.setBold(true);
-			
-			createExcelReportHeader(sheet, headerFont, headerStyle);
-			createExcelReportBody(sheet, agrmtList,ahtMap);
+			ExcelUtil util = new ExcelUtil();
+			XSSFCellStyle headerStyle = util.getHeaderStyle(wb);
+			XSSFCellStyle bodyStyle = util.getBodyStyle(wb);
+			util.createExcelReportHeader(sheet, headerStyle);
+			util.createExcelReportBody(sheet,bodyStyle, agrmtList,ahtMap);
 			
 			File file = new File(this.getAppConfig().getTempFileLocation()+"/report"+System.currentTimeMillis()+".xlsx");
 			
@@ -566,140 +570,7 @@ public class DocumentAdminServiceImpl extends BaseResource implements DocumentAd
 	}	
 	
 	
-	private void createExcelReportHeader(XSSFSheet sheet, Font headerFont, XSSFCellStyle headerStyle) {
 
-		XSSFRow headerRow = sheet.createRow(0);
-
-		XSSFColor headerColor = new XSSFColor(Color.DARK_GRAY);
-		headerStyle.setFillBackgroundColor(headerColor);
-		headerStyle.setFont(headerFont);
-
-		for (int i = 0; i < 16; i++) {
-			XSSFCell cell = headerRow.createCell(i);
-			cell.setCellStyle(headerStyle);
-
-			switch (i) {
-			case 0:
-				cell.setCellValue("Agreement ID");
-				break;
-			case 1:
-				cell.setCellValue("Agreement Type");
-				break;
-			case 2:
-				cell.setCellValue("LOB");
-				break;
-			case 3:
-				cell.setCellValue("Num of Pages");
-				break;
-			case 4:
-				cell.setCellValue("Num of Fields");
-				break;				
-			case 5:
-				cell.setCellValue("Maker Status");
-				break;
-			case 6:
-				cell.setCellValue("Maker Comments");
-				break;
-			case 7:
-				cell.setCellValue("Checker Status");
-				break;
-			case 8:
-				cell.setCellValue("Checker Comments");
-				break;	
-			case 9:
-				cell.setCellValue("Latest Status");
-				break;
-			case 10:
-				cell.setCellValue("Onshore SME Comments");
-				break;	
-			case 11:
-				cell.setCellValue("Maker Hold Time (Min)");
-				break;	
-			case 12:
-				cell.setCellValue("Checker Hold Time (Min)");
-				break;
-			case 13:
-				cell.setCellValue("Onshore Hold Time (Min)");
-				break;
-			case 14:
-				cell.setCellValue("Total Hold Time (Min)");
-				break;	
-			case 15:
-				cell.setCellValue("Age (Min)");
-				break;				
-			}
-		}
-		return;
-	}
-	
-	private void createExcelReportBody(XSSFSheet sheet, List<DocWkflwProcess> agrmtList, Map<String, AHTBean> ahtMap) {
-
-		if(agrmtList != null){
-			int i = 1;
-			for(DocWkflwProcess r : agrmtList){
-				XSSFRow row = sheet.createRow(i);
-				
-				for(int j=0; j<16; j++){
-					XSSFCell cell = row.createCell(j);
-					
-					switch (j) {
-					case 0:
-						cell.setCellValue(r.getAgreementId());
-						break;
-					case 1:
-						cell.setCellValue(r.getAgreementTypeDesc());
-						break;
-					case 2:
-						cell.setCellValue(r.getLob());
-						break;
-					case 3:
-						cell.setCellValue(r.getNumPages());
-						break;
-					case 4:
-						cell.setCellValue(r.getNumFields());
-						break;	
-					case 5:
-						cell.setCellValue(r.getMakerStatus());
-						break;
-					case 6:
-						cell.setCellValue(r.getMakerComments());
-						break;	
-					case 7:
-						cell.setCellValue(r.getCheckerStatus());
-						break;
-					case 8:
-						cell.setCellValue(r.getCheckerComments());
-						break;	
-					case 9:
-						cell.setCellValue(r.getStatusDescription());
-						break;
-					case 10:
-						cell.setCellValue(r.getSmeComments());
-						break;
-					case 11:
-						cell.setCellValue(ahtMap.get(r.getAgreementId()).getMakerHeldTime());
-						break;
-					case 12:
-						cell.setCellValue(ahtMap.get(r.getAgreementId()).getCheckerHeldTime());
-						break;
-					case 13:
-						cell.setCellValue(ahtMap.get(r.getAgreementId()).getSmeHeldTime());
-						break;
-					case 14:
-						cell.setCellValue(ahtMap.get(r.getAgreementId()).getTotalHeldTime());
-						break;	
-					case 15:
-						cell.setCellValue(ahtMap.get(r.getAgreementId()).getAge());
-						break;						
-					}
-					
-				}
-				i++;
-			}
-		}
-	
-		return;
-	}	
 	
 	
 	@Override
@@ -722,13 +593,12 @@ public class DocumentAdminServiceImpl extends BaseResource implements DocumentAd
 			
 			XSSFWorkbook wb = new XSSFWorkbook();			
 			XSSFSheet sheet = wb.createSheet();
-			XSSFCellStyle headerStyle = wb.createCellStyle();
+			ExcelUtil util = new ExcelUtil();
+			XSSFCellStyle headerStyle = util.getHeaderStyle(wb);
+			XSSFCellStyle bodyStyle = util.getBodyStyle(wb);
 			
-			Font headerFont = wb.createFont();
-			headerFont.setBold(true);
-			
-			createAuditTrailExcelReportHeader(sheet, headerFont, headerStyle);
-			createAuditTrailExcelReportBody(wb, sheet, agrmtList);
+			util.createAuditTrailExcelReportHeader(sheet, headerStyle);
+			util.createAuditTrailExcelReportBody(wb, sheet, agrmtList, bodyStyle);
 			
 			File file = new File(this.getAppConfig().getTempFileLocation()+"/report"+System.currentTimeMillis()+".xlsx");
 			
@@ -746,142 +616,5 @@ public class DocumentAdminServiceImpl extends BaseResource implements DocumentAd
 		
 		return null;
 	}	
-	
-	
-	private void createAuditTrailExcelReportHeader(XSSFSheet sheet, Font headerFont, XSSFCellStyle headerStyle) {
 
-		XSSFRow headerRow = sheet.createRow(0);
-
-		XSSFColor headerColor = new XSSFColor(Color.DARK_GRAY);
-		headerStyle.setFillBackgroundColor(headerColor);
-		headerStyle.setFont(headerFont);
-
-		for (int i = 0; i < 12; i++) {
-			XSSFCell cell = headerRow.createCell(i);
-			cell.setCellStyle(headerStyle);
-
-			switch (i) {
-			case 0:
-				cell.setCellValue("Agreement ID");
-				break;
-			case 1:
-				cell.setCellValue("Vesrion ID");
-				break;
-			case 2:
-				cell.setCellValue("Agreement Type");
-				break;
-			case 3:
-				cell.setCellValue("LOB");
-				break;
-			case 4:
-				cell.setCellValue("Num of Pages");
-				break;
-			case 5:
-				cell.setCellValue("Num of Fields");
-				break;				
-			case 6:
-				cell.setCellValue("Latest Status");
-				break;
-			case 7:
-				cell.setCellValue("Comments");
-				break;	
-			case 8:
-				cell.setCellValue("Agreement Workflow Created By");
-				break;	
-			case 9:
-				cell.setCellValue("Agreement Workflow Created Date");
-				break;
-			case 10:
-				cell.setCellValue("Agreement Workflow Last Updated By");
-				break;
-			case 11:
-				cell.setCellValue("Agreement Workflow Last Updated Date");
-				break;	
-			}
-		}
-		return;
-	}
-	
-	private void createAuditTrailExcelReportBody(XSSFWorkbook wb, XSSFSheet sheet, List<DocWkflwProcess> agrmtList) {
-
-		if(agrmtList != null){
-			int i = 1;
-			XSSFCellStyle cellStyle         = wb.createCellStyle();
-			for(DocWkflwProcess r : agrmtList){
-				XSSFRow row = sheet.createRow(i);
-				
-				for(int j=0; j<12; j++){
-					XSSFCell cell = row.createCell(j);
-					
-					switch (j) {
-					case 0:
-						cell.setCellValue(r.getAgreementId());
-						break;
-					case 1:
-						cell.setCellValue(r.getVersionId());
-						break;
-					case 2:
-						cell.setCellValue(r.getAgreementTypeDesc());
-						break;
-					case 3:
-						cell.setCellValue(r.getLob());
-						break;
-					case 4:
-						cell.setCellValue(r.getNumPages());
-						break;
-					case 5:
-						cell.setCellValue(r.getNumFields());
-						break;	
-					case 6:
-						cell.setCellValue(r.getStatusDescription());
-						break;
-					case 7:
-						cell.setCellValue(r.getComments());
-						break;
-					case 8:
-						cell.setCellValue(r.getCreatedBy());
-						break;
-					case 9:
-						short df = wb.createDataFormat().getFormat("mm/dd/yyyy h:mm");
-						cellStyle.setDataFormat(df);
-						cell.setCellStyle(cellStyle);						
-						cell.setCellValue(r.getCreationDate());
-						break;
-					case 10:
-						cell.setCellValue(r.getLastUpdatedBy());
-						break;
-					case 11:
-						short sdf = wb.createDataFormat().getFormat("mm/dd/yyyy h:mm");
-						cellStyle.setDataFormat(sdf);
-						cell.setCellStyle(cellStyle);						
-						cell.setCellValue(r.getLastUpdationDate());
-						break;	
-					}
-					
-				}
-				i++;
-			}
-		}
-	
-		return;
-	}	
-
-	/*public Response updateDocTypes(List<DocumentType> docTypeList){
-		return Response.ok().entity(Boolean.TRUE).build();
-	}
-	public Response updateDocRepos(List<DocumentRepository> docRepoList){
-		return Response.ok().entity(Boolean.TRUE).build();
-	}
-	public Response updateDocTagsMasterList(List<DocumentTag> docTageList){
-		return Response.ok().entity(Boolean.TRUE).build();
-	}
-	public Response updateDocSubTagsMasterList(List<DocumentSubTagValues> docSubTagsList){
-		return Response.ok().entity(Boolean.TRUE).build();
-	}
-	public Response updateDocTypeTagMap(List<DocumentTypeTagMapping> docTypeTagRelList){
-		return Response.ok().entity(Boolean.TRUE).build();
-	}
-	public Response updateDocTagSubTagMap(List<DocumentTagSubTagMapping> docTagSubTagRelList){
-		return Response.ok().entity(Boolean.TRUE).build();
-	}*/
 }

@@ -2,16 +2,21 @@ package com.myorg.tools.documentworkflow.util;
 
 import java.awt.Color;
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.DataValidation;
 import org.apache.poi.ss.usermodel.DataValidationConstraint;
 import org.apache.poi.ss.usermodel.DataValidationHelper;
+import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFColor;
@@ -20,15 +25,17 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import com.myorg.tools.documentworkflow.model.AHTBean;
 import com.myorg.tools.documentworkflow.model.AgreementErrorType;
 import com.myorg.tools.documentworkflow.model.AgreementType;
 import com.myorg.tools.documentworkflow.model.AgreementWorkflow;
+import com.myorg.tools.documentworkflow.model.DocWkflwProcess;
 import com.myorg.tools.documentworkflow.model.Role;
 import com.myorg.tools.documentworkflow.model.RoleUser;
 
 public class ExcelUtil {
 
-	public XSSFWorkbook generateDocUploadTemplate(List<AgreementType> agrTypList) throws IOException{
+	public XSSFWorkbook generateDocUploadTemplate(List<AgreementType> agrTypList, List<String> makerList) throws IOException{
 		
 		int i=0;
 		String[] typeValues = new String[agrTypList.size()];
@@ -37,15 +44,15 @@ public class ExcelUtil {
 			i++;
 		}
 		
+		String[] makerValues = makerList.toArray(new String[]{});
+		System.out.println("###### makerValues"+makerValues);
+		
 		XSSFWorkbook wb = new XSSFWorkbook();			
 		XSSFSheet sheet = wb.createSheet();
-		XSSFCellStyle headerStyle = wb.createCellStyle();
+		XSSFCellStyle headerStyle = getHeaderStyle(wb);
 		
-		Font headerFont = wb.createFont();
-		headerFont.setBold(true);
-		
-		createDocUploadTemplateHeader(sheet, headerFont, headerStyle);
-		createTemplateBody(sheet, typeValues);
+		createDocUploadTemplateHeader(sheet, headerStyle);
+		createTemplateBody(sheet, typeValues, makerValues);
 		
 		return wb;
 	}
@@ -61,13 +68,11 @@ public class ExcelUtil {
 		
 		XSSFWorkbook wb = new XSSFWorkbook();			
 		XSSFSheet sheet = wb.createSheet();
-		XSSFCellStyle headerStyle = wb.createCellStyle();
+		XSSFCellStyle headerStyle = getHeaderStyle(wb);
+		XSSFCellStyle bodyStyle = getBodyStyle(wb);
 		
-		Font headerFont = wb.createFont();
-		headerFont.setBold(true);
-		
-		createErrTypeTemplateHeader(sheet, headerFont, headerStyle);
-		createErrTypeTemplateBody(sheet, agrTypList);
+		createErrTypeTemplateHeader(sheet, headerStyle);
+		createErrTypeTemplateBody(sheet, agrTypList, bodyStyle);
 		
 		return wb;
 	}
@@ -76,13 +81,11 @@ public class ExcelUtil {
 		
 		XSSFWorkbook wb = new XSSFWorkbook();			
 		XSSFSheet sheet = wb.createSheet();
-		XSSFCellStyle headerStyle = wb.createCellStyle();
+		XSSFCellStyle headerStyle = getHeaderStyle(wb);
+		XSSFCellStyle bodyStyle = getBodyStyle(wb);
 		
-		Font headerFont = wb.createFont();
-		headerFont.setBold(true);
-		
-		createRoleUserTemplateHeader(sheet, headerFont, headerStyle);
-		createRoleTemplateBody(sheet, roleUserList, roleList);
+		createRoleUserTemplateHeader(sheet, headerStyle);
+		createRoleTemplateBody(sheet, roleUserList, roleList, bodyStyle);
 		
 		return wb;
 	}	
@@ -98,27 +101,20 @@ public class ExcelUtil {
 		
 		XSSFWorkbook wb = new XSSFWorkbook();			
 		XSSFSheet sheet = wb.createSheet();
-		XSSFCellStyle headerStyle = wb.createCellStyle();
+		XSSFCellStyle headerStyle = getHeaderStyle(wb);
+		XSSFCellStyle bodyStyle = getBodyStyle(wb);
 		
-		Font headerFont = wb.createFont();
-		headerFont.setBold(true);
-		
-		createAgreementTypeTemplateHeader(sheet, headerFont, headerStyle);
-		createAgreementTypeTemplateBody(sheet, agrTypList);
+		createAgreementTypeTemplateHeader(sheet, headerStyle);
+		createAgreementTypeTemplateBody(sheet, agrTypList, bodyStyle);
 		
 		return wb;
 	}	
 	
-	private void createDocUploadTemplateHeader(XSSFSheet sheet, Font headerFont, XSSFCellStyle headerStyle) {
+	private void createDocUploadTemplateHeader(XSSFSheet sheet, XSSFCellStyle headerStyle) {
 
 		XSSFRow headerRow = sheet.createRow(0);
-
-		XSSFColor headerColor = new XSSFColor(Color.DARK_GRAY);
-		headerStyle.setFillBackgroundColor(headerColor);
-		headerStyle.setFont(headerFont);
 		
-		
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 4; i++) {
 			XSSFCell cell = headerRow.createCell(i);
 			cell.setCellStyle(headerStyle);
 			
@@ -132,18 +128,22 @@ public class ExcelUtil {
 			case 2:
 				cell.setCellValue("LOB");
 				break;
-			case 3:
+			/*case 3:
 				cell.setCellValue("Status");
-				break;
-			case 4:
+				break;*/
+			case 3:
 				cell.setCellValue("Assigned To");
 				break;
 			}
 		}
+		for(int j=0; j<4; j++){
+			sheet.setColumnWidth(j, 4000);
+		}
+		sheet.createFreezePane(0, 1);
 		return;
 	}
 	
-	private void createTemplateBody(XSSFSheet sheet, String[] typeValues) {
+	private void createTemplateBody(XSSFSheet sheet, String[] typeValues,String[] makerValues) {
 
 		
 		DataValidationHelper validationHelper = new XSSFDataValidationHelper(sheet);
@@ -151,6 +151,7 @@ public class ExcelUtil {
 		
         DataValidationConstraint typeConstraint = validationHelper.createExplicitListConstraint(typeValues);
         DataValidationConstraint constraint = validationHelper.createExplicitListConstraint(allowedValues);
+        DataValidationConstraint makerConstraint = validationHelper.createExplicitListConstraint(makerValues);
         
         org.apache.poi.ss.util.CellRangeAddressList typeAddressList = new org.apache.poi.ss.util.CellRangeAddressList(1, 1001,1, 1);
         DataValidation typeValidation = validationHelper.createValidation(typeConstraint, typeAddressList);
@@ -165,27 +166,31 @@ public class ExcelUtil {
         typeValidation.setShowErrorBox(true);
         sheet.addValidationData(typeValidation); 
         
-        org.apache.poi.ss.util.CellRangeAddressList addressList = new org.apache.poi.ss.util.CellRangeAddressList(1002, 1048575,0,4);
+        org.apache.poi.ss.util.CellRangeAddressList addressList = new org.apache.poi.ss.util.CellRangeAddressList(1002, 1048575,0,3);
         dataValidation = validationHelper.createValidation(constraint, addressList); 
         dataValidation.setSuppressDropDownArrow(false);        
         dataValidation.setShowPromptBox(true); 
         dataValidation.setErrorStyle(DataValidation.ErrorStyle.STOP); 
         dataValidation.createErrorBox("Validation Error", "You can enter maximum 1000 rows at a time");
         dataValidation.setShowErrorBox(true);
-        sheet.addValidationData(dataValidation); 		
+        sheet.addValidationData(dataValidation); 	
+        
+        org.apache.poi.ss.util.CellRangeAddressList makerAddressList = new org.apache.poi.ss.util.CellRangeAddressList(1, 1001,3, 3);
+        DataValidation makerValidation = validationHelper.createValidation(makerConstraint, makerAddressList);
+        makerValidation.setSuppressDropDownArrow(true);
+        makerValidation.setShowPromptBox(true); 
+        makerValidation.setErrorStyle(DataValidation.ErrorStyle.STOP); 
+        makerValidation.createErrorBox("Validation Error", "You can only select values from dropdown");
+        makerValidation.setShowErrorBox(true);
+        sheet.addValidationData(makerValidation);         
 		return;
 	}
 	
-	private void createErrTypeTemplateHeader(XSSFSheet sheet, Font headerFont, XSSFCellStyle headerStyle) {
+	private void createErrTypeTemplateHeader(XSSFSheet sheet,  XSSFCellStyle headerStyle) {
 
 		XSSFRow headerRow = sheet.createRow(0);
-
-		XSSFColor headerColor = new XSSFColor(Color.DARK_GRAY);
-		headerStyle.setFillBackgroundColor(headerColor);
-		headerStyle.setFont(headerFont);
 		
-		
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < 2; i++) {
 			XSSFCell cell = headerRow.createCell(i);
 			cell.setCellStyle(headerStyle);
 			
@@ -194,9 +199,6 @@ public class ExcelUtil {
 				cell.setCellValue("Error Reason ID");
 				break;
 			case 1:
-				cell.setCellValue("Error Reason Code");
-				break;
-			case 2:
 				cell.setCellValue("Error Reason");
 				break;
 			}
@@ -204,26 +206,28 @@ public class ExcelUtil {
 		return;
 	}	
 	
-	private void createErrTypeTemplateBody(XSSFSheet sheet, List<AgreementErrorType> agrTypList) {
+	private void createErrTypeTemplateBody(XSSFSheet sheet, List<AgreementErrorType> agrTypList, XSSFCellStyle bodyStyle) {
 
 		for(int j=0; j<agrTypList.size(); j++ ){
 			XSSFRow row = sheet.createRow(j+1);
 			AgreementErrorType type = agrTypList.get(j);
-			for (int i = 0; i < 3; i++) {
+			for (int i = 0; i < 2; i++) {
 				XSSFCell cell = row.createCell(i);
+				cell.setCellStyle(bodyStyle);
 
 				switch (i) {
 				case 0:
 					cell.setCellValue(type.getErrorTypeId());
 					break;
 				case 1:
-					cell.setCellValue(type.getErrorTypeCode());
-					break;
-				case 2:
 					cell.setCellValue(type.getErrorTypeName());
 					break;
 				}
 			}			
+		}
+		
+		for (int i = 0; i < 2; i++) {
+			sheet.setColumnWidth(i, 3500);
 		}
 		
 		DataValidationHelper validationHelper = new XSSFDataValidationHelper(sheet);
@@ -241,7 +245,7 @@ public class ExcelUtil {
         editValidation.setShowErrorBox(true);
         sheet.addValidationData(editValidation); 
         
-        org.apache.poi.ss.util.CellRangeAddressList addressList = new org.apache.poi.ss.util.CellRangeAddressList(1002, 1048575,0,2);
+        org.apache.poi.ss.util.CellRangeAddressList addressList = new org.apache.poi.ss.util.CellRangeAddressList(1002, 1048575,0,1);
         DataValidation dataValidation = validationHelper.createValidation(constraint, addressList); 
         dataValidation.setSuppressDropDownArrow(false);        
         dataValidation.setShowPromptBox(true); 
@@ -252,15 +256,10 @@ public class ExcelUtil {
 		return;
 	}	
 	
-	private void createRoleUserTemplateHeader(XSSFSheet sheet, Font headerFont, XSSFCellStyle headerStyle) {
+	private void createRoleUserTemplateHeader(XSSFSheet sheet, XSSFCellStyle headerStyle) {
 
 		XSSFRow headerRow = sheet.createRow(0);
 
-		XSSFColor headerColor = new XSSFColor(Color.DARK_GRAY);
-		headerStyle.setFillBackgroundColor(headerColor);
-		headerStyle.setFont(headerFont);
-		
-		
 		for (int i = 0; i < 4; i++) {
 			XSSFCell cell = headerRow.createCell(i);
 			cell.setCellStyle(headerStyle);
@@ -283,14 +282,16 @@ public class ExcelUtil {
 		return;
 	}	
 	
-	private void createRoleTemplateBody(XSSFSheet sheet, List<RoleUser> roleUserList, List<Role> roleList) {
+	private void createRoleTemplateBody(XSSFSheet sheet, List<RoleUser> roleUserList, List<Role> roleList, XSSFCellStyle bodyStyle) {
 
 		for(int j=0; j<roleUserList.size(); j++ ){
 			XSSFRow row = sheet.createRow(j+1);
 			RoleUser roleUser = roleUserList.get(j);
+			
 			for (int i = 0; i < 4; i++) {
 				XSSFCell cell = row.createCell(i);
-
+				cell.setCellStyle(bodyStyle);
+				
 				switch (i) {
 				case 0:
 					cell.setCellValue(roleUser.getUserId());
@@ -451,7 +452,7 @@ public class ExcelUtil {
 
 					AgreementErrorType doc = new AgreementErrorType();
 
-					for (int j = 0; j < 3; j++) {
+					for (int j = 0; j < 2; j++) {
 						XSSFCell cell = row.getCell(j);
 
 						if (cell != null) {
@@ -491,12 +492,6 @@ public class ExcelUtil {
 								}
 								break;
 							case 1:
-								if(s != null){
-									doc.setErrorTypeCode(s);
-									System.out.println("###### Error Type Code "+s);
-								}
-								break;
-							case 2:
 								doc.setErrorTypeName(s);
 								System.out.println("###### Error Type Name "+s);
 								break;
@@ -582,15 +577,10 @@ public class ExcelUtil {
 		return docList;
 	}		
 	
-	private void createAgreementTypeTemplateHeader(XSSFSheet sheet, Font headerFont, XSSFCellStyle headerStyle) {
+	private void createAgreementTypeTemplateHeader(XSSFSheet sheet, XSSFCellStyle headerStyle) {
 
 		XSSFRow headerRow = sheet.createRow(0);
 
-		XSSFColor headerColor = new XSSFColor(Color.green);
-		headerStyle.setFillBackgroundColor(headerColor);
-		headerStyle.setFont(headerFont);
-		
-		
 		for (int i = 0; i < 2; i++) {
 			XSSFCell cell = headerRow.createCell(i);
 			cell.setCellStyle(headerStyle);
@@ -607,14 +597,15 @@ public class ExcelUtil {
 		return;
 	}	
 	
-	private void createAgreementTypeTemplateBody(XSSFSheet sheet, List<AgreementType> agrTypList) {
+	private void createAgreementTypeTemplateBody(XSSFSheet sheet, List<AgreementType> agrTypList, XSSFCellStyle bodyStyle) {
 
-		for(int j=0; j<agrTypList.size(); j++ ){
+		for(int j=0; j<agrTypList.size(); j++ ) {
 			XSSFRow row = sheet.createRow(j+1);
 			AgreementType type = agrTypList.get(j);
 			for (int i = 0; i < 2; i++) {
 				XSSFCell cell = row.createCell(i);
-
+				cell.setCellStyle(bodyStyle);
+				
 				switch (i) {
 				case 0:
 					cell.setCellValue(type.getAgreementTypeId());
@@ -624,6 +615,10 @@ public class ExcelUtil {
 					break;
 				}
 			}			
+		}
+		
+		for (int i = 0; i < 2; i++) {
+			sheet.setColumnWidth(i, 3500);
 		}
 		
 		DataValidationHelper validationHelper = new XSSFDataValidationHelper(sheet);
@@ -728,6 +723,285 @@ public class ExcelUtil {
 		}
 
 		return roleUserList;
+	}
+	
+	public XSSFCellStyle getHeaderStyle(XSSFWorkbook wb){
+		XSSFCellStyle headerStyle = wb.createCellStyle();
+		
+		XSSFColor headerColor = new XSSFColor();
+		headerColor.setIndexed(57);
+		headerStyle.setWrapText(true);
+		
+		headerStyle.setVerticalAlignment(VerticalAlignment.TOP);
+		headerStyle.setFillForegroundColor(headerColor);
+		headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+		
+		Font headerFont = wb.createFont();
+		//headerFont.setColor(IndexedColors.RED.getIndex());
+		headerFont.setBold(true);
+		headerStyle.setFont(headerFont);
+		return headerStyle;
+	}
+	
+	public XSSFCellStyle getBodyStyle(XSSFWorkbook wb){
+		XSSFCellStyle headerStyle = wb.createCellStyle();
+		headerStyle.setWrapText(true);
+		headerStyle.setVerticalAlignment(VerticalAlignment.TOP);
+		return headerStyle;
+	}	
+	
+	public void createExcelReportHeader(XSSFSheet sheet, XSSFCellStyle headerStyle) {
+
+		XSSFRow headerRow = sheet.createRow(0);
+
+		for (int i = 0; i < 16; i++) {
+			XSSFCell cell = headerRow.createCell(i);
+			cell.setCellStyle(headerStyle);
+
+			switch (i) {
+			case 0:
+				cell.setCellValue("Agreement ID");
+				break;
+			case 1:
+				cell.setCellValue("Agreement Type");
+				break;
+			case 2:
+				cell.setCellValue("LOB");
+				break;
+			case 3:
+				cell.setCellValue("Num of Pages");
+				break;
+			case 4:
+				cell.setCellValue("Num of Fields");
+				break;				
+			case 5:
+				cell.setCellValue("Maker Status");
+				break;
+			case 6:
+				cell.setCellValue("Maker Comments");
+				break;
+			case 7:
+				cell.setCellValue("Checker Status");
+				break;
+			case 8:
+				cell.setCellValue("Checker Comments");
+				break;	
+			case 9:
+				cell.setCellValue("Latest Status");
+				break;
+			case 10:
+				cell.setCellValue("Onshore SME Comments");
+				break;	
+			case 11:
+				cell.setCellValue("Maker Hold Time (Min)");
+				break;	
+			case 12:
+				cell.setCellValue("Checker Hold Time (Min)");
+				break;
+			case 13:
+				cell.setCellValue("Onshore Hold Time (Min)");
+				break;
+			case 14:
+				cell.setCellValue("Total Hold Time (Min)");
+				break;	
+			case 15:
+				cell.setCellValue("Age (Min)");
+				break;				
+			}
+		}
+		sheet.createFreezePane(0, 1);
+		return;
+	}
+	
+	public void createExcelReportBody(XSSFSheet sheet, XSSFCellStyle bodyStyle, List<DocWkflwProcess> agrmtList, Map<String, AHTBean> ahtMap) {
+
+		if(agrmtList != null){
+			int i = 1;
+			for(DocWkflwProcess r : agrmtList){
+				XSSFRow row = sheet.createRow(i);
+				
+				for(int j=0; j<16; j++){
+					XSSFCell cell = row.createCell(j);
+					cell.setCellStyle(bodyStyle);
+					
+					switch (j) {
+					case 0:
+						cell.setCellValue(r.getAgreementId());
+						break;
+					case 1:
+						cell.setCellValue(r.getAgreementTypeDesc());
+						break;
+					case 2:
+						cell.setCellValue(r.getLob());
+						break;
+					case 3:
+						cell.setCellValue(r.getNumPages());
+						break;
+					case 4:
+						cell.setCellValue(r.getNumFields());
+						break;	
+					case 5:
+						cell.setCellValue(r.getMakerStatus());
+						break;
+					case 6:
+						cell.setCellValue(r.getMakerComments());
+						break;	
+					case 7:
+						cell.setCellValue(r.getCheckerStatus());
+						break;
+					case 8:
+						cell.setCellValue(r.getCheckerComments());
+						break;	
+					case 9:
+						cell.setCellValue(r.getStatusDescription());
+						break;
+					case 10:
+						cell.setCellValue(r.getSmeComments());
+						break;
+					case 11:
+						cell.setCellValue(ahtMap.get(r.getAgreementId()).getMakerHeldTime());
+						break;
+					case 12:
+						cell.setCellValue(ahtMap.get(r.getAgreementId()).getCheckerHeldTime());
+						break;
+					case 13:
+						cell.setCellValue(ahtMap.get(r.getAgreementId()).getSmeHeldTime());
+						break;
+					case 14:
+						cell.setCellValue(ahtMap.get(r.getAgreementId()).getTotalHeldTime());
+						break;	
+					case 15:
+						cell.setCellValue(ahtMap.get(r.getAgreementId()).getAge());
+						break;						
+					}
+					
+				}
+				i++;
+			}
+			for(int j=0; j<16; j++){
+				sheet.setColumnWidth(j, 3500);
+			}
+		}
+	
+		return;
+	}		
+	
+	public void createAuditTrailExcelReportHeader(XSSFSheet sheet, XSSFCellStyle headerStyle) {
+
+		XSSFRow headerRow = sheet.createRow(0);
+
+		for (int i = 0; i < 12; i++) {
+			XSSFCell cell = headerRow.createCell(i);
+			cell.setCellStyle(headerStyle);
+
+			switch (i) {
+			case 0:
+				cell.setCellValue("Agreement ID");
+				break;
+			case 1:
+				cell.setCellValue("Vesrion ID");
+				break;
+			case 2:
+				cell.setCellValue("Agreement Type");
+				break;
+			case 3:
+				cell.setCellValue("LOB");
+				break;
+			case 4:
+				cell.setCellValue("Num of Pages");
+				break;
+			case 5:
+				cell.setCellValue("Num of Fields");
+				break;				
+			case 6:
+				cell.setCellValue("Latest Status");
+				break;
+			case 7:
+				cell.setCellValue("Comments");
+				break;	
+			case 8:
+				cell.setCellValue("Created By");
+				break;	
+			case 9:
+				cell.setCellValue("Created Date");
+				break;
+			case 10:
+				cell.setCellValue("Last Updated By");
+				break;
+			case 11:
+				cell.setCellValue("Last Updated Date");
+				break;	
+			}
+		}
+		sheet.createFreezePane(0, 1);
+		return;
+	}
+	
+	public void createAuditTrailExcelReportBody(XSSFWorkbook wb, XSSFSheet sheet, List<DocWkflwProcess> agrmtList, XSSFCellStyle bodyStyle) {
+
+		if(agrmtList != null){
+			int i = 1;
+			XSSFCellStyle dateCellStyle = wb.createCellStyle();
+			short df = wb.createDataFormat().getFormat("mm/dd/yyyy h:mm");
+			dateCellStyle.setDataFormat(df);
+			
+			for(DocWkflwProcess r : agrmtList){
+				XSSFRow row = sheet.createRow(i);
+				
+				for(int j=0; j<12; j++){
+					XSSFCell cell = row.createCell(j);
+					cell.setCellStyle(bodyStyle);
+					switch (j) {
+					case 0:
+						cell.setCellValue(r.getAgreementId());
+						break;
+					case 1:
+						cell.setCellValue(r.getVersionId());
+						break;
+					case 2:
+						cell.setCellValue(r.getAgreementTypeDesc());
+						break;
+					case 3:
+						cell.setCellValue(r.getLob());
+						break;
+					case 4:
+						cell.setCellValue(r.getNumPages());
+						break;
+					case 5:
+						cell.setCellValue(r.getNumFields());
+						break;	
+					case 6:
+						cell.setCellValue(r.getStatusDescription());
+						break;
+					case 7:
+						cell.setCellValue(r.getComments());
+						break;
+					case 8:
+						cell.setCellValue(r.getCreatedBy());
+						break;
+					case 9:
+						cell.setCellStyle(dateCellStyle);						
+						cell.setCellValue(r.getCreationDate());
+						break;
+					case 10:
+						cell.setCellValue(r.getLastUpdatedBy());
+						break;
+					case 11:
+						cell.setCellStyle(dateCellStyle);						
+						cell.setCellValue(r.getLastUpdationDate());
+						break;	
+					}
+					
+				}
+				i++;
+			}
+		}
+		
+		for(int j=0; j<12; j++){
+			sheet.setColumnWidth(j, 3500);
+		}
+	
+		return;
 	}	
 	
 	
@@ -742,18 +1016,49 @@ public class ExcelUtil {
 		
 		ExcelUtil util = new ExcelUtil();
 		try {
-			//XSSFWorkbook wb = util.generateDocUploadTemplate(agrTypList);
-			//File file = new File(this.getAppConfig().getTempFileLocation()+"/template"+System.currentTimeMillis()+".xlsx");
-			File file = new File("C:/Users/106753/Downloads/ErrorTypeUploadTemplate (1).xlsx");//new File("D:/temp/template"+System.currentTimeMillis()+".xlsx");
-			FileInputStream baos = new FileInputStream(file);
-			//util.parseBulkUploadFile(baos);
-			util.parseErrReasonUploadFile(baos);
-			//wb.write(baos);
-			baos.close();			
+			XSSFWorkbook wb = new XSSFWorkbook();			
+			XSSFSheet sheet = wb.createSheet();
+			XSSFCellStyle headerStyle = wb.createCellStyle();
+			XSSFColor headerColor = new XSSFColor();
+			headerColor.setIndexed(57);
+			headerStyle.setWrapText(true);
+			
+			headerStyle.setVerticalAlignment(VerticalAlignment.TOP);
+			headerStyle.setFillForegroundColor(headerColor);
+			headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+			
+			Font headerFont = wb.createFont();
+			//headerFont.setColor(IndexedColors.RED.getIndex());
+			headerFont.setBold(true);
+			headerStyle.setFont(headerFont);
+			
+			
+			
+			util.createExcelReportHeader(sheet, headerStyle);
+			
+			sheet.setColumnWidth(0, 3500);
+			
+			File file = new File("D:/temp/report"+System.currentTimeMillis()+".xlsx");
+			
+			FileOutputStream baos = new FileOutputStream(file);			
+			wb.write(baos);
+			wb.close();
+			baos.close();
+			
+			/*XSSFWorkbook wb = new XSSFWorkbook(new File("D:/Temp/report1452850238427.xlsx"));	
+			
+			System.out.println(wb.getSheetAt(0).getRow(0).getCell(0).getCellStyle().getFillBackgroundColorColor().getIndexed());
+			System.out.println(wb.getSheetAt(0).getRow(0).getCell(1).getCellStyle().getFillBackgroundColor());
+			System.out.println(IndexedColors.GREEN.getIndex());
+			XSSFColor headerColor = new XSSFColor();
+			headerColor.setIndexed(64);
+			
+			wb.close();*/
+			
 			System.out.println("###### DONE");
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
+		} 
 	}
 
 }

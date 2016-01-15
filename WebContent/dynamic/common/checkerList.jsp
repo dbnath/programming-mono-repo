@@ -35,6 +35,7 @@
 				<th><h3 style="Color:#ffffff">Agreement Id</h3></th>
 				<th width="4%"><h3 style="Color:#ffffff">LOB</h3></th>
 				<th width="15%"><h3 style="Color:#ffffff">Agreement Type</h3></th>
+				<th style="display:<c:if test="${userDetails.userRoleList[0].roleId != 4}">none</c:if>" ><h3 style="Color:#ffffff">Assigned To</h3></th>				
 				<th width="15%"><h3 style="Color:#ffffff">Maker Status</h3></th>
 				<th width="25%"><h3 style="Color:#ffffff">Maker Details</h3></th>
 				<th width="15%"><h3 style="Color:#ffffff">Current Status</h3></th>
@@ -52,6 +53,7 @@
 				  <td id="<c:out value="${document.agreementId}agreementId" />"><c:out value="${document.agreementId}" /></td>
 				  <td width="4%" id="<c:out value="${document.agreementId}lob" />"><c:out value="${document.lob}" /></td>
 				  <td width="15%" id="<c:out value="${document.agreementId}agreementTypeDesc" />"><c:out value="${document.agreementTypeDesc}" /></td>
+				  <td style="display:<c:if test="${userDetails.userRoleList[0].roleId != 4}">none</c:if>" id="<c:out value="${document.agreementId}assignedTo" />"><c:out value="${document.assignedTo}" /></td>
 				  <td width="15%" id="<c:out value="${document.agreementId}makerStatus" />"><c:out value="${document.makerStatus}" /></td>
 				  <td width="25%" id="<c:out value="${document.agreementId}makerComments" />"><c:out value="${document.makerComments}" /></td>
 				  <td width="15%" id="<c:out value="${document.agreementId}statusDescription" />"><c:out value="${document.statusDescription}" /></td>
@@ -97,7 +99,7 @@
     
 	<br>
 	<div id="checkerActionPanel" style="display:block">
-		<table align="left" width="100%">
+		<!--<table align="left" width="100%">
 			<tr>
 				<table>
 					<tr>
@@ -132,7 +134,50 @@
 					</tr>
 				</table>
 			</tr>
-		</table>
+		</table>-->
+		<form class="pure-form pure-form-stacked">
+		    <fieldset>
+		        <legend>Comments Section:</legend>
+		
+		        <div class="pure-g" style="text-align: left;">
+		            <div class="pure-u-1 pure-u-md-1-3">
+		                <label for="checkerStatus">Status</label>
+		                <select id="checkerStatus" onchange="landingObj.setHoldStatus(this)" disabled>
+		                    <c:forEach items="${workflowStatusList}" var="status">
+								<option value="${status.statusCode}">${status.statusDescription}</option>
+							</c:forEach>
+		                </select>
+		            </div>
+		
+		            <div class="pure-u-1 pure-u-md-2-3">
+		                <label for="checkerComments">Comments</label>
+		                <textarea id="checkerComments" disabled rows="2" cols="75" disabled></textarea>
+		            </div>	
+
+					<div class="pure-u-1 pure-u-md-3-24">
+		                <label for="errorReasonList">Error Reason</label>		                
+						<select id="errorReasonList" disabled >
+							<c:forEach items="${errorList}" var="error">
+								<option value="${error.errorTypeId}">${error.errorTypeName}</option>
+							</c:forEach>
+						</select>
+		            </div>					
+		            <div class="pure-u-1 pure-u-md-5-24">
+		            </div>		
+		            <div class="pure-u-1 pure-u-md-3-24">
+		                <label for="numPages">Number of Pages</label>		                
+		                <input type="text" id="numPages">
+		            </div>
+		            <div class="pure-u-1 pure-u-md-5-24">
+		            </div>
+		            <div class="pure-u-1 pure-u-md-3-24">
+		                <label for="numFields">Number of Fields</label>		                
+		                <input type="text" id="numFields" class="pure-input-1-2">
+		            </div>
+		        </div>
+		
+		    </fieldset>
+		</form>		
 	</div>
 	<br>
 </c:when>
