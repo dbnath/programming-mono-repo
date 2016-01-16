@@ -20,8 +20,8 @@
 				</button >&nbsp;				
 			</div>				
 			<div><input type="image" src="../../images/icon_refresh.jpg" style="width:30px;height:30px;" onclick="landingObj.reloadGridData()" /></div>
-			<div>Records <span id="startrecord"></span>-<span id="endrecord"></span> of <span id="totalrecords"></span></div>
-			<div><a href="javascript:sorter.reset()">reset</a></div>
+			<div class="details">Records <span id="startrecord"></span>-<span id="endrecord"></span> of <span id="totalrecords"></span></div>
+			<div class="details"><a href="javascript:sorter.reset()">reset</a></div>
 		</span>
 	</div>
 	<table cellpadding="0" cellspacing="0" border="0" id="mytable" class="tinytable">
@@ -117,12 +117,13 @@
 				</table>
 			</tr>
 		</table> --%>
-		<form class="pure-form pure-form-stacked">
-		    <fieldset>
-		        <legend>Comments Section:</legend>
+		<form class="pure-form pure-form-stacked" style="border:2px solid BLUE;">
+		    <fieldset class="fieldset">
+		        <legend><b>Comments Section:</b></legend>
 		
 		        <div class="pure-g" style="text-align: left;">
-		            <div class="pure-u-1 pure-u-md-1-3">
+		            <div style="width:1%"></div>
+		            <div class="pure-u-1 pure-u-md-1-3" style="width:33%">
 		                <label for="checkerStatus">Status</label>
 		                <select id="checkerStatus" onchange="landingObj.setHoldStatus(this)" disabled>
 		                    <c:forEach items="${workflowStatusList}" var="status">
@@ -131,14 +132,15 @@
 		                </select>
 		            </div>
 		
-		            <div class="pure-u-1 pure-u-md-2-3">
+		            <div class="pure-u-1 pure-u-md-2-3" style="width:66%">
 		                <label for="checkerComments">Comments</label>
 		                <textarea id="checkerComments" disabled rows="2" cols="75" disabled></textarea>
 		            </div>		            
 		
+		            <div style="width:1%"></div>
 		            <div class="pure-u-1 pure-u-md-3-24">
 		                <label for="numPages">Number of Pages</label>		                
-		                <input type="text" id="numPages">
+		                <input type="text" id="numPages" class="pure-input-1-2">
 		            </div>
 		            <div class="pure-u-1 pure-u-md-5-24">
 		            </div>

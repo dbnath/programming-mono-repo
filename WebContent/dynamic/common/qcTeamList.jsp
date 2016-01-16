@@ -9,8 +9,8 @@
 		</div>
 		<span class="details">
 			<div><input type="image" src="../../images/icon_refresh.jpg" style="width:30px;height:30px;" onclick="landingObj.reloadGridData()" /></div>
-			<div>Records <span id="teamstartrecord"></span>-<span id="teamendrecord"></span> of <span id="teamtotalrecords"></span></div>
-			<div><a href="javascript:teamSorter.reset()">reset</a></div>
+			<div class="details">Records <span id="teamstartrecord"></span>-<span id="teamendrecord"></span> of <span id="teamtotalrecords"></span></div>
+			<div class="details"><a href="javascript:teamSorter.reset()">reset</a></div>
 		</span>
 	</div>
 	<table cellpadding="0" cellspacing="0" border="0" id="teamtable" class="tinytable">
