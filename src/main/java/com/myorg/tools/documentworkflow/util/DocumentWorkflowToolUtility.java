@@ -1,6 +1,7 @@
 package com.myorg.tools.documentworkflow.util;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -13,6 +14,8 @@ import com.myorg.tools.documentworkflow.model.Response;
 import com.myorg.tools.documentworkflow.model.ReverseMappable;
 
 public class DocumentWorkflowToolUtility {
+	
+	private static DecimalFormat df = new DecimalFormat("#.##");
 	
 	public static boolean isEmpty(Object obj) {
 		if (obj == null) {
@@ -152,21 +155,33 @@ public class DocumentWorkflowToolUtility {
 			Calendar cal2 = Calendar.getInstance();
 			cal2.setTime(date2);
 			
-			Double timeDiff = Math.abs(Double.valueOf((cal2.getTimeInMillis() - cal1.getTimeInMillis())/ (1000 * 60)));
+			Double timeDiff = Math.abs(Double.valueOf(cal2.getTimeInMillis() - cal1.getTimeInMillis())/ (1000 * 60));
+			//System.out.println("###### timeDiff "+(cal2.getTimeInMillis() - cal1.getTimeInMillis()));
 
 			return timeDiff;
 		}
-		return 0.0;
+		//return 0.0;
+		return null;
 	}
 	
 	public static Date populateDateTime(Date dt, Integer hour, Integer min, Integer sec) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(dt);
-		//cal.set(Calendar.DAY_OF_MONTH, 12);
 		cal.set(Calendar.HOUR_OF_DAY, hour);
 		cal.set(Calendar.MINUTE, min);
 		cal.set(Calendar.SECOND, sec);
 		return cal.getTime();
+	}
+	
+	public static Double getNumforExcelReport(Double d){
+		try {
+			if(d != null){
+				return Double.valueOf(df.format(d));
+			}
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		}
+		return d;
 	}
 	
 	public static String convertDateToString(Date dt){

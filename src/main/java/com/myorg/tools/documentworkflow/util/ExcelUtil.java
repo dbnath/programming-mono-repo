@@ -1,21 +1,20 @@
 package com.myorg.tools.documentworkflow.util;
 
-import java.awt.Color;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.DataValidation;
 import org.apache.poi.ss.usermodel.DataValidationConstraint;
 import org.apache.poi.ss.usermodel.DataValidationHelper;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
@@ -735,6 +734,10 @@ public class ExcelUtil {
 		headerStyle.setVerticalAlignment(VerticalAlignment.TOP);
 		headerStyle.setFillForegroundColor(headerColor);
 		headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+		headerStyle.setBorderLeft(BorderStyle.THIN);
+		headerStyle.setBorderRight(BorderStyle.THIN);
+		headerStyle.setBorderTop(BorderStyle.THIN);
+		headerStyle.setBorderBottom(BorderStyle.THICK);		
 		
 		Font headerFont = wb.createFont();
 		//headerFont.setColor(IndexedColors.RED.getIndex());
@@ -747,6 +750,10 @@ public class ExcelUtil {
 		XSSFCellStyle headerStyle = wb.createCellStyle();
 		headerStyle.setWrapText(true);
 		headerStyle.setVerticalAlignment(VerticalAlignment.TOP);
+		headerStyle.setBorderLeft(BorderStyle.THIN);
+		headerStyle.setBorderRight(BorderStyle.THIN);
+		headerStyle.setBorderTop(BorderStyle.THIN);
+		headerStyle.setBorderBottom(BorderStyle.THIN);
 		return headerStyle;
 	}	
 	
@@ -817,6 +824,20 @@ public class ExcelUtil {
 
 		if(agrmtList != null){
 			int i = 1;
+			
+			double makerTime = 0.0;
+			double checkerTime = 0.0;
+			double smeTime = 0.0;
+			double totalTime = 0.0;
+			double age = 0.0;
+			int makerCnt = 0;
+			int checkerCnt = 0;
+			int smeCnt = 0;
+			int totalCnt = 0;
+			int ageCnt = 0;
+			
+			DecimalFormat df = new DecimalFormat("#.##");
+			
 			for(DocWkflwProcess r : agrmtList){
 				XSSFRow row = sheet.createRow(i);
 				
@@ -859,32 +880,116 @@ public class ExcelUtil {
 						cell.setCellValue(r.getSmeComments());
 						break;
 					case 11:
-						cell.setCellValue(ahtMap.get(r.getAgreementId()).getMakerHeldTime());
+						Double thisMakerTime = ahtMap.get(r.getAgreementId()).getMakerHeldTime();
+						if(thisMakerTime != null && thisMakerTime > 0.0){
+							makerCnt++;
+						}
+						cell.setCellValue(DocumentWorkflowToolUtility.getNumforExcelReport(thisMakerTime));
+						makerTime += thisMakerTime;
 						break;
 					case 12:
-						cell.setCellValue(ahtMap.get(r.getAgreementId()).getCheckerHeldTime());
+						Double thisCheckerTime = ahtMap.get(r.getAgreementId()).getCheckerHeldTime();
+						if(thisCheckerTime != null && thisCheckerTime > 0.0){
+							checkerCnt++;
+						}						
+						cell.setCellValue(DocumentWorkflowToolUtility.getNumforExcelReport(thisCheckerTime));
+						checkerTime += thisCheckerTime;
 						break;
 					case 13:
-						cell.setCellValue(ahtMap.get(r.getAgreementId()).getSmeHeldTime());
+						Double thisSMETime = ahtMap.get(r.getAgreementId()).getSmeHeldTime();
+						if(thisSMETime != null && thisSMETime > 0.0){
+							smeCnt++;
+						}						
+						cell.setCellValue(DocumentWorkflowToolUtility.getNumforExcelReport(thisSMETime));
+						System.out.println("###### thisSMETime "+thisSMETime);
+						smeTime += thisSMETime;
 						break;
 					case 14:
-						cell.setCellValue(ahtMap.get(r.getAgreementId()).getTotalHeldTime());
+						Double thisTotalTime = ahtMap.get(r.getAgreementId()).getTotalHeldTime();
+						if(thisTotalTime != null && thisTotalTime > 0.0){
+							totalCnt++;
+						}						
+						cell.setCellValue(DocumentWorkflowToolUtility.getNumforExcelReport(thisTotalTime));
+						totalTime += thisTotalTime;
 						break;	
 					case 15:
-						cell.setCellValue(ahtMap.get(r.getAgreementId()).getAge());
+						Double thisAge = ahtMap.get(r.getAgreementId()).getAge();
+						if(thisAge != null && thisAge > 0.0){
+							ageCnt++;
+						}						
+						cell.setCellValue(DocumentWorkflowToolUtility.getNumforExcelReport(thisAge));
+						age += thisAge;
 						break;						
 					}
 					
 				}
 				i++;
 			}
+			createAverageRow(sheet, makerTime, checkerTime, smeTime, totalTime, age, agrmtList.size(), bodyStyle, df, makerCnt, checkerCnt, smeCnt, totalCnt, ageCnt);
 			for(int j=0; j<16; j++){
 				sheet.setColumnWidth(j, 3500);
 			}
 		}
 	
 		return;
-	}		
+	}
+	
+	private void createAverageRow(XSSFSheet sheet,	double makerTime, double checkerTime, double smeTime,double totalTime,double age, int numOfRecords,XSSFCellStyle bodyStyle, DecimalFormat df
+			,int makerCnt,
+			int checkerCnt,
+			int smeCnt,
+			int totalCnt,
+			int ageCnt){
+		XSSFRow row = sheet.createRow(numOfRecords +1);
+		
+		for (int j = 10; j < 16; j++) {
+			XSSFCell cell = row.createCell(j);
+			cell.setCellStyle(bodyStyle);
+
+			switch (j) {
+			case 10:
+				cell.setCellValue("Average");
+				break;
+			case 11:
+				if (makerCnt != 0) {
+					cell.setCellValue(DocumentWorkflowToolUtility.getNumforExcelReport(makerTime / makerCnt));
+				} else {
+					cell.setCellValue(0);
+				}
+				break;
+			case 12:
+				if (checkerCnt != 0) {
+					cell.setCellValue(DocumentWorkflowToolUtility.getNumforExcelReport(checkerTime / checkerCnt));
+				} else {
+					cell.setCellValue(0);
+				}
+				break;
+			case 13:
+				if (smeCnt != 0) {
+					cell.setCellValue(DocumentWorkflowToolUtility.getNumforExcelReport(smeTime / smeCnt));
+				} else {
+					cell.setCellValue(0);
+				}
+				break;
+			case 14:
+				if (totalCnt != 0) {
+					cell.setCellValue(DocumentWorkflowToolUtility.getNumforExcelReport(totalTime / totalCnt));
+				} else {
+					cell.setCellValue(0);
+				}
+				break;
+			case 15:
+				if (ageCnt != 0) {
+					cell.setCellValue(DocumentWorkflowToolUtility.getNumforExcelReport(age / ageCnt));
+				} else {
+					cell.setCellValue(0);
+				}
+				break;
+			}
+		}
+		
+		
+	}
 	
 	public void createAuditTrailExcelReportHeader(XSSFSheet sheet, XSSFCellStyle headerStyle) {
 

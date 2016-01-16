@@ -10,6 +10,11 @@ var adminlanding = function () {
 	function getElementById(elemId){
 		return document.getElementById(elemId);
 	}
+	
+	function isIE () {
+		  var myNav = navigator.userAgent.toLowerCase();
+		  return (myNav.indexOf('msie') != -1) ? parseInt(myNav.split('msie')[1]) : false;
+	}	
 
 	var selectedItemsTeamList = [];
 	var selectedItemsMyList = null;
