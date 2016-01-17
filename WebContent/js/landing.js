@@ -65,8 +65,16 @@ var landing = function () {
 	this.assignMe=assignMe;
 	function assignMe(){
 		if(selectedItemsTeamList.length == 0){
-			showMessage("Please select at least one agreement",'Select Agreement');
+			showMessage("Please select at least one agreement", "warning");
+			//swal({title:"Please select at least one agreement", type:"warning"});
 			return false;
+		} else {
+			for (var k in selectedItemsTeamList) {
+				if ($(selectedItemsTeamList[k]+'assignedTo').innerHTML != null && $(selectedItemsTeamList[k]+'assignedTo').innerHTML != ''){
+					showMessage("Please uncheck the already assigned agreement!!!", "warning");
+					return false;
+				}
+			}
 		}
 		serviceObj.assignToMe(selectedItemsTeamList,assignRespFn);
 		
@@ -76,20 +84,13 @@ var landing = function () {
 	function assignRespFn(responseData){
 		
 		if(responseData.responseText === "true"){
-			showMessage("Assignments assigned successfully. Please check My Inbox","SUCCESS");
-			//resetAssignmentList();
+			showMessage("Assignments assigned successfully. Please check My Inbox","success");
+			//swal({title:"Assignments assigned successfully. Please check My Inbox",type:"success"});
 			reloadGridData();
 		} else {
-			showMessage("There was an error in the process. <br> Please try again.","Error");
+			showMessage("There was an error in the process. <br> Please try again.","error");
+			//swal({title:"There was an error in the process. <br> Please try again.",type:"error"});
 		}
-	}
-	
-	function resetAssignmentList(){
-		for(var k in selectedItemsTeamList){
-			$(selectedItemsTeamList[k]).disabled = true;
-			selectedItemsTeamList[k]=null;
-		}
-		//alert(selectedItemsTeamList);
 	}
 	
 	this.setMyAssignment=setMyAssignment;
@@ -101,7 +102,8 @@ var landing = function () {
 			if(selectedItemsMyList == null){
 				selectedItemsMyList = control.value;
 			} else {
-				showMessage('You can work on one agreement at a time','Select Agreement');
+				showMessage("You can work on one agreement at a time","warning");
+				//swal({title:"You can work on one agreement at a time",type:"warning"});
 				control.checked=false;
 				return false;
 			}
@@ -277,15 +279,18 @@ var landing = function () {
 		
 		if($("selectedRoleId").value == "2" || $("selectedRoleId").value == "3"){
 			if ($('numPages').value == null || $('numPages').value == '' || $('numPages').value == 0) {
-				showMessage("Please fill up Number of Pages in Comment Section...","Alert");
+				showMessage("Please fill up Comments, Number of Pages and Number of Fields in Comment Section befor marking an agreement as Complete...","warning");
+				//swal({title:"Please fill up Comments, Number of Pages and Number of Fields in Comment Section befor marking an agreement as Complete...",type:"warning"});
 				return false;
 			}
 			if ($('numFields').value == null || $('numFields').value == '' || $('numFields').value == 0) {
-				showMessage("Please fill up Number of Fields in Comment Section...","Alert");
+				showMessage("Please fill up Comments, Number of Pages and Number of Fields in Comment Section befor marking an agreement as Complete...","warning");
+				//swal({title:"Please fill up Comments, Number of Pages and Number of Fields in Comment Section befor marking an agreement as Complete...",type:"warning"});
 				return false;
 			}
 			if ($('checkerComments').value == null || $('checkerComments').value == '') {
-				showMessage("Please fill up Comments in Comment Section...","Alert");
+				showMessage("Please fill up Comments, Number of Pages and Number of Fields in Comment Section befor marking an agreement as Complete...","warning");
+				//swal({title:"Please fill up Comments, Number of Pages and Number of Fields in Comment Section befor marking an agreement as Complete...",type:"warning"});
 				return false;
 			}
 		}
@@ -361,21 +366,24 @@ var landing = function () {
 	function holdClick(){
 		if($("selectedRoleId").value == "1" && $('checkerStatus').value == 15){				
 			if($('checkerComments').value == null || $('checkerComments').value == ''){
-				showMessage('Please fill in Comments Section','Alert');
+				showMessage("Please fill Comments in Comments Section before marking an agreement as Hold...","warning");
+				//swal({title:"Please fill Comments in Comments Section before marking an agreement as Hold...",type:"warning"});
 				return false;
 			}
 		}
 
 		if($("selectedRoleId").value == "2" && $('checkerStatus').value == 15){
 			if($('checkerComments').value == null || $('checkerComments').value == '' || $('errorReasonList').value == -1){
-				showMessage('Please fill in both Comments Section and Error Reason','Alert');
+				showMessage("Please fill in both Comments and Error Reasonin Comment Section before marking an agreement as Hold...","warning");
+				//swal({title:"Please fill in both Comments and Error Reasonin Comment Section before marking an agreement as Hold...",type:"warning"});
 				return false;
 			}
 		}
 		
 		if($("selectedRoleId").value == "3" && $('checkerStatus').value == 21){
 			if($('checkerComments').value == null || $('checkerComments').value == ''){
-				showMessage('Please fill in Comments Section','Alert');
+				showMessage("Please fill in Comment in Comment Section before marking an agreement as Hold...","warning");
+				//swal({title:"Please fill in Comment in Comment Section before marking an agreement as Hold...",type:"warning"});
 				return false;
 			}
 		}	
@@ -387,14 +395,33 @@ var landing = function () {
 			}
 		}
 		else {
-			jDialog({
+			/*jDialog({
 			  title:"Hold Agreement",
 			  content:"Hold Agreement. Are you sure?",
 			  callBack:function(){
 				  holdwork();
 				  jDialog.currentDialog.remove();
 			  }
-			});
+			});*/
+			swal({   
+					title: "Hold Agreement! Are you sure?",   
+					text: "You will not be able to recover the previous atate after holding this agreement!",   
+					type: "warning",   
+					showCancelButton: true,   
+					confirmButtonColor: "rgb(66, 184, 221)",  
+					confirmButtonText: "Yes, hold it!",
+					closeOnConfirm: false,   
+					closeOnCancel: false
+				 },
+			     function(isConfirm){ 
+					if(isConfirm){
+						holdwork();
+						swal({title:"Successfully hold the agreement!", type:"success"});
+					} else {
+						swal({title:"Not marking the agreement as Hold!!!", type:"error"});
+					}
+			     }
+				);
 		}
 		
 	}
@@ -490,10 +517,14 @@ var landing = function () {
 			alert(msg);
 		}
 		else {
-			jDialog({
+			/*jDialog({
 			  title:msgTitle,
 			  content:msg				  
-			});
+			});*/
+			swal({   
+					title: msg,   
+					type: msgTitle
+				});
 		}
 		
 	}	

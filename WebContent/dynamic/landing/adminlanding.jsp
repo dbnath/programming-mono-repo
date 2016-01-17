@@ -19,6 +19,8 @@
 </div> <!-- end of main container -->
 <input type="hidden" id="viewId"value="<%=request.getParameter("u8_input")%>" />
 
+<%@ include file="../common/footer.jsp" %>
+
 <script>
 	document.getElementById("u8_input").value=document.getElementById("viewId").value;
 	var sorter = new TINY.table.sorter('sorter','mytable',{

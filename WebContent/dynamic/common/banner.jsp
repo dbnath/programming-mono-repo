@@ -36,8 +36,10 @@
         <link rel="stylesheet" href="<%=request.getContextPath()%>/css/mainstyle.css">
     <!--<![endif]-->
 
-	<link rel="stylesheet" href="<%=request.getContextPath()%>/css/jDialog.css">
-	<script language="Javascript" src="<%=request.getContextPath()%>/css/jDialog.js"></script>
+	<!--<link rel="stylesheet" href="<%=request.getContextPath()%>/css/jDialog.css">
+	<script language="Javascript" src="<%=request.getContextPath()%>/css/jDialog.js"></script>-->
+	<link rel="stylesheet" href="<%=request.getContextPath()%>/static/sweetalert-master/dist/sweetalert.css">
+	<script type="text/javascript" src="<%=request.getContextPath()%>/static/sweetalert-master/dist/sweetalert.min.js"></script>
 	
 	<link rel="stylesheet" href="<%=request.getContextPath()%>/css/pikaday.css">
 	

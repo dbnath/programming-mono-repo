@@ -16,6 +16,11 @@ var adminlanding = function () {
 		  return (myNav.indexOf('msie') != -1) ? parseInt(myNav.split('msie')[1]) : false;
 	}	
 
+	function isIE () {
+		  var myNav = navigator.userAgent.toLowerCase();
+		  return (myNav.indexOf('msie') != -1) ? parseInt(myNav.split('msie')[1]) : false;
+	}
+
 	var selectedItemsTeamList = [];
 	var selectedItemsMyList = null;
 	
@@ -74,11 +79,11 @@ var adminlanding = function () {
 	this.assignRespFn=assignRespFn;
 	function assignRespFn(responseData){
 		if(responseData.responseText === "true"){
-			showMessage("Assignment assigned to you for further action.","Notification");
+			showMessage("Assignments assigned successfully. Please check My Inbox","success");
 			//resetAssignmentList();
 			reloadGridData();
 		} else {
-			showMessage("There was an error in the process. Please try again.","Error");
+			showMessage("There was an error in the process. <br> Please try again.","error");
 		}
 	}
 	
@@ -99,7 +104,7 @@ var adminlanding = function () {
 			if(selectedItemsMyList == null){
 				selectedItemsMyList = control.value;
 			} else {
-				showMessage('You can work on one agreement at a time','Select Agreement');
+				showMessage("You can work on one agreement at a time","warning");
 				//jDialog('You can work on one agreement at a time.');
 				control.checked=false;
 				return false;
@@ -277,15 +282,15 @@ var adminlanding = function () {
 	function completeClick(){
 		if($("viewId").value == "2" || $("viewId").value == "3"){
 			if ($('numPages').value == null || $('numPages').value == '' || $('numPages').value == 0) {
-				showMessage("Please fill up Number of Pages in Comment Section...","Alert");
+				showMessage("Please fill up Comments, Number of Pages and Number of Fields in Comment Section befor marking an agreement as Complete...","warning");
 				return false;
 			}
 			if ($('numFields').value == null || $('numFields').value == '' || $('numFields').value == 0) {
-				showMessage("Please fill up Number of Fields in Comment Section...","Alert");
+				showMessage("Please fill up Comments, Number of Pages and Number of Fields in Comment Section befor marking an agreement as Complete...","warning");
 				return false;
 			}
 			if ($('checkerComments').value == null || $('checkerComments').value == '') {
-				showMessage("Please fill up Comments in Comment Section...","Alert");
+				showMessage("Please fill up Comments, Number of Pages and Number of Fields in Comment Section befor marking an agreement as Complete...","warning");
 				return false;
 			}
 		}
@@ -362,21 +367,21 @@ var adminlanding = function () {
 		//jDialog('Do you realy want to hold it?',function(){
 			if($("viewId").value == "1" && $('checkerStatus').value == 15){				
 				if($('checkerComments').value == null || $('checkerComments').value == ''){
-					showMessage('Please fill in Comments Section','Alert');
+					showMessage("Please fill Comments in Comments Section before marking an agreement as Hold...","warning");
 					return false;
 				}
 			}
 	
 			if($("viewId").value == "2" && $('checkerStatus').value == 15){
 				if($('checkerComments').value == null || $('checkerComments').value == '' || $('errorReasonList').value == -1){
-					showMessage('Please fill in bothComments Section and Error Reason','Alert');
+					showMessage("Please fill in both Comments and Error Reasonin Comment Section before marking an agreement as Hold...","warning");
 					return false;
 				}
 			}
 			
 			if($("viewId").value == "3" && $('checkerStatus').value == 21){
 				if($('checkerComments').value == null || $('checkerComments').value == ''){
-					showMessage('Please fill in Comments Section','Alert');
+					showMessage("Please fill in Comment in Comment Section before marking an agreement as Hold...","warning");
 					return false;
 				}
 			}		
@@ -388,14 +393,33 @@ var adminlanding = function () {
 				}
 			}
 			else {
-				jDialog({
+				/*jDialog({
 				  title:"Hold Agreement",
 				  content:"Hold Agreement. Are you sure?",
 				  callBack:function(){
 					  holdwork();
 					  jDialog.currentDialog.remove();
 				  }
-				});
+				});*/
+				swal({   
+						title: "Hold Agreement! Are you sure?",   
+						text: "You will not be able to recover the previous atate after holding this agreement!",   
+						type: "warning",   
+						showCancelButton: true,   
+						confirmButtonColor: "rgb(66, 184, 221)",  
+						confirmButtonText: "Yes, hold it!",
+						closeOnConfirm: false,   
+						closeOnCancel: false
+					},
+					function(isConfirm){ 
+						if(isConfirm){
+							holdwork();
+							showMessage("Successfully hold the agreement!", "success");
+						} else {
+							showMessage("Not marking the agreemnet as Hold!!!", "error");
+						}
+						
+					});
 			}			
 			
 			var inputObj = {};
@@ -505,10 +529,14 @@ var adminlanding = function () {
 			alert(msg);
 		}
 		else {
-			jDialog({
+			/*jDialog({
 			  title:msgTitle,
 			  content:msg				  
-			});
+			});*/
+			swal({
+				title:msg,
+				type: msgTitle
+				});
 		}
 		
 	}	
