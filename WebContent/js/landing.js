@@ -405,7 +405,7 @@ var landing = function () {
 			});*/
 			swal({   
 					title: "Hold Agreement! Are you sure?",   
-					text: "You will not be able to recover the previous workflow state if you click Yes, Hold It buttton!",   
+					text: "You will not be able to recover the previous workflow state if you click Yes, hold it buttton!",   
 					type: "warning",   
 					showCancelButton: true,   
 					confirmButtonColor: "rgb(66, 184, 221)",  
