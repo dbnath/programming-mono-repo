@@ -403,7 +403,7 @@ var adminlanding = function () {
 				});*/
 				swal({   
 						title: "Hold Agreement! Are you sure?",   
-						text: "You will not be able to recover the previous atate after holding this agreement!",   
+						text: "You will not be able to recover the previous workflow state if  you click Yes, hold it Button!",   
 						type: "warning",   
 						showCancelButton: true,   
 						confirmButtonColor: "rgb(66, 184, 221)",  
