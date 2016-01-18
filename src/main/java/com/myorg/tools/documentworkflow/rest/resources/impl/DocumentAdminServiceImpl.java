@@ -11,19 +11,16 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
+import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.DataValidation;
 import org.apache.poi.ss.usermodel.DataValidationConstraint;
 import org.apache.poi.ss.usermodel.DataValidationHelper;
-import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFColor;
-import org.apache.poi.xssf.usermodel.XSSFCreationHelper;
 import org.apache.poi.xssf.usermodel.XSSFDataValidationHelper;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -37,12 +34,7 @@ import com.myorg.tools.documentworkflow.model.AgreementType;
 import com.myorg.tools.documentworkflow.model.AgreementWorkflow;
 import com.myorg.tools.documentworkflow.model.DocWkflwProcess;
 import com.myorg.tools.documentworkflow.model.DocumentRepository;
-import com.myorg.tools.documentworkflow.model.DocumentSubTagValues;
-import com.myorg.tools.documentworkflow.model.DocumentTag;
-import com.myorg.tools.documentworkflow.model.DocumentTagSubTagMapping;
 import com.myorg.tools.documentworkflow.model.DocumentType;
-import com.myorg.tools.documentworkflow.model.DocumentTypeTagMapping;
-import com.myorg.tools.documentworkflow.model.DocumentTypeTagSubTagsMap;
 import com.myorg.tools.documentworkflow.rest.resources.BaseResource;
 import com.myorg.tools.documentworkflow.rest.resources.DocumentAdminService;
 import com.myorg.tools.documentworkflow.util.DocumentWorkflowToolUtility;
@@ -53,6 +45,8 @@ import com.sun.jersey.multipart.FormDataParam;
 public class DocumentAdminServiceImpl extends BaseResource implements DocumentAdminService {
 	
 	private DocumentAdminDAO documentAdminDAO;
+	
+	static Logger log = Logger.getLogger(DocumentAdminServiceImpl.class.getName());
 	
 	/**
 	 * @return the documentAdminDAO
@@ -158,7 +152,7 @@ public class DocumentAdminServiceImpl extends BaseResource implements DocumentAd
 			/*User user = getLoggedInUser();
 			userId = user.getUserId();*/
 			
-			System.out.println("###### User id to upload doc "+userId);
+			log.debug("###### User id to upload doc "+userId);
 			List<AgreementWorkflow> docList = parseBulkUploadFile(uploadedInputStream);
 			//documentAdminDAO.uploadDocumentInformation(docList, userId);
 			boolean uploadStatus = documentAdminDAO.uploadAgreementInformation(docList, userId);
@@ -170,10 +164,10 @@ public class DocumentAdminServiceImpl extends BaseResource implements DocumentAd
 			return Response.ok().entity("<html><head><script>function refreshParent(){window.close();}</script></head><body><div>Document Uploaded Successfully</div><input type=\"Button\" value=\"Close Window\" onclick=\"refreshParent()\" /></body></html>").build();
 			
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 			return Response.serverError().entity("Documents failed to upload").build();
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 			return Response.serverError().entity("Documents failed to upload").build();
 		}
 		
@@ -193,10 +187,10 @@ public class DocumentAdminServiceImpl extends BaseResource implements DocumentAd
 			return Response.ok().entity("<html><head><script>function refreshParent(){window.close();}</script></head><body><div>Document Uploaded Successfully</div><input type=\"Button\" value=\"Close Window\" onclick=\"refreshParent()\" /></body></html>").build();
 			
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 			return Response.serverError().entity("Documents failed to upload").build();
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 			return Response.serverError().entity("Documents failed to upload").build();
 		}
 	}
@@ -215,10 +209,10 @@ public class DocumentAdminServiceImpl extends BaseResource implements DocumentAd
 			return Response.ok().entity("<html><head><script>function refreshParent(){window.close();}</script></head><body><div>Document Uploaded Successfully</div><input type=\"Button\" value=\"Close Window\" onclick=\"refreshParent()\" /></body></html>").build();
 			
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 			return Response.serverError().entity("Documents failed to upload").build();
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 			return Response.serverError().entity("Documents failed to upload").build();
 		}
 	}	
@@ -277,15 +271,15 @@ public class DocumentAdminServiceImpl extends BaseResource implements DocumentAd
 							switch (colNum) {
 							case 0:
 								doc.setAgreementId(s);
-								System.out.println("###### agreemen id "+s);
+								log.debug("###### agreemen id "+s);
 								break;
 							case 1:
 								doc.setAgreementTypeDesc(s);
-								System.out.println("###### agreemen type "+s);
+								log.debug("###### agreemen type "+s);
 								break;
 							case 2:
 								doc.setLob(s);
-								System.out.println("###### lob "+s);
+								log.debug("###### lob "+s);
 								break;
 							/*case 3:
 								doc.setWfStatusDesc(DocumentWorkflowToolUtility.isEmpty(s) ? "New" : s);
@@ -293,7 +287,7 @@ public class DocumentAdminServiceImpl extends BaseResource implements DocumentAd
 								break;*/
 							case 3:
 								doc.setAssignedTo(s);
-								System.out.println("###### assigned to "+s);
+								log.debug("###### assigned to "+s);
 								break;
 							}
 
@@ -330,10 +324,10 @@ public class DocumentAdminServiceImpl extends BaseResource implements DocumentAd
 			return Response.ok(file).header("Content-Disposition", "attachment; filename=\"AgreementUploadTemplate.xlsx\"").build();
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 			return Response.status(404).entity("Template Not Available: ").type("text/plain").build();
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 			return Response.status(404).entity("Template Not Available: ").type("text/plain").build();
 		}
 		
@@ -359,10 +353,10 @@ public class DocumentAdminServiceImpl extends BaseResource implements DocumentAd
 			return Response.ok(file).header("Content-Disposition", "attachment; filename=\"ErrorTypeUploadTemplate.xlsx\"").build();
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 			return Response.status(404).entity("Template Not Available: ").type("text/plain").build();
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 			return Response.status(404).entity("Template Not Available: ").type("text/plain").build();
 		}
 		
@@ -385,10 +379,10 @@ public class DocumentAdminServiceImpl extends BaseResource implements DocumentAd
 			return Response.ok(file).header("Content-Disposition", "attachment; filename=\"AgreementTypeUploadTemplate.xlsx\"").build();
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 			return Response.status(404).entity("Template Not Available: ").type("text/plain").build();
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 			return Response.status(404).entity("Template Not Available: ").type("text/plain").build();
 		}
 		
@@ -437,10 +431,10 @@ public class DocumentAdminServiceImpl extends BaseResource implements DocumentAd
 			return Response.ok(file).header("Content-Disposition", "attachment; filename=\"FileUploadTemplate.xlsx\"").build();
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 			return Response.status(404).entity("Template Not Available: ").type("text/plain").build();
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 			return Response.status(404).entity("Template Not Available: ").type("text/plain").build();
 		}
 		
@@ -539,7 +533,7 @@ public class DocumentAdminServiceImpl extends BaseResource implements DocumentAd
 			String rptToDate = DocumentWorkflowToolUtility.convertDateToString(rptToDt);
 			AHTWrapper ahtWrapper = documentAdminDAO.extractAgreementAHTInfo(rptFromDate, rptToDate);
 			
-			System.out.println(rptFromDate + "######" + rptToDate);
+			log.debug(rptFromDate + "######" + rptToDate);
 			List<DocWkflwProcess> agrmtList = ahtWrapper.getDocRepoList();
 			Map<String, AHTBean> ahtMap  = ahtWrapper.getAhtMap();
 			//System.out.println("agrmtList size..."+agrmtList.size()+"#### ahtMap size..."+ahtMap.size());
@@ -561,9 +555,9 @@ public class DocumentAdminServiceImpl extends BaseResource implements DocumentAd
 			return Response.ok(file).header("Content-Disposition", "attachment; filename=\"Agreement_Data_Dump.xlsx\"").build();			
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 		}
 		
 		return null;
@@ -589,7 +583,7 @@ public class DocumentAdminServiceImpl extends BaseResource implements DocumentAd
 			String rptToDate = DocumentWorkflowToolUtility.convertDateToString(rptToDt);
 			List<DocWkflwProcess> agrmtList = documentAdminDAO.extractAgreementsAuditTrail(rptFromDate, rptToDate);
 			
-			System.out.println("agrmtList size..."+agrmtList.size());
+			log.debug("agrmtList size..."+agrmtList.size());
 			
 			XSSFWorkbook wb = new XSSFWorkbook();			
 			XSSFSheet sheet = wb.createSheet();
@@ -609,9 +603,9 @@ public class DocumentAdminServiceImpl extends BaseResource implements DocumentAd
 			return Response.ok(file).header("Content-Disposition", "attachment; filename=\"Agreements_Audit_Trail_Dump.xlsx\"").build();			
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 		}
 		
 		return null;

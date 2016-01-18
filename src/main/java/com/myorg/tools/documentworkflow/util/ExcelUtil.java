@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.DataValidation;
 import org.apache.poi.ss.usermodel.DataValidationConstraint;
@@ -33,6 +34,8 @@ import com.myorg.tools.documentworkflow.model.Role;
 import com.myorg.tools.documentworkflow.model.RoleUser;
 
 public class ExcelUtil {
+	
+	static Logger log = Logger.getLogger(ExcelUtil.class.getName());
 
 	public XSSFWorkbook generateDocUploadTemplate(List<AgreementType> agrTypList, List<String> makerList) throws IOException{
 		
@@ -44,7 +47,7 @@ public class ExcelUtil {
 		}
 		
 		String[] makerValues = makerList.toArray(new String[]{});
-		System.out.println("###### makerValues"+makerValues);
+		log.info("###### makerValues"+makerValues);
 		
 		XSSFWorkbook wb = new XSSFWorkbook();			
 		XSSFSheet sheet = wb.createSheet();
@@ -404,23 +407,23 @@ public class ExcelUtil {
 							switch (colNum) {
 							case 0:
 								doc.setAgreementId(s);
-								System.out.println("###### agreemen id "+s);
+								log.info("###### agreemen id "+s);
 								break;
 							case 1:
 								doc.setAgreementTypeDesc(s);
-								System.out.println("###### agreemen type "+s);
+								log.info("###### agreemen type "+s);
 								break;
 							case 2:
 								doc.setLob(s);
-								System.out.println("###### lob "+s);
+								log.info("###### lob "+s);
 								break;
 							case 3:
 								doc.setWfStatusDesc(DocumentWorkflowToolUtility.isEmpty(s) ? "New" : s);
-								System.out.println("###### status id "+s);
+								log.info("###### status id "+s);
 								break;
 							case 4:
 								doc.setAssignedTo(s);
-								System.out.println("###### assigned to "+s);
+								log.info("###### assigned to "+s);
 								break;
 							}
 
@@ -487,12 +490,12 @@ public class ExcelUtil {
 							case 0:
 								if(s != null){
 									doc.setErrorTypeId(Double.valueOf(s).intValue());;
-									System.out.println("###### Error Type id "+doc.getErrorTypeId());
+									log.info("###### Error Type id "+doc.getErrorTypeId());
 								}
 								break;
 							case 1:
 								doc.setErrorTypeName(s);
-								System.out.println("###### Error Type Name "+s);
+								log.info("###### Error Type Name "+s);
 								break;
 							}
 						}
@@ -555,13 +558,13 @@ public class ExcelUtil {
 							case 0:
 								if(s != null){
 									doc.setAgreementTypeId(Double.valueOf(s).intValue());;
-									System.out.println("###### Error Type id "+doc.getAgreementTypeId());
+									log.info("###### Error Type id "+doc.getAgreementTypeId());
 								}
 								break;
 							case 1:
 								if(s != null){
 									doc.setAgrementTypeName(s);
-									System.out.println("###### Error Type Code "+s);
+									log.info("###### Error Type Code "+s);
 								}
 								break;
 							}
@@ -901,7 +904,7 @@ public class ExcelUtil {
 							smeCnt++;
 						}						
 						cell.setCellValue(DocumentWorkflowToolUtility.getNumforExcelReport(thisSMETime));
-						System.out.println("###### thisSMETime "+thisSMETime);
+						log.info("###### thisSMETime "+thisSMETime);
 						smeTime += thisSMETime;
 						break;
 					case 14:
@@ -1160,9 +1163,9 @@ public class ExcelUtil {
 			
 			wb.close();*/
 			
-			System.out.println("###### DONE");
+			log.info("###### DONE");
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.error(e);
 		} 
 	}
 

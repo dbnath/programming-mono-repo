@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.TransactionDefinition;
@@ -25,6 +26,8 @@ import com.myorg.tools.documentworkflow.util.DocumentWorkflowToolUtility;
 
 public class UserAdminDAOImpl extends BaseJDBCTemplate implements UserAdminDAO {
 
+	static Logger log = Logger.getLogger(UserAdminDAOImpl.class.getName());
+	
 	public List<User> populateUserbase() throws SQLException, Exception {
 		String SQL = DocumentWorkflowToolConstant.USER_BASE_POPULATE_SQL;
 		List<User> usersList = null;
@@ -150,10 +153,10 @@ public class UserAdminDAOImpl extends BaseJDBCTemplate implements UserAdminDAO {
 			TransactionStatus status = this.getTransactionManager().getTransaction(def);			
 			try {
 				HashMap<String, Integer> roleMap = DocumentWorkflowToolUtility.mapByValue(new ArrayList<ReverseMappable>(populateMasterRoleList()));	
-				System.out.println("###### roleMap "+roleMap);
+				log.debug("###### roleMap "+roleMap);
 				for(RoleUser doc : roleUserList){
 					if(doc != null){
-						System.out.println("###### roleName "+doc.getRoleName());
+						log.debug("###### roleName "+doc.getRoleName());
 						doc.setRoleId(roleMap.get(doc.getRoleName()));
 						updateUserRoleInDB(doc, jdbcTemplate, userId);
 					}
@@ -162,11 +165,11 @@ public class UserAdminDAOImpl extends BaseJDBCTemplate implements UserAdminDAO {
 				return true;
 
 			} catch (SQLException e) {
-				e.printStackTrace();
+				log.error(e.getMessage(),e);
 				this.getTransactionManager().rollback(status);
 				return false;
 			} catch (Exception e) {
-				e.printStackTrace();
+				log.error(e.getMessage(),e);
 				this.getTransactionManager().rollback(status);
 				return false;				
 			}			

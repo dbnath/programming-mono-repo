@@ -8,6 +8,8 @@ import java.util.Map;
 
 import javax.ws.rs.core.Response;
 
+import org.apache.log4j.Logger;
+
 import com.myorg.tools.documentworkflow.constant.Constants;
 import com.myorg.tools.documentworkflow.dao.DocumentWorkflowDAO;
 import com.myorg.tools.documentworkflow.dto.DocumentDTO;
@@ -22,6 +24,8 @@ import com.myorg.tools.documentworkflow.util.DocumentWorkflowToolUtility;
 
 public class DocumentWorkflowServiceImpl extends BaseResource implements DocumentWorkflowService {
 
+	static Logger log = Logger.getLogger(DocumentWorkflowServiceImpl.class.getName());
+	
 	private DocumentWorkflowDAO documentDAO;
 	
 	/**
@@ -54,24 +58,24 @@ public class DocumentWorkflowServiceImpl extends BaseResource implements Documen
 	
 	public Response getAllDocuments(String userId) {
 		try {
-			System.out.println("Inside getAllDocuments userId = "+userId);
+			log.debug("Inside getAllDocuments userId = "+userId);
 			List<DocumentWorkflow> documentList = documentDAO
 					.getAllDocuments(userId);
 			return Response.ok().entity(documentList).build();
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 			return Response.serverError().build();
 		}
 	}
 
 	public Response getDocumentDetail(Integer docId) {
 		try {
-			System.out.println("docId" +docId);
+			log.debug("docId" +docId);
 			DocumentWorkflowDetail documentWorkflowDetail = documentDAO
 					.getDocumentDetail(docId);
 			return Response.ok().entity(documentWorkflowDetail).build();
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 			return Response.serverError().build();
 		}
 	}
@@ -99,21 +103,21 @@ public class DocumentWorkflowServiceImpl extends BaseResource implements Documen
 				docDetailObj.setLastUpdatedBy(userId);
 				docDetailObj.setLastUpdatedDt(new Date());
 
-				System.out.println("###### isFinalSubmit "+isFinalSubmit);
-				System.out.println("###### docObj "+docObj);
-				System.out.println("###### docDetailObj "+docDetailObj);
-				System.out.println("###### Submitting workflow for DocID "+docObj.getDocId()+",Doc Type "+docObj.getDocTypeId()+", Status "+docObj.getWfStatusId());
+				log.debug("###### isFinalSubmit "+isFinalSubmit);
+				log.debug("###### docObj "+docObj);
+				log.debug("###### docDetailObj "+docDetailObj);
+				log.debug("###### Submitting workflow for DocID "+docObj.getDocId()+",Doc Type "+docObj.getDocTypeId()+", Status "+docObj.getWfStatusId());
 				documentDAO.submitWorkflow(docObj, docDetailObj, isFinalSubmit);
-				System.out.println("###### Completed workflow for DocID "+docObj.getDocId()+",Doc Type "+docObj.getDocTypeId()+", Status "+docObj.getWfStatusId());
+				log.debug("###### Completed workflow for DocID "+docObj.getDocId()+",Doc Type "+docObj.getDocTypeId()+", Status "+docObj.getWfStatusId());
 			}
 			
 			return Response.ok().entity(Boolean.TRUE).build();
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 			return Response.serverError().build();
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 			return Response.serverError().build();
 		}
 	}
@@ -170,12 +174,12 @@ public class DocumentWorkflowServiceImpl extends BaseResource implements Documen
 
 	@Override
 	public Response getAgreementsForAdminUsers(DocumentDTO documentDTO) {
-		System.out.println("###### GORU "+documentDTO.getRoleId());
+		log.debug("###### "+documentDTO.getRoleId());
 		try {
 			documentDTO = documentDAO.getAgreementsForAdminUsers(documentDTO.getRoleId());
 			DocumentWorkflowToolUtility.setResponse(documentDTO, Constants.SUCCESS_CODE, Constants.SUCCESS_MESSAGE);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 			DocumentWorkflowToolUtility.setResponse(documentDTO, Constants.FAILURE_CODE, e.getMessage());
 		}
 		return Response.ok(documentDTO).build(); 
@@ -187,7 +191,7 @@ public class DocumentWorkflowServiceImpl extends BaseResource implements Documen
 			documentDTO = documentDAO.getDocumentsForMaker(documentDTO);
 			DocumentWorkflowToolUtility.setResponse(documentDTO, Constants.SUCCESS_CODE, Constants.SUCCESS_MESSAGE);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 			DocumentWorkflowToolUtility.setResponse(documentDTO, Constants.FAILURE_CODE, e.getMessage());
 		}
 		return Response.ok(documentDTO).build();
@@ -200,7 +204,7 @@ public class DocumentWorkflowServiceImpl extends BaseResource implements Documen
 			documentDTO = documentDAO.getDocumentsForAllCheckers();
 			DocumentWorkflowToolUtility.setResponse(documentDTO, Constants.SUCCESS_CODE, Constants.SUCCESS_MESSAGE);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 			DocumentWorkflowToolUtility.setResponse(documentDTO, Constants.FAILURE_CODE, e.getMessage());
 		}
 		return documentDTO;
@@ -212,7 +216,7 @@ public class DocumentWorkflowServiceImpl extends BaseResource implements Documen
 			documentDTO = documentDAO.getDocumentsForChecker(documentDTO);
 			DocumentWorkflowToolUtility.setResponse(documentDTO, Constants.SUCCESS_CODE, Constants.SUCCESS_MESSAGE);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 			DocumentWorkflowToolUtility.setResponse(documentDTO, Constants.FAILURE_CODE, e.getMessage());
 		}
 		return documentDTO;
@@ -225,7 +229,7 @@ public class DocumentWorkflowServiceImpl extends BaseResource implements Documen
 			documentDTO = documentDAO.getDocumentsForAllSMEs();
 			DocumentWorkflowToolUtility.setResponse(documentDTO, Constants.SUCCESS_CODE, Constants.SUCCESS_MESSAGE);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 			DocumentWorkflowToolUtility.setResponse(documentDTO, Constants.FAILURE_CODE, e.getMessage());
 		}
 		return documentDTO;
@@ -237,7 +241,7 @@ public class DocumentWorkflowServiceImpl extends BaseResource implements Documen
 			documentDTO = documentDAO.getDocumentsForSME(documentDTO);
 			DocumentWorkflowToolUtility.setResponse(documentDTO, Constants.SUCCESS_CODE, Constants.SUCCESS_MESSAGE);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 			DocumentWorkflowToolUtility.setResponse(documentDTO, Constants.FAILURE_CODE, e.getMessage());
 		}
 		return documentDTO;
@@ -260,7 +264,7 @@ public class DocumentWorkflowServiceImpl extends BaseResource implements Documen
 			}
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 			DocumentWorkflowToolUtility.setResponse(documentDTO, Constants.FAILURE_CODE, e.getMessage());
 		}
 		return Response.ok(documentDTO).build();
@@ -278,7 +282,7 @@ public class DocumentWorkflowServiceImpl extends BaseResource implements Documen
 			}
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 			DocumentWorkflowToolUtility.setResponse(documentDTO, Constants.FAILURE_CODE, e.getMessage());
 		}
 		return Response.ok(documentDTO).build();
@@ -295,7 +299,7 @@ public class DocumentWorkflowServiceImpl extends BaseResource implements Documen
 			}
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 			DocumentWorkflowToolUtility.setResponse(documentDTO, Constants.FAILURE_CODE, e.getMessage());
 		}
 		return Response.ok(documentDTO).build();
@@ -309,7 +313,7 @@ public class DocumentWorkflowServiceImpl extends BaseResource implements Documen
 			return Response.ok().entity(Boolean.TRUE).build();
 		
           } catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 			return Response.serverError().build();
 		}
 	}

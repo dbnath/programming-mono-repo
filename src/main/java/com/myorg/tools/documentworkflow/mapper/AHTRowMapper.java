@@ -12,7 +12,7 @@ public class AHTRowMapper implements RowMapper<AHTBean> {
 	
 	public AHTBean mapRow(ResultSet rs, int rowNum) throws SQLException {
 		AHTBean docWorkflow = new AHTBean();
-	      if (! DocumentWorkflowToolUtility.isEmpty(rs)) {
+	      if (! DocumentWorkflowToolUtility.isEmpty(rs)) { 
 				docWorkflow.setAgreementId(rs.getString("ID_AGRMT"));
 				docWorkflow.setRoleId(rs.getInt("ID_ROLE"));
 				docWorkflow.setStatusCode(rs.getInt("ID_WF_STATUS"));
@@ -25,7 +25,7 @@ public class AHTRowMapper implements RowMapper<AHTBean> {
 				cal.setTime(rs.getTime("LAST_UPDATE_DT"));*/
 				
 				docWorkflow.setLastUpdationDate(rs.getTimestamp("LAST_UPDATE_DT"));
-				System.out.println("###### MAPPER"+docWorkflow.getLastUpdationDate());
+				//System.out.println("###### MAPPER"+docWorkflow.getLastUpdationDate());
 	      }
       return docWorkflow;
     }

@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.TransactionDefinition;
@@ -36,6 +37,8 @@ import com.myorg.tools.documentworkflow.model.User;
 import com.myorg.tools.documentworkflow.util.DocumentWorkflowToolUtility;
 
 public class DocumentWorkflowDAOImpl extends BaseJDBCTemplate implements DocumentWorkflowDAO {
+	
+	static Logger log = Logger.getLogger(DocumentWorkflowDAOImpl.class.getName());
 	
 	/**
 	  * 
@@ -138,7 +141,7 @@ public class DocumentWorkflowDAOImpl extends BaseJDBCTemplate implements Documen
 				 this.getTransactionManager().commit(status);
 				 isSubmitSuccess = true;
 			} catch (SQLException e) {
-				e.printStackTrace();
+				log.error(e.getMessage(),e);
 				this.getTransactionManager().rollback(status);
 			} /*finally {
 				if (isSubmitSuccess) {
@@ -251,7 +254,7 @@ public class DocumentWorkflowDAOImpl extends BaseJDBCTemplate implements Documen
 			this.getTransactionManager().commit(status);
 			return Boolean.TRUE;
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 			this.getTransactionManager().rollback(status);
 			return Boolean.FALSE;
 		}
@@ -264,7 +267,7 @@ public class DocumentWorkflowDAOImpl extends BaseJDBCTemplate implements Documen
 	    String SQL = DocumentWorkflowToolConstant.FETCH_ADMIN_MAKER_AGREEMENTS_SQL;
 	    MakerAgreementWkflwMapper mapper = new MakerAgreementWkflwMapper();
 	    docList = this.getJdbcTemplateObject().query(SQL, mapper);
-	    System.out.println(docList);
+	    log.debug(docList);
 	    documentDTO.setDocList(docList);
 		return documentDTO;
 	}
@@ -428,7 +431,7 @@ public class DocumentWorkflowDAOImpl extends BaseJDBCTemplate implements Documen
 			success = true;
 			//return Boolean.TRUE;
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 			this.getTransactionManager().rollback(transactionStatus);
 			//return Boolean.FALSE;
 		}
@@ -455,7 +458,7 @@ public class DocumentWorkflowDAOImpl extends BaseJDBCTemplate implements Documen
 		String SELECT_MAX_ID_VER_FROM_WF_PROCESS_AUDIT_SQL = DocumentWorkflowToolConstant.SELECT_MAX_ID_VER_FROM_WF_PROCESS_AUDIT_SQL;
 		Integer versionId = jdbcTemplate.queryForObject(SELECT_MAX_ID_VER_FROM_WF_PROCESS_AUDIT_SQL, Integer.class, agreementId);
 		
-		System.out.println(" ###### versionId "+versionId);
+		log.debug(" ###### versionId "+versionId);
 		
 		String INSERT_INTO_WKF_PROCESS_AUDIT_SQL = DocumentWorkflowToolConstant.INSERT_INTO_WKF_PROCESS_AUDIT_SQL;
 		jdbcTemplate.update(INSERT_INTO_WKF_PROCESS_AUDIT_SQL, versionId+1, roleId, statusCode, assignedTo, userId, currentDate, numPages, numFields, agreementId);
@@ -479,7 +482,7 @@ public class DocumentWorkflowDAOImpl extends BaseJDBCTemplate implements Documen
 			success = true;
 			//return Boolean.TRUE;
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 			this.getTransactionManager().rollback(transactionStatus);
 			//return Boolean.FALSE;
 		}
@@ -526,7 +529,7 @@ public class DocumentWorkflowDAOImpl extends BaseJDBCTemplate implements Documen
 			success = true;
 			//return Boolean.TRUE;
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 			this.getTransactionManager().rollback(transactionStatus);
 			//return Boolean.FALSE;
 		}

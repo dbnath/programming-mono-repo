@@ -8,6 +8,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +27,8 @@ import com.myorg.tools.documentworkflow.model.User;
 @Controller
 @RequestMapping("/")
 public class ViewController {
+	
+	static Logger log = Logger.getLogger(ViewController.class.getName());
 	
 	@Autowired
 	private DocumentWorkflowDAO documentDAO;
@@ -77,14 +80,14 @@ public class ViewController {
 				dto = documentDAO.getDocumentsForAllSMEs();
 				modelView = new ModelAndView("common/qcTeamList");
 			}
-			System.out.println("For role : "+primaryRole +", user="+user.getUserId()+", documentlist="+dto.getDocList());
+			log.info("For role : "+primaryRole +", user="+user.getUserId()+", documentlist="+dto.getDocList());
 			modelView.addObject("teamDocumentList", dto.getDocList() == null ? new ArrayList<DocWkflwProcess>() : dto.getDocList());
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		}
 		return modelView;
 	}
@@ -121,29 +124,29 @@ public class ViewController {
 				dto = documentDAO.getDocumentsForSME(dto);
 				modelView = new ModelAndView("common/qcList");
 			}
-			System.out.println("For role : "+primaryRole +", user="+user.getUserId()+", documentlist="+dto.getDocList());
+			log.info("For role : "+primaryRole +", user="+user.getUserId()+", documentlist="+dto.getDocList());
 			modelView.addObject("workflowStatusList", workflowStatusList);
 			modelView.addObject("myDocumentList", dto.getDocList() == null ? new ArrayList<DocWkflwProcess>() : dto.getDocList());
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		}
 		return modelView;
 	}
 	
 	@RequestMapping(method = RequestMethod.POST,value = "adminHome")
 	public ModelAndView getAdminHomeView() {
-		System.out.println("Inside getAdminHomeView");
+		log.debug("Inside getAdminHomeView");
 		ModelAndView modelView = new ModelAndView("admin/adminHome");
 		return modelView;
 	}
 	
 	@RequestMapping(method = RequestMethod.GET,value = "adminHome")
 	public ModelAndView backToAdminHomeView() {
-		System.out.println("Inside getAdminHomeView");
+		log.debug("Inside getAdminHomeView");
 		ModelAndView modelView = new ModelAndView("admin/adminHome");
 		return modelView;
 	}	
@@ -168,11 +171,11 @@ public class ViewController {
 		Enumeration<String> params = request.getParameterNames();
 		
 		while(params.hasMoreElements()){
-			System.out.println("###### Param "+params.nextElement());
+			log.debug("###### Param "+params.nextElement());
 		}
 		
 		Integer primaryRole = Integer.valueOf(request.getParameter("u8_input"));
-		System.out.println("###### primaryRole "+primaryRole);
+		log.info("###### primaryRole "+primaryRole);
 		
 		try {
 			List<DocumentWorkflowStatus> workflowStatusList = documentDAO.getWorkflowStatusListByRole(primaryRole);
@@ -201,15 +204,15 @@ public class ViewController {
 				//dto = documentDAO.getDocumentsForSME(dto);
 				modelView = new ModelAndView("common/qcList");
 			}
-			System.out.println("For Admin View role : "+primaryRole +", documentlist="+dto.getDocList());
+			log.info("For Admin View role : "+primaryRole +", documentlist="+dto.getDocList());
 			modelView.addObject("workflowStatusList", workflowStatusList);
 			modelView.addObject("myDocumentList", dto.getDocList() == null ? new ArrayList<DocWkflwProcess>() : dto.getDocList());
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		}
 		
 		return modelView;

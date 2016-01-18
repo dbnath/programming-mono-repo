@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -48,6 +49,8 @@ import com.myorg.tools.documentworkflow.model.ReverseMappable;
 import com.myorg.tools.documentworkflow.util.DocumentWorkflowToolUtility;
 
 public class DocumentAdminDAOImpl extends BaseJDBCTemplate implements DocumentAdminDAO {
+	
+	static Logger log = Logger.getLogger(DocumentAdminDAOImpl.class.getName());
 
 	public List<DocumentType> populateDocumentTypes() throws SQLException, Exception {
 		String SQL = DocumentWorkflowToolConstant.DOC_TYPE_POPULATE_SQL;
@@ -244,8 +247,8 @@ public class DocumentAdminDAOImpl extends BaseJDBCTemplate implements DocumentAd
 			HashMap<String, Integer> typeMap = DocumentWorkflowToolUtility.mapByValue(new ArrayList<ReverseMappable>(populateDocumentTypes()));
 			HashMap<String, Integer> repoMap = DocumentWorkflowToolUtility.mapByValue(new ArrayList<ReverseMappable>(populateDocumentRepos()));
 			
-			System.out.println("###### typeMap "+typeMap);
-			System.out.println("###### repoMap "+repoMap);
+			log.debug("###### typeMap "+typeMap);
+			log.debug("###### repoMap "+repoMap);
 			
 			SimpleJdbcCall jdbcCall = new SimpleJdbcCall(this.getDataSource()).withProcedureName("addDocument");
 			
@@ -260,15 +263,15 @@ public class DocumentAdminDAOImpl extends BaseJDBCTemplate implements DocumentAd
 						doc.setIsBadLinkReported("N");
 						doc.setIsDeleted("N");
 						
-						System.out.println("###### doc Repo "+doc.getDocRepoDesc()+" ###### "+doc.getDocRepoId());
-						System.out.println("###### doc Repo "+doc.getDocTypeDesc()+" ###### "+doc.getDocTypeId());
+						log.debug("###### doc Repo "+doc.getDocRepoDesc()+" ###### "+doc.getDocRepoId());
+						log.debug("###### doc Repo "+doc.getDocTypeDesc()+" ###### "+doc.getDocTypeId());
 						
 						insertDocumentsIntoDatabase(jdbcCall, doc);
 					}
 				}
 				return true;
 			} catch (SQLException e) {
-				e.printStackTrace();
+				log.error(e.getMessage(), e);
 				return false;
 			}			
 		}
@@ -321,8 +324,8 @@ public class DocumentAdminDAOImpl extends BaseJDBCTemplate implements DocumentAd
 			HashMap<String, Integer> typeMap = DocumentWorkflowToolUtility.mapByValue(new ArrayList<ReverseMappable>(populateAgreementTypes()));
 			HashMap<String, Integer> statusMap = DocumentWorkflowToolUtility.mapByValue(new ArrayList<ReverseMappable>(populateAgreementStatus()));
 			
-			System.out.println("###### typeMap "+typeMap);
-			System.out.println("###### statusMap "+statusMap);
+			log.debug("###### typeMap "+typeMap);
+			log.debug("###### statusMap "+statusMap);
 			
 			SimpleJdbcCall jdbcCall = new SimpleJdbcCall(this.getDataSource()).withProcedureName("addAgreement");
 			
@@ -343,7 +346,7 @@ public class DocumentAdminDAOImpl extends BaseJDBCTemplate implements DocumentAd
 				}
 				return true;
 			} catch (SQLException e) {
-				e.printStackTrace();
+				log.error(e.getMessage(), e);
 				return false;
 			}			
 		}
@@ -398,10 +401,10 @@ public class DocumentAdminDAOImpl extends BaseJDBCTemplate implements DocumentAd
 					counter++;
 					if(doc != null){
 						if(!DocumentWorkflowToolUtility.isEmptyValue(doc.getErrorTypeId())){
-							System.out.println("###### Updating row "+counter);
+							log.debug("###### Updating row "+counter);
 							updateErrorReason(doc, jdbcTemplate);
 						} else {
-							System.out.println("###### Inserting row "+counter);
+							log.debug("###### Inserting row "+counter);
 							insertErrorReason(doc, jdbcTemplate);
 						}
 					}
@@ -409,8 +412,7 @@ public class DocumentAdminDAOImpl extends BaseJDBCTemplate implements DocumentAd
 				this.getTransactionManager().commit(status);
 				return true;
 			} catch (SQLException e) {
-				System.err.println("Error occurred while processing entry "+(counter+1));
-				e.printStackTrace();
+				log.error("Error occurred while processing entry "+(counter+1),e);
 				this.getTransactionManager().rollback(status);
 				return false;
 			}			
@@ -431,10 +433,10 @@ public class DocumentAdminDAOImpl extends BaseJDBCTemplate implements DocumentAd
 					counter++;
 					if(agrType != null){
 						if(!DocumentWorkflowToolUtility.isEmptyValue(agrType.getAgreementTypeId())){
-							System.out.println("###### Updating row "+counter);
+							log.debug("###### Updating row "+counter);
 							updateAgreementType(agrType, jdbcTemplate);
 						} else {
-							System.out.println("###### Inserting row "+counter);
+							log.debug("###### Inserting row "+counter);
 							insertAgreementType(agrType, jdbcTemplate);
 						}
 					}
@@ -442,8 +444,7 @@ public class DocumentAdminDAOImpl extends BaseJDBCTemplate implements DocumentAd
 				this.getTransactionManager().commit(status);
 				return true;
 			} catch (SQLException e) {
-				System.err.println("Error occurred while processing entry "+(counter+1));
-				e.printStackTrace();
+				log.error("Error occurred while processing entry "+(counter+1),e);
 				this.getTransactionManager().rollback(status);
 				return false;
 			}			
@@ -562,7 +563,7 @@ public class DocumentAdminDAOImpl extends BaseJDBCTemplate implements DocumentAd
 					if (aht.getStatusCode() == 22){
 						currentRole = aht.getRoleId();
 					}
-					System.out.println(ahtTemp.getAgreementId()+"...startTime..."+startTime+"...StopTime..."+stopTime);
+					log.debug(ahtTemp.getAgreementId()+"...startTime..."+startTime+"...StopTime..."+stopTime);
 					setAHTBeanHeldTime(ahtTemp, currentRole, ahtTime, makerHeldTime, checkerHeldTime, smeHeldTime);
 					startTime = null;
 					stopTime = null;
@@ -579,23 +580,23 @@ public class DocumentAdminDAOImpl extends BaseJDBCTemplate implements DocumentAd
 		case 1:
 			makerHeldTime = ahtTime;
 			ahtTemp.setMakerHeldTime(makerHeldTime);
-			System.out.println(ahtTemp.getAgreementId()+"...MakerHeldTime..."+ahtTemp.getMakerHeldTime());
+			log.debug(ahtTemp.getAgreementId()+"...MakerHeldTime..."+ahtTemp.getMakerHeldTime());
 			break;
 		case 2:
 			checkerHeldTime = ahtTime;
 			ahtTemp.setCheckerHeldTime(checkerHeldTime);
-			System.out.println(ahtTemp.getAgreementId()+"...MakerHeldTime..."+ahtTemp.getMakerHeldTime()+"...CheckerHeldTime..."+ahtTemp.getCheckerHeldTime());
+			log.debug(ahtTemp.getAgreementId()+"...MakerHeldTime..."+ahtTemp.getMakerHeldTime()+"...CheckerHeldTime..."+ahtTemp.getCheckerHeldTime());
 			break;
 		case 3:
 			smeHeldTime = ahtTime;
 			if (Double.valueOf(smeHeldTime).doubleValue()>0.0) {
 				ahtTemp.setSmeHeldTime(smeHeldTime);
 			}
-			System.out.println(ahtTemp.getAgreementId()+"...MakerHeldTime..."+ahtTemp.getMakerHeldTime()+"...CheckerHeldTime..."+ahtTemp.getCheckerHeldTime()+"...SMEHeldTime..."+ahtTemp.getSmeHeldTime());
+			log.debug(ahtTemp.getAgreementId()+"...MakerHeldTime..."+ahtTemp.getMakerHeldTime()+"...CheckerHeldTime..."+ahtTemp.getCheckerHeldTime()+"...SMEHeldTime..."+ahtTemp.getSmeHeldTime());
 			break;
 		}
 		ahtTemp.setTotalHeldTime(ahtTemp.getMakerHeldTime()+ahtTemp.getCheckerHeldTime()+ahtTemp.getSmeHeldTime());
-		System.out.println(ahtTemp.getAgreementId()+"...TotalHoldTime..."+ahtTemp.getTotalHeldTime());
+		log.debug(ahtTemp.getAgreementId()+"...TotalHoldTime..."+ahtTemp.getTotalHeldTime());
 		resetMakerCheckerSmeHeldTime(ahtTemp, makerHeldTime, checkerHeldTime, smeHeldTime);
 	}
 	
@@ -628,14 +629,14 @@ public class DocumentAdminDAOImpl extends BaseJDBCTemplate implements DocumentAd
 					ageStopTime = ahtTemp.getLastUpdationDate();
 					ahtAge = DocumentWorkflowToolUtility.getTimeDifferenceInMin(ageStartTime, ageStopTime);
 					ahtMap.get(ahtTemp.getAgreementId()).setAge(ahtAge);
-					System.out.println("AgreementID ..."+ahtTemp.getAgreementId()+":: AgeStartTime :: "+ageStartTime+"::AgeStopTime :: "+ageStopTime+" Age..."+ahtAge);
+					log.debug("AgreementID ..."+ahtTemp.getAgreementId()+":: AgeStartTime :: "+ageStartTime+"::AgeStopTime :: "+ageStopTime+" Age..."+ahtAge);
 				}
 		    }
 			if (i==(ahtList.size()-1)){
 				ageStopTime = aht.getLastUpdationDate();
 				ahtAge = DocumentWorkflowToolUtility.getTimeDifferenceInMin(ahtMap.get(aht.getAgreementId()).getAgeStartTime(), ageStopTime);
 				ahtMap.get(aht.getAgreementId()).setAge(ahtAge);
-				System.out.println("AgreementID ..."+aht.getAgreementId()+":: AgeStartTime :: "+ageStartTime+"::AgeStopTime :: "+ageStopTime+" Age..."+ahtAge);
+				log.debug("AgreementID ..."+aht.getAgreementId()+":: AgeStartTime :: "+ageStartTime+"::AgeStopTime :: "+ageStopTime+" Age..."+ahtAge);
 			}
 			
 		}

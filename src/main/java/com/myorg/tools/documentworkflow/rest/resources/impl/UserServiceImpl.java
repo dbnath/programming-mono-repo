@@ -3,6 +3,8 @@ package com.myorg.tools.documentworkflow.rest.resources.impl;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.apache.log4j.Logger;
+
 import com.myorg.tools.documentworkflow.dao.UserAdminDAO;
 import com.myorg.tools.documentworkflow.model.DocumentWorkflowResponse;
 import com.myorg.tools.documentworkflow.model.User;
@@ -10,6 +12,8 @@ import com.myorg.tools.documentworkflow.rest.resources.BaseResource;
 import com.myorg.tools.documentworkflow.rest.resources.UserService;
 
 public class UserServiceImpl extends BaseResource implements UserService   {
+	
+	static Logger log = Logger.getLogger(UserServiceImpl.class.getName());
 	
 	private UserAdminDAO userAdminDAO;
 	
@@ -24,7 +28,7 @@ public class UserServiceImpl extends BaseResource implements UserService   {
 	@Override
 	public Response login(User user) {
 		// TODO Auto-generated method stub
-		System.out.println("user is " + user);
+		log.debug("user is " + user);
 		User dto  = null;		
 		try {
 			dto = userAdminDAO.authenticateAndFetchDetails(user.getUserId(), user.getPassword());
@@ -40,7 +44,7 @@ public class UserServiceImpl extends BaseResource implements UserService   {
 			}
 		} catch (Exception e) {		
 			String message = e.getMessage();
-			System.out.println("Exception message = "+ message);
+			log.error("Exception message = "+ message,e);
 			DocumentWorkflowResponse dr = new DocumentWorkflowResponse();
 			dr.setResponseCode(Status.FORBIDDEN.getStatusCode());
 			dr.setResponseMessage(message);

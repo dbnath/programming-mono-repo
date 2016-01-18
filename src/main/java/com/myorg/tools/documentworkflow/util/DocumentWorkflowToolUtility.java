@@ -9,11 +9,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import com.myorg.tools.documentworkflow.dto.BaseDTO;
 import com.myorg.tools.documentworkflow.model.Response;
 import com.myorg.tools.documentworkflow.model.ReverseMappable;
 
 public class DocumentWorkflowToolUtility {
+	
+	static Logger log = Logger.getLogger(DocumentWorkflowToolUtility.class.getName());
 	
 	private static DecimalFormat df = new DecimalFormat("#.##");
 	
@@ -179,7 +183,7 @@ public class DocumentWorkflowToolUtility {
 				return Double.valueOf(df.format(d));
 			}
 		} catch (NumberFormatException e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 		}
 		return d;
 	}

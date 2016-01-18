@@ -2,9 +2,14 @@ package com.myorg.tools.documentworkflow.config;
 
 import java.io.File;
 
+import org.apache.log4j.Logger;
+
 public class DocumentWorkflowConfiguration { 
 	private String userCookieHeaderName;
 	private String tempFileLocation;
+	
+	static Logger log = Logger.getLogger(DocumentWorkflowConfiguration.class.getName());
+	
 	public void init() {
 		
 		try {
@@ -25,10 +30,9 @@ public class DocumentWorkflowConfiguration {
 					}
 				}
 			}
-			
+			log.info("###### Application Document Workflow INITIALIZED SUCCESSFULLY. ");
 		} catch (Exception e) {
-			e.printStackTrace();
-			System.out.println("Error occurred during temp file clean up. This needs to be looked at");
+			log.error("Error occurred during temp file clean up. This needs to be looked at", e);
 		}
 	}
 	

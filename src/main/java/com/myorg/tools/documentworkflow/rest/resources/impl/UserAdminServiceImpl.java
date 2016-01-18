@@ -9,10 +9,10 @@ import java.util.List;
 
 import javax.ws.rs.core.Response;
 
+import org.apache.log4j.Logger;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.myorg.tools.documentworkflow.dao.UserAdminDAO;
-import com.myorg.tools.documentworkflow.model.AgreementType;
 import com.myorg.tools.documentworkflow.model.Role;
 import com.myorg.tools.documentworkflow.model.RoleUser;
 import com.myorg.tools.documentworkflow.model.RoleUsersMapping;
@@ -24,6 +24,8 @@ import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataParam;
 
 public class UserAdminServiceImpl extends BaseResource implements UserAdminService {
+	
+	static Logger log = Logger.getLogger(UserAdminServiceImpl.class.getName());
 	
 	private UserAdminDAO userAdminDAO;
 
@@ -46,7 +48,7 @@ public class UserAdminServiceImpl extends BaseResource implements UserAdminServi
 			List<User> usersList = userAdminDAO.populateUserbase();
 			return Response.ok().entity(usersList).build();
 		} catch(Exception e){
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 			return Response.serverError().build();
 		}
 	}
@@ -56,7 +58,7 @@ public class UserAdminServiceImpl extends BaseResource implements UserAdminServi
 			List<Role> masterRoleList = userAdminDAO.populateMasterRoleList();
 			return Response.ok().entity(masterRoleList).build();
 		} catch(Exception e){
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 			return Response.serverError().build();
 		}
 		
@@ -67,7 +69,7 @@ public class UserAdminServiceImpl extends BaseResource implements UserAdminServi
 			User user = userAdminDAO.fetchUserDetail(userId);
 			return Response.ok().entity(user).build();
 		} catch(Exception e){
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 			return Response.serverError().build();
 		}
 	}
@@ -77,7 +79,7 @@ public class UserAdminServiceImpl extends BaseResource implements UserAdminServi
 			RoleUsersMapping users = userAdminDAO.populateRoleUserbaseMap(roleId);
 			return Response.ok().entity(users).build();
 		} catch(Exception e){
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 			return Response.serverError().build();
 		}
 	}
@@ -87,7 +89,7 @@ public class UserAdminServiceImpl extends BaseResource implements UserAdminServi
 			List<User> usersList = userAdminDAO.populateUnmappedRoleUserbase(roleId);
 			return Response.ok().entity(usersList).build();
 		} catch(Exception e){
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 			return Response.serverError().build();
 		}
 	}
@@ -108,10 +110,10 @@ public class UserAdminServiceImpl extends BaseResource implements UserAdminServi
 				return Response.ok(file).header("Content-Disposition", "attachment; filename=\"RoleUserUploadTemplate.xlsx\"").build();
 				
 			} catch (SQLException e) {
-				e.printStackTrace();
+				log.error(e.getMessage(),e);
 				return Response.status(404).entity("Template Not Available: ").type("text/plain").build();
 			} catch (Exception e) {
-				e.printStackTrace();
+				log.error(e.getMessage(),e);
 				return Response.status(404).entity("Template Not Available: ").type("text/plain").build();
 			}		 
 	 }
@@ -129,10 +131,10 @@ public class UserAdminServiceImpl extends BaseResource implements UserAdminServi
 				return Response.ok().entity("<html><head><script>function refreshParent(){window.close();}</script></head><body><div>Document Uploaded Successfully</div><input type=\"Button\" value=\"Close Window\" onclick=\"refreshParent()\" /></body></html>").build();
 				
 			} catch (IOException e) {
-				e.printStackTrace();
+				log.error(e.getMessage(),e);
 				return Response.serverError().entity("Documents failed to upload").build();
 			} catch (Exception e) {
-				e.printStackTrace();
+				log.error(e.getMessage(),e);
 				return Response.serverError().entity("Documents failed to upload").build();
 			}
 		}
