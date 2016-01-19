@@ -152,7 +152,7 @@
 		
 		            <div class="pure-u-1 pure-u-md-2-3" style="width:66%">
 		                <label for="checkerComments">Comments</label>
-		                <textarea id="checkerComments" disabled rows="2" cols="75" disabled></textarea>
+		                <textarea id="checkerComments" disabled rows="2" cols="75" style="resize: none;" disabled></textarea>
 		            </div>	
 					<div style="width:1%"></div>
 					<div class="pure-u-1 pure-u-md-3-24">

@@ -34,7 +34,7 @@
 
 		<c:forEach items="${teamDocumentList}" var="document">
 			<tr>
-			  <td><input type="checkbox" id="<c:out value="${document.agreementId}" />Team" name="docId" value="<c:out value="${document.agreementId}" />"  onclick="landingObj.setAssignment(this)" /> </td>
+			  <td><input type="checkbox" id="<c:out value="${document.agreementId}" />Team" name="docId" value="<c:out value="${document.agreementId}" />" style="display:<c:if test="${document.assignedTo != null}">none</c:if>" onclick="landingObj.setAssignment(this)" /> </td>
 			  <td><c:out value="${document.agreementId}" /></td>
 			  <td><c:out value="${document.lob}" /></td>
 			  <td><c:out value="${document.agreementTypeDesc}" /></td>
@@ -79,12 +79,14 @@
                 <div class="page">Page <span id="teamcurrentpage"></span> of <span id="teamtotalpages"></span></div>
             </div>
         </div>
-    </div>
-	<div class="col-xs-6" style="text-align: left;margin-left: 195px;">
-		<button  class="button-secondary pure-button" id="assign" onclick="landingObj.assignMe()" >
+	<br>
+	<div class="col-xs-6" style="text-align: left;">
+		<button  class="button-secondary pure-button" style="align:left" id="assign" onclick="landingObj.assignMe()" >
 			<b>Assign to Me</b>
 		</button >
 	</div>
+		
+    </div>
 </c:when>
 <c:when test="${empty teamDocumentList}"><h2>No records available</h2></c:when>
 </c:choose>

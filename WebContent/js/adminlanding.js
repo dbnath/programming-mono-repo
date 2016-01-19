@@ -79,7 +79,7 @@ var adminlanding = function () {
 	this.assignRespFn=assignRespFn;
 	function assignRespFn(responseData){
 		if(responseData.responseText === "true"){
-			showMessage("Assignments assigned successfully. Please check My Inbox","success");
+			showMessage("Assignment(s) assigned successfully.","success");
 			//resetAssignmentList();
 			reloadGridData();
 		} else {

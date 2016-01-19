@@ -68,16 +68,18 @@ var landing = function () {
 			showMessage("Please select at least one agreement", "warning");
 			//swal({title:"Please select at least one agreement", type:"warning"});
 			return false;
-		} else {
+		} /*else {
 			for (var k in selectedItemsTeamList) {
-				if ($(selectedItemsTeamList[k]+'assignedTo').innerHTML != null && $(selectedItemsTeamList[k]+'assignedTo').innerHTML != ''){
-					showMessage("Please uncheck the already assigned agreement!!!", "warning");
+				if ($(selectedItemsTeamList[k]+'assignedTo') != null && (($(selectedItemsTeamList[k]+'assignedTo').innerHTML != null && $(selectedItemsTeamList[k]+'assignedTo').innerHTML != '') || ($(selectedItemsTeamList[k]+'assignedTo').value != null && $(selectedItemsTeamList[k]+'assignedTo').value != ''))){
+					showMessage("Few of the selected agreements are already assigned to someone! Reloading the grid once again for you...", "warning");
+					selectedItemsTeamList.splice(0, selectedItemsTeamList.length);
+					reloadGridData();
 					return false;
 				}
 			}
-		}
+			serviceObj.assignToMe(selectedItemsTeamList,assignRespFn);
+		}*/
 		serviceObj.assignToMe(selectedItemsTeamList,assignRespFn);
-		
 	}
 	
 	this.assignRespFn=assignRespFn;
@@ -88,7 +90,7 @@ var landing = function () {
 			//swal({title:"Assignments assigned successfully. Please check My Inbox",type:"success"});
 			reloadGridData();
 		} else {
-			showMessage("There was an error in the process. <br> Please try again.","error");
+			showMessage("There was an error in the process. Please try again.","error");
 			//swal({title:"There was an error in the process. <br> Please try again.",type:"error"});
 		}
 	}
@@ -279,17 +281,17 @@ var landing = function () {
 		
 		if($("selectedRoleId").value == "2" || $("selectedRoleId").value == "3"){
 			if ($('numPages').value == null || $('numPages').value == '' || $('numPages').value == 0) {
-				showMessage("Please fill up Comments, Number of Pages and Number of Fields in Comment Section befor marking an agreement as Complete...","warning");
+				showMessage("Please fill up Comments, Number of Pages and Number of Fields in Comment Section before marking an agreement as Complete...","warning");
 				//swal({title:"Please fill up Comments, Number of Pages and Number of Fields in Comment Section befor marking an agreement as Complete...",type:"warning"});
 				return false;
 			}
 			if ($('numFields').value == null || $('numFields').value == '' || $('numFields').value == 0) {
-				showMessage("Please fill up Comments, Number of Pages and Number of Fields in Comment Section befor marking an agreement as Complete...","warning");
+				showMessage("Please fill up Comments, Number of Pages and Number of Fields in Comment Section before marking an agreement as Complete...","warning");
 				//swal({title:"Please fill up Comments, Number of Pages and Number of Fields in Comment Section befor marking an agreement as Complete...",type:"warning"});
 				return false;
 			}
 			if ($('checkerComments').value == null || $('checkerComments').value == '') {
-				showMessage("Please fill up Comments, Number of Pages and Number of Fields in Comment Section befor marking an agreement as Complete...","warning");
+				showMessage("Please fill up Comments, Number of Pages and Number of Fields in Comment Section before marking an agreement as Complete...","warning");
 				//swal({title:"Please fill up Comments, Number of Pages and Number of Fields in Comment Section befor marking an agreement as Complete...",type:"warning"});
 				return false;
 			}
@@ -374,7 +376,7 @@ var landing = function () {
 
 		if($("selectedRoleId").value == "2" && $('checkerStatus').value == 15){
 			if($('checkerComments').value == null || $('checkerComments').value == '' || $('errorReasonList').value == -1){
-				showMessage("Please fill in both Comments and Error Reasonin Comment Section before marking an agreement as Hold...","warning");
+				showMessage("Please fill in both Comments and Error Reason in Comment Section before marking an agreement as Hold...","warning");
 				//swal({title:"Please fill in both Comments and Error Reasonin Comment Section before marking an agreement as Hold...",type:"warning"});
 				return false;
 			}
@@ -416,7 +418,7 @@ var landing = function () {
 			     function(isConfirm){ 
 					if(isConfirm){
 						holdwork();
-						swal({title:"Successfully hold the agreement!", type:"success"});
+						swal({title:"Agreement held successfully!", type:"success"});
 					} else {
 						swal({title:"Not marking the agreement as Hold!!!", type:"error"});
 					}
