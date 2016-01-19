@@ -46,7 +46,13 @@ public class ExcelUtil {
 			i++;
 		}
 		
-		String[] makerValues = makerList.toArray(new String[]{});
+		String[] makerValues = null;
+		
+		if(DocumentWorkflowToolUtility.isEmptyList(makerList)){
+			makerValues = new String[]{""};
+		} else {
+			makerValues = makerList.toArray(new String[]{});
+		}
 		log.info("###### makerValues"+makerValues);
 		
 		XSSFWorkbook wb = new XSSFWorkbook();			

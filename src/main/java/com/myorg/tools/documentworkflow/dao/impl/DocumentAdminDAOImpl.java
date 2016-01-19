@@ -578,19 +578,24 @@ public class DocumentAdminDAOImpl extends BaseJDBCTemplate implements DocumentAd
 	private void setAHTBeanHeldTime(AHTBean ahtTemp, Integer currentRole, Double ahtTime, Double makerHeldTime, Double checkerHeldTime, Double smeHeldTime) {
 		switch(currentRole){
 		case 1:
-			makerHeldTime = ahtTime;
-			ahtTemp.setMakerHeldTime(makerHeldTime);
+			if(ahtTime != null){
+				makerHeldTime = ahtTime;
+				ahtTemp.setMakerHeldTime(makerHeldTime);
+			}
 			log.debug(ahtTemp.getAgreementId()+"...MakerHeldTime..."+ahtTemp.getMakerHeldTime());
 			break;
 		case 2:
-			checkerHeldTime = ahtTime;
-			ahtTemp.setCheckerHeldTime(checkerHeldTime);
+			if(ahtTime != null){
+				checkerHeldTime = ahtTime;
+				ahtTemp.setCheckerHeldTime(checkerHeldTime);
+			}
 			log.debug(ahtTemp.getAgreementId()+"...MakerHeldTime..."+ahtTemp.getMakerHeldTime()+"...CheckerHeldTime..."+ahtTemp.getCheckerHeldTime());
 			break;
 		case 3:
-			smeHeldTime = ahtTime;
-			if (Double.valueOf(smeHeldTime).doubleValue()>0.0) {
-				ahtTemp.setSmeHeldTime(smeHeldTime);
+			if(ahtTime != null){
+				smeHeldTime = ahtTime;
+				//if (Double.valueOf(smeHeldTime).doubleValue()>0.0) {
+					ahtTemp.setSmeHeldTime(smeHeldTime);
 			}
 			log.debug(ahtTemp.getAgreementId()+"...MakerHeldTime..."+ahtTemp.getMakerHeldTime()+"...CheckerHeldTime..."+ahtTemp.getCheckerHeldTime()+"...SMEHeldTime..."+ahtTemp.getSmeHeldTime());
 			break;
