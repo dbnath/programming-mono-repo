@@ -12,19 +12,19 @@ var admin = function () {
 	}
 
 	 home.uploadDocs =function(contextPath){
-			window.open(contextPath+'/jsp/fileUpload.jsp?userId='+home.userId);
+			window.open(contextPath+'/jsp/fileUpload.jsp?userId='+$("selectedUserId").value);
 		};
 		
       home.uploadErrorReasons =function(contextPath){
-			window.open(contextPath+'/jsp/errReasonUpload.jsp?userId='+home.userId);
+			window.open(contextPath+'/jsp/errReasonUpload.jsp?userId='+$("selectedUserId").value);
       }; 
       
       home.uploadagreementTypes =function(contextPath){
-			window.open(contextPath+'/jsp/agrTypeUpload.jsp?userId='+home.userId);
+			window.open(contextPath+'/jsp/agrTypeUpload.jsp?userId='+$("selectedUserId").value);
     };  
     
     home.uploadUserRoles = function(contextPath){
-    	window.open(contextPath+'/jsp/userRoleUpload.jsp?userId='+home.userId);
+    	window.open(contextPath+'/jsp/userRoleUpload.jsp?userId='+$("selectedUserId").value);
     };
 	  
 	this.loadView=loadView;
