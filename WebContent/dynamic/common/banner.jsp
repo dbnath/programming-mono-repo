@@ -77,6 +77,7 @@
 	var cotextPathTop = "${pageContext.request.contextPath}";
 	function logout() {
 		new service().logout();
-		window.location=cotextPathTop+"/view/login";
+		//window.location=cotextPathTop+"/";//+"/view/login";
+		window.close();
 	}
 </script>

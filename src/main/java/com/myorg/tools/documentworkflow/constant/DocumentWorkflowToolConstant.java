@@ -16,7 +16,7 @@ public class DocumentWorkflowToolConstant {
 	public static String DOC_TYPE_TAG_SUBTAGS_MAP_SQL = "select a.ID_DOC_TAG ID_DOC_TAG, b.TX_DOC_TAG TX_DOC_TAG, c.ID_DOC_SUB_TAG ID_DOC_SUB_TAG, d.TX_DOC_SUB_TAG TX_DOC_SUB_TAG from doc_type_tag_mapping a, doc_tag_info b, doc_tag_subtag_map c, doc_sub_tag_info d where a.ID_DOC_TYPE = ? and a.ID_DOC_TAG = b.ID_DOC_TAG and a.ID_DOC_TAG = c.ID_DOC_TAG and c.ID_DOC_SUB_TAG = d.ID_DOC_SUB_TAG";
 	public static String USER_BASE_POPULATE_SQL = "select * from user";
 	public static String MASTER_ROLE_POPULATE_SQL = "select * from ROLE";
-	public static String FETCH_USER_DETAILS_SQL = "select * from user where ID_USER = ?";
+	public static String FETCH_USER_DETAILS_SQL = "select * from user where ID_USER = ? AND USER_STATUS='Active'";
 	public static String FETCH_ROLE_USER_MAP_SQL = "select a.ID_USER, b.NM_USER, b.PASSWORD, b.PASSWORD_TYPE, b.USER_STATUS, b.LAST_LOGIN, a.CREATED_BY, a.CREATION_DT, a.UPDATED_BY, a.UPDATE_DT from user_role_map a, user b where a.ID_ROLE = ? and a.ID_USER = b.ID_USER";
 	public static String POPULATE_ROLE_FOR_USER_SQL = "select a.ID_ROLE, b.NM_ROLE, b.TX_ROLE from user_role_map a, role b where a.ID_USER = ? and a.ID_ROLE = b.ID_ROLE";
 	

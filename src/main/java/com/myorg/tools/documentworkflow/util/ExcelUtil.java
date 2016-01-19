@@ -1013,7 +1013,7 @@ public class ExcelUtil {
 				cell.setCellValue("Agreement ID");
 				break;
 			case 1:
-				cell.setCellValue("Vesrion ID");
+				cell.setCellValue("Version");
 				break;
 			case 2:
 				cell.setCellValue("Agreement Type");

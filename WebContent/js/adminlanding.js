@@ -374,7 +374,7 @@ var adminlanding = function () {
 	
 			if($("viewId").value == "2" && $('checkerStatus').value == 15){
 				if($('checkerComments').value == null || $('checkerComments').value == '' || $('errorReasonList').value == -1){
-					showMessage("Please fill in both Comments and Error Reasonin Comment Section before marking an agreement as Hold...","warning");
+					showMessage("Please fill in both Comments and Error Reason in Comment Section before marking an agreement as Hold...","warning");
 					return false;
 				}
 			}
@@ -414,9 +414,9 @@ var adminlanding = function () {
 					function(isConfirm){ 
 						if(isConfirm){
 							holdwork();
-							showMessage("Successfully hold the agreement!", "success");
+							showMessage("Agreement Held Successfully!", "success");
 						} else {
-							showMessage("Not marking the agreemnet as Hold!!!", "error");
+							showMessage("Error while marking the agreement as Hold!!!", "error");
 						}
 						
 					});
