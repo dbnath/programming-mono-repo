@@ -31,6 +31,8 @@ public class DocWkflwProcess implements Serializable{
 	
 	private Date lastUpdationDate;
 	
+	private String lastUpdationDateStr;
+	
 	private Integer roleId;
 	
 	private String makerComments;
@@ -247,6 +249,14 @@ public class DocWkflwProcess implements Serializable{
 
 	public void setComments(String comments) {
 		this.comments = comments;
+	}
+
+	public String getLastUpdationDateStr() {
+		return lastUpdationDateStr;
+	}
+
+	public void setLastUpdationDateStr(String lastUpdationDateStr) {
+		this.lastUpdationDateStr = lastUpdationDateStr;
 	}
 	
 	

@@ -26,7 +26,8 @@ public class CheckerAgreementWorkflowMapper implements RowMapper<DocWkflwProcess
 		    docWorkflow.setCreatedBy(rs.getString("CREATED_BY"));
 		    docWorkflow.setCreationDate(rs.getDate("CREATED_DT"));
 		    docWorkflow.setLastUpdatedBy(rs.getString("LAST_UPDATED_BY"));
-		    docWorkflow.setLastUpdationDate(rs.getDate("LAST_UPDATE_DT"));
+		    docWorkflow.setLastUpdationDate(rs.getTimestamp("LAST_UPDATE_DT"));
+		    docWorkflow.setLastUpdationDateStr(DocumentWorkflowToolUtility.convertDateToString(rs.getTimestamp("LAST_UPDATE_DT")));
 		    docWorkflow.setCheckerComments(DocumentWorkflowToolUtility.isEmptyValue(rs.getString("CHECKER_COM"))?"":rs.getString("CHECKER_COM"));
 		    docWorkflow.setErrorReason(DocumentWorkflowToolUtility.isEmptyValue(rs.getString("TX_ERR_REASON"))?"":rs.getString("TX_ERR_REASON"));
 		    docWorkflow.setNumPages(rs.getInt("NUM_PAGES"));

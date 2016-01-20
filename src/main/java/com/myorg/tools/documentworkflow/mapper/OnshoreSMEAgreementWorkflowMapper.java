@@ -27,7 +27,8 @@ public class OnshoreSMEAgreementWorkflowMapper implements RowMapper<DocWkflwProc
 		    docWorkflow.setCreatedBy(rs.getString("CREATED_BY"));
 		    docWorkflow.setCreationDate(rs.getDate("CREATED_DT"));
 		    docWorkflow.setLastUpdatedBy(rs.getString("LAST_UPDATED_BY"));
-		    docWorkflow.setLastUpdationDate(rs.getDate("LAST_UPDATE_DT"));
+		    docWorkflow.setLastUpdationDate(rs.getTimestamp("LAST_UPDATE_DT"));
+		    docWorkflow.setLastUpdationDateStr(DocumentWorkflowToolUtility.convertDateToString(rs.getTimestamp("LAST_UPDATE_DT")));
 		    docWorkflow.setNumPages(rs.getInt("NUM_PAGES"));
 		    docWorkflow.setNumFields(rs.getInt("NUM_FIELDS"));
 		}

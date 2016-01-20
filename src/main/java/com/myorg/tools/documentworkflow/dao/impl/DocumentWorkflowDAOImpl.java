@@ -429,13 +429,25 @@ public class DocumentWorkflowDAOImpl extends BaseJDBCTemplate implements Documen
 			startProcessExecuteQueries(documentDTO);
 			this.getTransactionManager().commit(transactionStatus);
 			success = true;
+			documentDTO = getUpdatedAgreementWorkflow(documentDTO, success);
+			documentDTO.setMessage("Agreement "+documentDTO.getAgreementId()+" marked Started. This also starts your Clock!!!");
+			return documentDTO;
 			//return Boolean.TRUE;
 		} catch (SQLException e) {
 			log.error(e.getMessage(),e);
 			this.getTransactionManager().rollback(transactionStatus);
+			documentDTO.setSuccess(false);
+			documentDTO.setMessage("Error marking the agreement "+documentDTO.getAgreementId()+" as Started. \n Error Msg:"+e.getMessage()+"\nPlease try after some time. !!!");
+			return documentDTO;			
+			//return Boolean.FALSE;
+		} catch (Exception e) {
+			log.error(e.getMessage(),e);
+			this.getTransactionManager().rollback(transactionStatus);
+			documentDTO.setSuccess(false);
+			documentDTO.setMessage("Error marking the agreement "+documentDTO.getAgreementId()+" as Started. \n Error Msg:"+e.getMessage()+"\nPlease try after some time. !!!");
+			return documentDTO;			
 			//return Boolean.FALSE;
 		}
-		return getUpdatedAgreementWorkflow(documentDTO, success);
 	}
 	
 	private void startProcessExecuteQueries(DocumentDTO documentDTO) throws SQLException, Exception { 
@@ -452,9 +464,22 @@ public class DocumentWorkflowDAOImpl extends BaseJDBCTemplate implements Documen
 		
 		String assignedTo = DocumentWorkflowToolUtility.equalStrings("4", documentDTO.getUser().getRoleId(), false, true)? (!DocumentWorkflowToolUtility.isEmptyValue(documentDTO.getAssignedTo())? documentDTO.getAssignedTo() : userId) : userId;
 		
+		Date timeStampFromUI = DocumentWorkflowToolUtility.getDateforTimestampMatch(documentDTO.getLastUpdationDate());
+		Date timeStampFromDB = null;
+		
+		documentDTO =  getLatestAgreement(documentDTO, roleId);
+		if(documentDTO.getDocList() != null){
+			timeStampFromDB = documentDTO.getDocList().get(0).getLastUpdationDate();
+		}
+		
+		if(!DocumentWorkflowToolUtility.compareDates(timeStampFromUI, timeStampFromDB)){
+			documentDTO.setMessage("Agreement version outdated. Please Refresh your grid and redo your action.");
+			throw new Exception("Agreement version outdated. Please Refresh your grid and redo your action.");
+		}		
+		
 		String UPDATE_STATUS_IN_WKF_PROCESS_SQL = DocumentWorkflowToolConstant.UPDATE_STATUS_IN_WKF_PROCESS_SQL;
 		jdbcTemplate.update(UPDATE_STATUS_IN_WKF_PROCESS_SQL, statusCode, userId, currentDate, agreementId);
-		
+						
 		String SELECT_MAX_ID_VER_FROM_WF_PROCESS_AUDIT_SQL = DocumentWorkflowToolConstant.SELECT_MAX_ID_VER_FROM_WF_PROCESS_AUDIT_SQL;
 		Integer versionId = jdbcTemplate.queryForObject(SELECT_MAX_ID_VER_FROM_WF_PROCESS_AUDIT_SQL, Integer.class, agreementId);
 		
@@ -480,13 +505,26 @@ public class DocumentWorkflowDAOImpl extends BaseJDBCTemplate implements Documen
 			completeProcessExecuteQueries(documentDTO);
 			this.getTransactionManager().commit(transactionStatus);
 			success = true;
+			documentDTO = getUpdatedAgreementWorkflow(documentDTO, success);
+			documentDTO.setMessage("Agreement "+documentDTO.getAgreementId()+" marked Complete. This also stops your Clock!!!");
+			return documentDTO;
 			//return Boolean.TRUE;
 		} catch (SQLException e) {
 			log.error(e.getMessage(),e);
 			this.getTransactionManager().rollback(transactionStatus);
+			documentDTO.setSuccess(false);
+			documentDTO.setMessage("Error marking the agreement "+documentDTO.getAgreementId()+" as Complete. \n Error Msg:"+e.getMessage()+"\nPlease try after some time. !!!");
+			return documentDTO;			
+			//return Boolean.FALSE;
+		} catch (Exception e) {
+			log.error(e.getMessage(),e);
+			this.getTransactionManager().rollback(transactionStatus);
+			documentDTO.setSuccess(false);
+			documentDTO.setMessage("Error marking the agreement "+documentDTO.getAgreementId()+" as Complete. \n Error Msg:"+e.getMessage()+"\nPlease try after some time. !!!");
+			return documentDTO;			
 			//return Boolean.FALSE;
 		}
-		return getUpdatedAgreementWorkflow(documentDTO, success);
+		
 	}
 	
 	private void completeProcessExecuteQueries(DocumentDTO documentDTO) throws SQLException, Exception{
@@ -499,6 +537,18 @@ public class DocumentWorkflowDAOImpl extends BaseJDBCTemplate implements Documen
 		Integer numPages = documentDTO.getNumPages();
 		Integer numFields = documentDTO.getNumFields();
 		Date currentDate = Calendar.getInstance().getTime();
+		Date timeStampFromUI = DocumentWorkflowToolUtility.getDateforTimestampMatch(documentDTO.getLastUpdationDate());
+		Date timeStampFromDB = null;
+		
+		documentDTO =  getLatestAgreement(documentDTO, roleId);
+		if(documentDTO.getDocList() != null){
+			timeStampFromDB = documentDTO.getDocList().get(0).getLastUpdationDate();
+		}
+		
+		if(!DocumentWorkflowToolUtility.compareDates(timeStampFromUI, timeStampFromDB)){
+			documentDTO.setMessage("Agreement version outdated. Please Refresh your grid and redo your action.");
+			throw new Exception("Agreement version outdated. Please Refresh your grid and redo your action.");
+		}
 		
 		JdbcTemplate jdbcTemplate = this.getJdbcTemplateObject();
 		
@@ -527,13 +577,26 @@ public class DocumentWorkflowDAOImpl extends BaseJDBCTemplate implements Documen
 			holdProcessExecuteQueries(documentDTO);
 			this.getTransactionManager().commit(transactionStatus);
 			success = true;
+			documentDTO = getUpdatedAgreementWorkflow(documentDTO, success);
+			documentDTO.setMessage("Agreement "+documentDTO.getAgreementId()+" marked Held. This also halts your Clock!!!");
+			return documentDTO;
 			//return Boolean.TRUE;
 		} catch (SQLException e) {
 			log.error(e.getMessage(),e);
 			this.getTransactionManager().rollback(transactionStatus);
+			documentDTO.setSuccess(false);
+			documentDTO.setMessage("Error marking the agreement "+documentDTO.getAgreementId()+" as Held. \n Error Msg:"+e.getMessage()+"\nPlease try after some time. !!!");
+			return documentDTO;
+			//return Boolean.FALSE;
+		} catch (Exception e) {
+			log.error(e.getMessage(),e);
+			this.getTransactionManager().rollback(transactionStatus);
+			documentDTO.setSuccess(false);
+			documentDTO.setMessage("Error marking the agreement "+documentDTO.getAgreementId()+" as Held. \n Error Msg:"+e.getMessage()+"\nPlease try after some time. !!!");
+			return documentDTO;
 			//return Boolean.FALSE;
 		}
-		return getUpdatedAgreementWorkflow(documentDTO, success);
+		
 	}
 	
 	private void holdProcessExecuteQueries(DocumentDTO documentDTO) throws SQLException, Exception{
@@ -550,6 +613,19 @@ public class DocumentWorkflowDAOImpl extends BaseJDBCTemplate implements Documen
 		Integer newRoleId = (roleId==3)?roleId : roleId+1;
 		
 		String assignedTo = (roleId==3) ? (DocumentWorkflowToolUtility.equalStrings("4", documentDTO.getUser().getRoleId(), false, true)? (! DocumentWorkflowToolUtility.isEmptyValue(documentDTO.getAssignedTo())? documentDTO.getAssignedTo() : userId) : userId) : null;
+		
+		Date timeStampFromUI = DocumentWorkflowToolUtility.getDateforTimestampMatch(documentDTO.getLastUpdationDate());
+		Date timeStampFromDB = null;
+		
+		documentDTO =  getLatestAgreement(documentDTO, roleId);
+		if(documentDTO.getDocList() != null){
+			timeStampFromDB = documentDTO.getDocList().get(0).getLastUpdationDate();
+		}
+		
+		if(!DocumentWorkflowToolUtility.compareDates(timeStampFromUI, timeStampFromDB)){
+			documentDTO.setMessage("Agreement version outdated. Please Refresh your grid and redo your action.");
+			throw new Exception("Agreement version outdated. Please Refresh your grid and redo your action.");
+		}
 		
 		JdbcTemplate jdbcTemplate = this.getJdbcTemplateObject();
 		

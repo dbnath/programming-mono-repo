@@ -1,6 +1,7 @@
 package com.myorg.tools.documentworkflow.dto;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 import com.myorg.tools.documentworkflow.model.DocWkflwProcess;
@@ -36,6 +37,10 @@ public class DocumentDTO extends BaseDTO implements Serializable {
 	private Integer numPages;
 	
 	private Integer numFields;
+	
+	private String lastUpdationDate;
+	
+	private String message;
 
 	public User getUser() {
 		return user;
@@ -131,6 +136,22 @@ public class DocumentDTO extends BaseDTO implements Serializable {
 
 	public void setNumFields(Integer numFields) {
 		this.numFields = numFields;
+	}
+
+	public String getLastUpdationDate() {
+		return lastUpdationDate;
+	}
+
+	public void setLastUpdationDate(String lastUpdationDate) {
+		this.lastUpdationDate = lastUpdationDate;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
 	}
 
 }

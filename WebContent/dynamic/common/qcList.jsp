@@ -42,7 +42,8 @@
 				<th width="25%"><h3 style="Color:#ffffff">SME Details</h3></th>
 				<th><h3 style="Color:#ffffff">Number of Pages</h3></th>
 				<th><h3 style="Color:#ffffff">Number of Fields</h3></th>
-				<th style="display:''"><h3 style="Color:#ffffff">StatusCode</h3></th>	
+				<th style="display:none"><h3 style="Color:#ffffff">StatusCode</h3></th>	
+				<th style="display:none"><h3 style="Color:#ffffff">TimeStamp</h3></th>	
 			</tr>
 		</thead>
 		<tbody>
@@ -59,7 +60,8 @@
 				  <td width="25%" id="<c:out value="${document.agreementId}smeComments" />"><c:out value="${document.smeComments}" /></td>
 				  <td id="<c:out value="${document.agreementId}numPages" />"><c:out value="${document.numPages}" /></td>		  
 				  <td id="<c:out value="${document.agreementId}numFields" />"><c:out value="${document.numFields}" /></td>		  
-				  <td style="display:''" id="<c:out value="${document.agreementId}statusCode" />" value="<c:out value="${document.statusCode}" />" ><c:out value="${document.statusCode}" /></td>		  
+				  <td style="display:none" id="<c:out value="${document.agreementId}statusCode" />" value="<c:out value="${document.statusCode}" />" ><c:out value="${document.statusCode}" /></td>		  
+				  <td style="display:none" id="<c:out value="${document.agreementId}lastUpdationDate" />" value="<c:out value="${document.lastUpdationDate}" />" ><c:out value="${document.lastUpdationDate}" /></td>				  
 				</tr>
 			</c:forEach>
 	    </tbody>

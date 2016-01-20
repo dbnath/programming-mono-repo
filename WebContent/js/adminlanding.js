@@ -197,11 +197,22 @@ var adminlanding = function () {
 		} 
 	}
 	
+	function getAgreementTimeStamp(agrId){
+		var lastUpdationDate = $(agrId+'lastUpdationDate').value;
+		
+		if(!lastUpdationDate){
+			lastUpdationDate = $(agrId+'lastUpdationDate').innerHTML;
+		}
+		
+		return lastUpdationDate;
+	}	
+	
 	this.startClick=startClick;
 	function startClick(){
 		var inputObj = {};
 		inputObj.agreementId=selectedItemsMyList;//[0];
 		inputObj.roleId=$("viewId").value;
+		inputObj.lastUpdationDate=getAgreementTimeStamp(selectedItemsMyList);
 		
 		if($("viewId").value == "1"){
 			inputObj.statusCode=2; //For Maker Start hardcoding the value
@@ -222,17 +233,22 @@ var adminlanding = function () {
 		var respStatus = responseObject.response.responseMessage;
 		if(respStatus == "Success"){
 			var docList = responseObject.docList;
+			
 			for(var k in docList){
 				var agrId = docList[k].agreementId;
 				//alert('3a1'+agrId+'###'+k);
 				if(agrId){
 					$(agrId).checked=false;
 					
+					showMessage(responseObject.message, "success");
+					
 					$(agrId+'statusDescription').innerHTML=docList[k].statusDescription;
 					$(agrId+'numPages').innerHTML=docList[k].numPages;
 					$(agrId+'numFields').innerHTML=docList[k].numFields;
 					$(agrId+'statusCode').innerHTML=docList[k].statusCode;
 					$(agrId+'statusCode').value=docList[k].statusCode;
+					$(agrId+'lastUpdationDate').innerHTML=docList[k].lastUpdationDateStr;
+					$(agrId+'lastUpdationDate').value=docList[k].lastUpdationDateStr;					
 					
 					var stsCode = docList[k].statusCode;
 					
@@ -258,6 +274,13 @@ var adminlanding = function () {
 				}
 			}
 			disableAll();
+		} else {			
+			var agrId = responseObject.agreementId;
+			showMessage(responseObject.message, "error");
+			if(agrId){
+				$(agrId).checked=false;
+			}			
+			disableAll();
 		}
 		
 	}
@@ -280,7 +303,7 @@ var adminlanding = function () {
 	
 	this.completeClick=completeClick;
 	function completeClick(){
-		if($("viewId").value == "2" || $("viewId").value == "3"){
+		//if($("viewId").value == "2" || $("viewId").value == "3"){
 			if ($('numPages').value == null || $('numPages').value == '' || $('numPages').value == 0) {
 				showMessage("Please fill up Comments, Number of Pages and Number of Fields in Comment Section befor marking an agreement as Complete...","warning");
 				return false;
@@ -293,13 +316,14 @@ var adminlanding = function () {
 				showMessage("Please fill up Comments, Number of Pages and Number of Fields in Comment Section befor marking an agreement as Complete...","warning");
 				return false;
 			}
-		}
+		//}
 		var inputObj = {};
 		inputObj.agreementId=selectedItemsMyList;//[0];
 		inputObj.roleId=$("viewId").value;
 		inputObj.comment=$('checkerComments').value;
 		inputObj.numPages=$('numPages').value;
 		inputObj.numFields=$('numFields').value;
+		inputObj.lastUpdationDate=getAgreementTimeStamp(selectedItemsMyList);
 		
 		if($("viewId").value == "1"){
 			inputObj.statusCode=3; //For Maker Complete hardcoding the value
@@ -321,18 +345,21 @@ var adminlanding = function () {
 		var respStatus = responseObject.response.responseMessage;
 		
 		if(respStatus == "Success"){
-			var docList = responseObject.docList;
+			var docList = responseObject.docList;			
 			
 			for(var k in docList){
 				var agrId = docList[k].agreementId;
 				if(agrId){
 					$(agrId).checked=false;
+					showMessage(responseObject.message, "success");
 					//$(agrId).disabled=true;
 					$(agrId+'statusDescription').innerHTML=docList[k].statusDescription;
 					$(agrId+'numPages').innerHTML=docList[k].numPages;
 					$(agrId+'numFields').innerHTML=docList[k].numFields;
 					$(agrId+'statusCode').innerHTML=docList[k].statusCode;
 					$(agrId+'statusCode').value=docList[k].statusCode;
+					$(agrId+'lastUpdationDate').innerHTML=docList[k].lastUpdationDateStr;
+					$(agrId+'lastUpdationDate').value=docList[k].lastUpdationDateStr;					
 					
 					var stsCode = docList[k].statusCode;
 					if($("viewId").value == "1"){
@@ -357,6 +384,13 @@ var adminlanding = function () {
 					}
 				}
 			}
+			disableAll();
+		} else {			
+			var agrId = responseObject.agreementId;
+			showMessage(responseObject.message,"error");
+			if(agrId){
+				$(agrId).checked=false;
+			}			
 			disableAll();
 		}
 	}	
@@ -408,21 +442,21 @@ var adminlanding = function () {
 						showCancelButton: true,   
 						confirmButtonColor: "rgb(66, 184, 221)",  
 						confirmButtonText: "Yes, hold it!",
-						closeOnConfirm: false,   
+						closeOnConfirm: true,   
 						closeOnCancel: false
 					},
 					function(isConfirm){ 
 						if(isConfirm){
 							holdwork();
-							showMessage("Agreement Held Successfully!", "success");
+							//showMessage("Agreement Held Successfully!", "success");
 						} else {
-							showMessage("Error while marking the agreement as Hold!!!", "error");
+							showMessage("Not marking the agreement as Hold!!!", "error");
 						}
 						
 					});
 			}			
 			
-			var inputObj = {};
+			/*var inputObj = {};
 			inputObj.agreementId=selectedItemsMyList;//[0];
 			inputObj.roleId=$("viewId").value;
 			inputObj.statusCode=$('checkerStatus').value;
@@ -431,9 +465,10 @@ var adminlanding = function () {
 			if($("viewId").value == "2"){
 			  inputObj.errorReasonCode=$('errorReasonList').value;
 			}
+			inputObj.lastUpdationDate=getAgreementTimeStamp(selectedItemsMyList);
 			inputObj.numPages=$('numPages').value;
 			inputObj.numFields=$('numFields').value;
-			serviceObj.holdProcess(inputObj,holdRespFn);
+			serviceObj.holdProcess(inputObj,holdRespFn);*/
 
 	}
 	
@@ -448,6 +483,7 @@ var adminlanding = function () {
 		if($("viewId").value == "2"){
 		  inputObj.errorReasonCode=$('errorReasonList').value;
 		}
+		inputObj.lastUpdationDate=getAgreementTimeStamp(selectedItemsMyList);
 		inputObj.numPages=$('numPages').value;
 		inputObj.numFields=$('numFields').value;
 		serviceObj.holdProcess(inputObj,holdRespFn);
@@ -467,12 +503,15 @@ var adminlanding = function () {
 				var agrId = docList[k].agreementId;
 				if(agrId){
 					$(agrId).checked=false;
+					showMessage(responseObject.message, "success");
 					//$(agrId).disabled=true;
 					$(agrId+'statusDescription').innerHTML=docList[k].statusDescription;
 					$(agrId+'numPages').innerHTML=docList[k].numPages;
 					$(agrId+'numFields').innerHTML=docList[k].numFields;
 					$(agrId+'statusCode').innerHTML=docList[k].statusCode;
 					$(agrId+'statusCode').value=docList[k].statusCode;
+					$(agrId+'lastUpdationDate').innerHTML=docList[k].lastUpdationDateStr;
+					$(agrId+'lastUpdationDate').value=docList[k].lastUpdationDateStr;					
 					
 					var stsCode = docList[k].statusCode;
 					if($("viewId").value == "1"){
@@ -497,6 +536,13 @@ var adminlanding = function () {
 					}
 				}
 			}
+			disableAll();
+		} else {
+			var agrId = responseObject.agreementId;
+			showMessage(responseObject.message, "error");
+			if(agrId){
+				$(agrId).checked=false;
+			}					
 			disableAll();
 		}
 	}	

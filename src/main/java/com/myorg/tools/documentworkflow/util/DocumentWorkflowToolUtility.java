@@ -2,6 +2,7 @@ package com.myorg.tools.documentworkflow.util;
 
 import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -194,8 +195,33 @@ public class DocumentWorkflowToolUtility {
 			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			strDate = dateFormat.format(dt);	
 		}catch(Exception e){
-			
+			log.error("Error while formatting date ",e);
 		}
 		return strDate;
     }
+	
+	public static boolean compareDates(Date date1, Date date2) {
+		
+		boolean areDatesSame = false;
+		
+		if(date1 != null && date2 != null){
+			areDatesSame = (date1.compareTo(date2) == 0);
+		}
+		return areDatesSame;
+	}
+	
+	public static Date getDateforTimestampMatch(String dateStr){
+		
+		Date d = null;
+		try {
+			if(dateStr != null){
+				DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				d = dateFormat.parse(dateStr);
+			}
+		} catch (Exception e) {
+			log.error("Error while formatting date ",e);
+		}
+		return d;
+		
+	}
 }

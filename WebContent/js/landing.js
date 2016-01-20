@@ -194,11 +194,22 @@ var landing = function () {
 		} 
 	}
 	
+	function getAgreementTimeStamp(agrId){
+		var lastUpdationDate = $(agrId+'lastUpdationDate').value;
+		
+		if(!lastUpdationDate){
+			lastUpdationDate = $(agrId+'lastUpdationDate').innerHTML;
+		}
+		
+		return lastUpdationDate;
+	}	
+	
 	this.startClick=startClick;
 	function startClick(){
 		var inputObj = {};
 		inputObj.agreementId=selectedItemsMyList;//[0];
 		inputObj.roleId=$("selectedRoleId").value;
+		inputObj.lastUpdationDate=getAgreementTimeStamp(selectedItemsMyList);
 		
 		if($("selectedRoleId").value == "1"){
 			inputObj.statusCode=2; //For Maker Start hardcoding the value
@@ -211,25 +222,30 @@ var landing = function () {
 		
 		serviceObj.startProcess(inputObj,startRespFn);		
 	}
-	
+		
 	this.startRespFn=startRespFn;
 	function startRespFn(responseData){
-		
 		var responseObject = JSON.parse(responseData.responseText);
 		var respStatus = responseObject.response.responseMessage;
+		
 		if(respStatus == "Success"){
 			var docList = responseObject.docList;
+			
 			for(var k in docList){
 				var agrId = docList[k].agreementId;
 				//alert('3a1'+agrId+'###'+k);
 				if(agrId){
 					$(agrId).checked=false;
+					showMessage(responseObject.message, "success");
 					
 					$(agrId+'statusDescription').innerHTML=docList[k].statusDescription;
 					$(agrId+'numPages').innerHTML=docList[k].numPages;
 					$(agrId+'numFields').innerHTML=docList[k].numFields;
 					$(agrId+'statusCode').innerHTML=docList[k].statusCode;
 					$(agrId+'statusCode').value=docList[k].statusCode;
+					$(agrId+'lastUpdationDate').innerHTML=docList[k].lastUpdationDateStr;
+					$(agrId+'lastUpdationDate').value=docList[k].lastUpdationDateStr;
+					
 					
 					var stsCode = docList[k].statusCode;
 					
@@ -256,6 +272,13 @@ var landing = function () {
 			}
 			disableAll();
 			
+		} else {
+			var agrId = responseObject.agreementId;
+			showMessage(responseObject.message, "error");
+			if(agrId){
+				$(agrId).checked=false;
+			}			
+			disableAll();
 		}
 		
 	}
@@ -279,7 +302,7 @@ var landing = function () {
 	this.completeClick=completeClick;
 	function completeClick(){
 		
-		if($("selectedRoleId").value == "2" || $("selectedRoleId").value == "3"){
+		//if($("selectedRoleId").value == "2" || $("selectedRoleId").value == "3"){
 			if ($('numPages').value == null || $('numPages').value == '' || $('numPages').value == 0) {
 				showMessage("Please fill up Comments, Number of Pages and Number of Fields in Comment Section before marking an agreement as Complete...","warning");
 				//swal({title:"Please fill up Comments, Number of Pages and Number of Fields in Comment Section befor marking an agreement as Complete...",type:"warning"});
@@ -295,7 +318,7 @@ var landing = function () {
 				//swal({title:"Please fill up Comments, Number of Pages and Number of Fields in Comment Section befor marking an agreement as Complete...",type:"warning"});
 				return false;
 			}
-		}
+		//}
 		
 		var inputObj = {};
 		inputObj.agreementId=selectedItemsMyList;//[0];
@@ -303,6 +326,7 @@ var landing = function () {
 		inputObj.comment=$('checkerComments').value;
 		inputObj.numPages=$('numPages').value;
 		inputObj.numFields=$('numFields').value;
+		inputObj.lastUpdationDate=getAgreementTimeStamp(selectedItemsMyList);
 		
 		if($("selectedRoleId").value == "1"){
 			inputObj.statusCode=3; //For Maker Complete hardcoding the value
@@ -330,12 +354,15 @@ var landing = function () {
 				var agrId = docList[k].agreementId;
 				if(agrId){
 					$(agrId).checked=false;
+					showMessage(responseObject.message, "success");										
 					//$(agrId).disabled=true;
 					$(agrId+'statusDescription').innerHTML=docList[k].statusDescription;
 					$(agrId+'numPages').innerHTML=docList[k].numPages;
 					$(agrId+'numFields').innerHTML=docList[k].numFields;
 					$(agrId+'statusCode').innerHTML=docList[k].statusCode;
 					$(agrId+'statusCode').value=docList[k].statusCode;
+					$(agrId+'lastUpdationDate').innerHTML=docList[k].lastUpdationDateStr;
+					$(agrId+'lastUpdationDate').value=docList[k].lastUpdationDateStr;					
 					
 					var stsCode = docList[k].statusCode;
 					if($("selectedRoleId").value == "1"){
@@ -360,6 +387,13 @@ var landing = function () {
 					}
 				}
 			}
+			disableAll();
+		} else {			
+			var agrId = responseObject.agreementId;
+			showMessage(responseObject.message,"error");
+			if(agrId){
+				$(agrId).checked=false;
+			}			
 			disableAll();
 		}
 	}	
@@ -412,15 +446,15 @@ var landing = function () {
 					showCancelButton: true,   
 					confirmButtonColor: "rgb(66, 184, 221)",  
 					confirmButtonText: "Yes, hold it!",
-					closeOnConfirm: false,   
+					closeOnConfirm: true,   
 					closeOnCancel: false
 				 },
 			     function(isConfirm){ 
 					if(isConfirm){
 						holdwork();
-						swal({title:"Agreement held successfully!", type:"success"});
+						//swal({title:"Agreement held successfully!", type:"success"});
 					} else {
-						swal({title:"Not marking the agreement as Hold!!!", type:"error"});
+						showMessage("Not marking the agreement as Hold!!!", "error");
 					}
 			     }
 				);
@@ -440,6 +474,7 @@ var landing = function () {
 		if($("selectedRoleId").value == "2"){
 		  inputObj.errorReasonCode=$('errorReasonList').value;
 		}
+		inputObj.lastUpdationDate=getAgreementTimeStamp(selectedItemsMyList);
 		inputObj.numPages=$('numPages').value;
 		inputObj.numFields=$('numFields').value;
 		serviceObj.holdProcess(inputObj,holdRespFn);
@@ -453,18 +488,22 @@ var landing = function () {
 		var respStatus = responseObject.response.responseMessage;
 		
 		if(respStatus == "Success"){
+			
 			var docList = responseObject.docList;
 			
 			for(var k in docList){
 				var agrId = docList[k].agreementId;
 				if(agrId){
 					$(agrId).checked=false;
+					showMessage(responseObject.message, "success");
 					//$(agrId).disabled=true;
 					$(agrId+'statusDescription').innerHTML=docList[k].statusDescription;
 					$(agrId+'numPages').innerHTML=docList[k].numPages;
 					$(agrId+'numFields').innerHTML=docList[k].numFields;
 					$(agrId+'statusCode').innerHTML=docList[k].statusCode;
 					$(agrId+'statusCode').value=docList[k].statusCode;
+					$(agrId+'lastUpdationDate').innerHTML=docList[k].lastUpdationDateStr;
+					$(agrId+'lastUpdationDate').value=docList[k].lastUpdationDateStr;					
 					
 					var stsCode = docList[k].statusCode;
 					if($("selectedRoleId").value == "1"){
@@ -489,6 +528,13 @@ var landing = function () {
 					}
 				}
 			}
+			disableAll();
+		} else {
+			var agrId = responseObject.agreementId;
+			showMessage(responseObject.message, "error");
+			if(agrId){
+				$(agrId).checked=false;
+			}					
 			disableAll();
 		}
 	}	
