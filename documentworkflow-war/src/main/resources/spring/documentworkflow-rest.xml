@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+  http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+  http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+  
+  
+  	<bean id="baseResource" abstract="true">
+  		<property name="appConfig" ref="appConfig" />
+	</bean>
+	
+	<bean id="documentResourceImpl" class="com.myorg.tools.documentworkflow.rest.resources.impl.DocumentWorkflowServiceImpl" scope="request" parent="baseResource">
+		<property name="documentDAO" ref="documentWorkflowDAOImpl" />
+	</bean>
+	<bean id="documentAdminSvcImpl" class="com.myorg.tools.documentworkflow.rest.resources.impl.DocumentAdminServiceImpl" scope="request" parent="baseResource">
+		<property name="documentAdminDAO" ref="documentAdminDAOImpl" />
+	</bean>
+	<bean id="userAdminSvcImpl" class="com.myorg.tools.documentworkflow.rest.resources.impl.UserAdminServiceImpl" scope="request" parent="baseResource">
+		<property name="userAdminDAO" ref="userAdminDAOImpl" />
+	</bean>
+	
+	<bean id="userResourceImpl" class="com.myorg.tools.documentworkflow.rest.resources.impl.UserServiceImpl" scope="request" parent="baseResource">
+		<property name="userAdminDAO" ref="userAdminDAOImpl" />
+    </bean>
+    
+	<bean id="documentRptSvcImpl" class="com.myorg.tools.documentworkflow.rest.resources.impl.DocumentReportServiceImpl" scope="request" parent="baseResource">
+		<property name="documentReportDAO" ref="documentReportDAOImpl" />
+	</bean>    
+	
+</beans>

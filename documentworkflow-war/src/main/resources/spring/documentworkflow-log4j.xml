@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+  <!-- Use console for dev -->
+  <appender name="ASYNC_FILE_APPENDER" class="org.apache.log4j.AsyncAppender">
+		<param name="Threshold" value="DEBUG"/>
+		<appender-ref ref="LOGFILE"/>
+  </appender>
+    
+  <appender name="LOGFILE" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="File" value="D:/temp/logs/document-workflow-services.log" />
+		<param name="DatePattern" value="'.'yyyy-MM-dd" />
+		<param name="Threshold" value="DEBUG" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern"
+				value="[%d{MM/dd/yy HH:mm:ss.SSS}] %t [%X{RequestId}/%X{LoginId}/%X{RemoteAddress}]  %-5p %c{2} - %m%n" />
+		</layout>
+	</appender>
+	
+	<category name="org.springframework">
+		<priority value="INFO" />
+	</category>
+	<category name="java.sql">
+		<priority value="INFO" />
+	</category>
+	
+	<category name="java.sql.PreparedStatement">
+		<priority value="INFO" />
+	</category>
+	
+    <root>
+		<appender-ref ref="ASYNC_FILE_APPENDER"/>
+	</root>
+</log4j:configuration>

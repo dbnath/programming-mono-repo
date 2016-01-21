@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:aop="http://www.springframework.org/schema/aop"	
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+ 
+	<!-- Load datasource and define JDBC template -->
+	<!--<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<constructor-arg>
+			<ref bean="dataSource" />
+		</constructor-arg>
+	</bean>-->
+	
+	<bean id="baseJDBCTemplate" 
+      class=" com.myorg.tools.documentworkflow.dao.impl.BaseJDBCTemplate">
+      <property name="dataSource"  ref="dataSource" />
+      <property name="transactionManager"  ref="transactionManager" />      
+   </bean>	
+	
+	<!-- DAO configuration -->
+	<bean id="documentWorkflowDAOImpl" class=" com.myorg.tools.documentworkflow.dao.impl.DocumentWorkflowDAOImpl">
+		<property name="dataSource"  ref="dataSource" />
+		<property name="transactionManager"  ref="transactionManager" />
+	</bean>
+	<bean id="documentAdminDAOImpl" class=" com.myorg.tools.documentworkflow.dao.impl.DocumentAdminDAOImpl">
+		<property name="dataSource"  ref="dataSource" />
+		<property name="transactionManager"  ref="transactionManager" />
+	</bean>
+	<bean id="userAdminDAOImpl" class=" com.myorg.tools.documentworkflow.dao.impl.UserAdminDAOImpl">
+		<property name="dataSource"  ref="dataSource" />
+		<property name="transactionManager"  ref="transactionManager" />
+	</bean>
+	<bean id="documentReportDAOImpl" class=" com.myorg.tools.documentworkflow.dao.impl.DocumentReportDAOImpl">
+		<property name="dataSource"  ref="dataSource" />
+		<property name="transactionManager"  ref="transactionManager" />
+	</bean>	
+</beans>

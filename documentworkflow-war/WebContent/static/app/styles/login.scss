@@ -1,0 +1,45 @@
+.evs_header{
+  background-color : #5FCC8E;
+  .navbar-brand{
+    color : #fff;
+  }
+}
+.loginContainer{
+  width: 350px;
+  margin: 0 auto;
+  margin-top : 12%;
+  padding: 30px;
+  border: 1px solid #E4E1E1;
+  box-shadow: 2px 2px 3px #b3b3b3;
+  h2{
+    margin: 0;
+    font-size: 28px;
+    margin-bottom: 15px;
+  }
+  .buttonContainer{
+    text-align: right;
+    .login {
+      background-color: #5FCC8E;
+      color : #fff;
+    }
+  }
+  .moreInfo span{
+    display: block;
+    font-size : 13px;
+    color : #5FCC8E;
+    padding : 3px 0;
+    cursor : pointer;
+  }
+  .moreInfo span:hover{
+    text-decoration : underline;
+  }
+}
+.half_cnt{
+  width: 50%;
+  float : left;
+  padding : 10px;
+}
+.signup{
+  background-color: #5FCC8E;
+  color : #fff;
+}

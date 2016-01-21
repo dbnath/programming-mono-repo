@@ -1,0 +1,9 @@
+\. DDL.sql
+\. INS_AGREEMENT_TYPE.sql
+\. INS_ERR_REASON.sql
+\. INS_ROLE.sql
+\. INS_WF_STATUS.sql
+\. INS_USER.sql
+\. INS_USER_ROLE_MAP.sql
+\. INS_ROLE_STATUS_MAPPING.sql
+\. AddAgreement.sql

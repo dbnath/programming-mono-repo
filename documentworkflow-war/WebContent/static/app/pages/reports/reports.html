@@ -1,0 +1,41 @@
+<div ng-include="'static/app/pages/common/banner.html'" style="padding:10px"></div>
+
+
+  <!-- slide in menu (mobile only) -->
+  
+  <div class="container bootcards-container" id="main" ng-init="rc.initReports();">
+    
+	<div class="row">
+	
+	
+	<div class="col-sm-5">
+		<div class="panel panel-default bootcards-chart">
+		  <div class="panel-heading">
+		    <h3 class="panel-title">Completion Status</h3>
+		  </div>
+		  <div class="bootcards-chart-canvas" id="barChart"></div>
+		  <div class="panel-footer">
+		    <small>No of Documents in queue</small>
+		  </div>
+		</div>
+	</div>
+	
+	<!--details panel on right side-->
+    <div class="col-sm-5 bootcards-cards hidden-xs pull-right" >
+		    	 
+		<div class="panel panel-default bootcards-chart">
+		  <div class="panel-heading">
+		    <h3 class="panel-title">Daily Completion Report</h3>
+		  </div>
+		  <div class="bootcards-chart-canvas" id="dailychart"></div>
+		  <div class="panel-footer">
+		    <small>No of Documents completed</small>
+		  </div>
+		</div>
+    
+    </div>
+
+</div> <!-- end of row -->
+</div> <!-- end of main container -->
+
+	
