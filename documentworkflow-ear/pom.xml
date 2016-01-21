@@ -1,0 +1,155 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.myorg.tools.documentworkflow</groupId>
+		<artifactId>documentworkflow-parent</artifactId>	
+		<version>1.1-SNAPSHOT</version>		
+	</parent>	
+	
+	<artifactId>documentworkflow-ear</artifactId>
+	<packaging>ear</packaging>
+	
+	<name>Document Workflow Services EAR</name>
+
+	<properties>
+		<jetty.version>9.1.2.v20140210</jetty.version>
+        <spring.security.version>3.2.4.RELEASE</spring.security.version>
+        <plugin.war.version>2.4</plugin.war.version>
+		<commons.beanutils.version>1.7.0</commons.beanutils.version>
+		<commons.codec.version>1.9</commons.codec.version>
+		<commons.collections.version>3.2.1</commons.collections.version>
+		<commons.dbcp.version>1.4</commons.dbcp.version>
+		<commons.io.version>2.4</commons.io.version>
+		<commons.lang.version>3.1</commons.lang.version>
+		<commons.cli.version>1.2</commons.cli.version>
+		<ehcache.spring.annotations.version>1.2.0</ehcache.spring.annotations.version>
+		<ehcache.version>2.6.8</ehcache.version>
+		<jackson.version>1.9.13</jackson.version>
+		<jdk.version>1.6</jdk.version>
+		<jersey.version>1.18</jersey.version>
+		<log4j.version>1.2.17</log4j.version>
+		<logback.version>1.0.13</logback.version>
+		<logback.ext.version>0.1.1</logback.ext.version>
+		<servlet.version>3.0.1</servlet.version>
+		<slf4j.version>1.7.6</slf4j.version>
+		<httpclient.version>4.5</httpclient.version>
+		<spring.version>4.0.3.RELEASE</spring.version>
+	</properties>
+	
+
+	<build>
+		<plugins>			
+			<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-install-plugin</artifactId>
+					<version>2.2</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.6</version>
+				<configuration>
+					<encoding>${project.build.sourceEncoding}</encoding>
+					<overwrite>false</overwrite>
+					<nonFilteredFileExtensions>
+						<nonFilteredFileExtension>zip</nonFilteredFileExtension>
+						<nonFilteredFileExtension>tar.gz</nonFilteredFileExtension>
+						<nonFilteredFileExtension>jar</nonFilteredFileExtension>
+						<nonFilteredFileExtension>exe</nonFilteredFileExtension>
+						<nonFilteredFileExtension>tar</nonFilteredFileExtension>
+						<nonFilteredFileExtension>gz</nonFilteredFileExtension>
+						<nonFilteredFileExtension>key</nonFilteredFileExtension>
+						<nonFilteredFileExtension>cipher</nonFilteredFileExtension>
+					</nonFilteredFileExtensions>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<fork>true</fork>
+					<encoding>${project.build.sourceEncoding}</encoding>
+					<showWarnings>true</showWarnings>
+					<showDeprecation>true</showDeprecation>
+					<compilerVersion>${jdk.version}</compilerVersion>
+					<executable>${JDK16_HOME}/bin/javac</executable>
+					<source>${jdk.version}</source>
+					<target>${jdk.version}</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-eclipse-plugin</artifactId>
+				<version>2.6</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-clean-plugin</artifactId>
+				<version>2.5</version>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.8</version>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>tomcat-maven-plugin</artifactId>
+				<version>1.1</version>
+				<configuration>
+					<warSourceDirectory>WebContent</warSourceDirectory>
+					<webXml>WebContent/WEB-INF/web.xml</webXml>
+				</configuration>
+			</plugin>
+			 <plugin>
+				<artifactId>maven-ear-plugin</artifactId>
+				<configuration>
+				  <version>1.4</version>
+				  <modules>
+					<webModule>
+					<groupId>com.myorg.tools.documentworkflow</groupId>
+					<artifactId>documentworkflow-war</artifactId>
+					  <bundleFileName>documentworkflow.war</bundleFileName>
+					  <contextRoot>/documentworkflow</contextRoot>
+					</webModule>
+				  </modules>
+				  <displayName>documentworkflow.ear</displayName>
+				  <!-- If I want maven to generate the application.xml, set this to true -->
+				  <generateApplicationXml>true</generateApplicationXml>
+				</configuration>
+			  </plugin>			
+		</plugins>
+
+		<finalName>${project.artifactId}</finalName>
+		<outputDirectory>WebContent/WEB-INF/classes</outputDirectory>
+
+		<!--<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>false</filtering>
+				<includes>
+					<include>**/*.xml</include>
+					<include>**/*.json</include>
+					<include>**/*.properties</include>
+				</includes>
+			</resource>
+		</resources>-->
+	</build>
+
+	<dependencies>		
+
+		<!-- Jackson dependencies -->
+		<dependency>
+			<groupId>com.myorg.tools.documentworkflow</groupId>
+			<artifactId>documentworkflow-war</artifactId>
+			<version>1.1-SNAPSHOT</version>
+			<type>war</type>
+		</dependency>
+	</dependencies>
+
+	
+
+</project>
