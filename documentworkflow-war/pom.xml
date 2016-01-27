@@ -77,6 +77,24 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
 				<version>2.6</version>
+			   <executions>
+				  <execution>
+					<id>copy-resources</id>
+					<phase>validate</phase>
+					<goals>
+					  <goal>copy-resources</goal>
+					</goals>
+					<configuration>
+					  <outputDirectory>WebContent/WEB-INF</outputDirectory>
+					  <resources>
+						<resource>
+							<directory>src/main/config/${env}</directory>
+							<filtering>false</filtering>
+						</resource>
+					  </resources>
+					</configuration>
+				  </execution>
+				</executions>				
 				<configuration>
 					<encoding>${project.build.sourceEncoding}</encoding>
 					<overwrite>false</overwrite>
@@ -89,7 +107,7 @@
 						<nonFilteredFileExtension>gz</nonFilteredFileExtension>
 						<nonFilteredFileExtension>key</nonFilteredFileExtension>
 						<nonFilteredFileExtension>cipher</nonFilteredFileExtension>
-					</nonFilteredFileExtensions>
+					</nonFilteredFileExtensions>			
 				</configuration>
 			</plugin>
 			<plugin>
@@ -116,6 +134,17 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-clean-plugin</artifactId>
 				<version>2.5</version>
+				<configuration>
+					<filesets>
+						<fileset>
+							<directory>WebContent/WEB-INF</directory>
+							<includes>
+								<include>documentworkflow-context.xml</include>
+							</includes>
+							<followSymlinks>false</followSymlinks>
+						</fileset>
+					</filesets>	
+				</configuration>
 			</plugin>
 
 			<plugin>
@@ -151,21 +180,40 @@
 			  </plugin>			
 		</plugins>
 
-		<finalName>${project.artifactId}</finalName>
+		<!--<finalName>${project.artifactId}</finalName>
 		<outputDirectory>WebContent/WEB-INF/classes</outputDirectory>
 
 		<resources>
 			<resource>
-				<directory>src/main/resources</directory>
+				<directory>src/main/resources</directory>				
 				<filtering>false</filtering>
-				<includes>
-					<include>**/*.xml</include>
-					<include>**/*.json</include>
-					<include>**/*.properties</include>
-				</includes>
 			</resource>
-		</resources>
+		</resources>-->
 	</build>
+	
+	<profiles>
+	 <profile>
+	  <id>tomcat</id>
+	  <activation>
+		<activeByDefault>true</activeByDefault>
+	  </activation>
+	  <properties>
+		<env>tomcat</env>
+	  </properties>
+	</profile>
+	<profile>
+	  <id>dev</id>
+	  <properties>
+		<env>dev</env>
+	  </properties>
+	</profile>
+	<profile>
+	  <id>prod</id>
+	  <properties>
+		<env>prod</env>
+	  </properties>
+	</profile>
+	</profiles>
 
 	<dependencies>		
 
