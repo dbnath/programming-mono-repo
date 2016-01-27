@@ -14,10 +14,10 @@ public class DocumentWorkflowToolConstant {
 	public static String DOC_TYPE_TAG_MAP_SQL = "select a.ID_DOC_TAG ID_DOC_TAG, b.TX_DOC_TAG TX_DOC_TAG from doc_type_tag_mapping a, doc_tag_info b where a.ID_DOC_TYPE = ? and a.ID_DOC_TAG = b.ID_DOC_TAG";
 	public static String DOC_TAG_SUB_TAG_MAP_SQL = "select a.ID_DOC_SUB_TAG ID_DOC_SUB_TAG, b.TX_DOC_SUB_TAG TX_DOC_SUB_TAG from doc_tag_subtag_map a, doc_sub_tag_info b where a.ID_DOC_TAG = ? and a.ID_DOC_SUB_TAG = b.ID_DOC_SUB_TAG";
 	public static String DOC_TYPE_TAG_SUBTAGS_MAP_SQL = "select a.ID_DOC_TAG ID_DOC_TAG, b.TX_DOC_TAG TX_DOC_TAG, c.ID_DOC_SUB_TAG ID_DOC_SUB_TAG, d.TX_DOC_SUB_TAG TX_DOC_SUB_TAG from doc_type_tag_mapping a, doc_tag_info b, doc_tag_subtag_map c, doc_sub_tag_info d where a.ID_DOC_TYPE = ? and a.ID_DOC_TAG = b.ID_DOC_TAG and a.ID_DOC_TAG = c.ID_DOC_TAG and c.ID_DOC_SUB_TAG = d.ID_DOC_SUB_TAG";
-	public static String USER_BASE_POPULATE_SQL = "select * from user";
+	public static String USER_BASE_POPULATE_SQL = "select * from LEGAL_USER";
 	public static String MASTER_ROLE_POPULATE_SQL = "select * from ROLE";
-	public static String FETCH_USER_DETAILS_SQL = "select * from user where ID_USER = ? AND USER_STATUS='Active'";
-	public static String FETCH_ROLE_USER_MAP_SQL = "select a.ID_USER, b.NM_USER, b.PASSWORD, b.PASSWORD_TYPE, b.USER_STATUS, b.LAST_LOGIN, a.CREATED_BY, a.CREATION_DT, a.UPDATED_BY, a.UPDATE_DT from user_role_map a, user b where a.ID_ROLE = ? and a.ID_USER = b.ID_USER";
+	public static String FETCH_USER_DETAILS_SQL = "select * from LEGAL_USER where ID_USER = ? AND USER_STATUS='Active'";
+	public static String FETCH_ROLE_USER_MAP_SQL = "select a.ID_USER, b.NM_USER, b.PASSWORD, b.PASSWORD_TYPE, b.USER_STATUS, b.LAST_LOGIN, a.CREATED_BY, a.CREATION_DT, a.UPDATED_BY, a.UPDATE_DT from user_role_map a, LEGAL_USER b where a.ID_ROLE = ? and a.ID_USER = b.ID_USER";
 	public static String POPULATE_ROLE_FOR_USER_SQL = "select a.ID_ROLE, b.NM_ROLE, b.TX_ROLE from user_role_map a, role b where a.ID_USER = ? and a.ID_ROLE = b.ID_ROLE";
 	
 	public static String DEL_DOC_TAG_REL_SQL = "delete from doc_tag_rel where ID_DOC = ?";
@@ -113,18 +113,18 @@ public class DocumentWorkflowToolConstant {
 	
 	public static String QUERY_FOR_AUDITTRAIL = "select a.ID_AGRMT, a.ID_VER, a.LOB, a.ID_AGREEMENT_TYPE, b.TX_AGREEMENT_TYPE, a.NUM_PAGES, a.NUM_FIELDS, a.ASSIGNED_TO, a.ID_ROLE AS 'ID_ROLE_AS', a.ID_WF_STATUS, c.TX_WF_STATUS, M.COMMENTS, a.CREATED_BY, a.CREATED_DT, a.LAST_UPDATED_BY, a.LAST_UPDATE_DT from WF_PROCESS_AUDIT a JOIN AGREEMENT_TYPE b ON a.ID_AGREEMENT_TYPE = b.ID_AGREEMENT_TYPE JOIN WF_STATUS c ON c.ID_WF_STATUS = a.ID_WF_STATUS LEFT OUTER JOIN WF_COMMENT_AUDIT M ON a.ID_AGRMT = M.ID_AGRMT and a.ID_VER = M.ID_VER WHERE a.LAST_UPDATE_DT BETWEEN ? AND ?";
 
-	public static String FETCH_ALL_ROLE_USER_MAP = "select a.ID_USER, b.NM_USER, b.USER_STATUS, c.TX_ROLE, c.ID_ROLE from USER_ROLE_MAP a, USER b, ROLE c where a.ID_USER = b.ID_USER AND a.ID_ROLE = c.ID_ROLE";
+	public static String FETCH_ALL_ROLE_USER_MAP = "select a.ID_USER, b.NM_USER, b.USER_STATUS, c.TX_ROLE, c.ID_ROLE from USER_ROLE_MAP a, LEGAL_USER b, ROLE c where a.ID_USER = b.ID_USER AND a.ID_ROLE = c.ID_ROLE";
 	
-	public static String FETCH_USER = "SELECT COUNT(ID_USER) FROM USER WHERE ID_USER = ?";
+	public static String FETCH_USER = "SELECT COUNT(ID_USER) FROM LEGAL_USER WHERE ID_USER = ?";
 	
-	public static String INS_USER = "INSERT INTO USER (ID_USER, NM_USER, PASSWORD, PASSWORD_TYPE, USER_STATUS, CREATED_BY, CREATION_DT, LAST_LOGIN, UPDATED_BY, UPDATE_DT) VALUES (?,?,?,?,?,?,?,?,?,?)";
+	public static String INS_USER = "INSERT INTO LEGAL_USER (ID_USER, NM_USER, PASSWORD, PASSWORD_TYPE, USER_STATUS, CREATED_BY, CREATION_DT, LAST_LOGIN, UPDATED_BY, UPDATE_DT) VALUES (?,?,?,?,?,?,?,?,?,?)";
 	
 	public static String INS_USER_ROLE = "INSERT INTO USER_ROLE_MAP (ID_USER, ID_ROLE, CREATED_BY, CREATION_DT, UPDATED_BY, UPDATE_DT) VALUES (?,?,?,?,?,?)";
 	
-	public static String UPD_USER = "UPDATE USER SET NM_USER = ?, USER_STATUS = ? , UPDATED_BY = ?, UPDATE_DT = ? WHERE ID_USER = ?";
+	public static String UPD_USER = "UPDATE LEGAL_USER SET NM_USER = ?, USER_STATUS = ? , UPDATED_BY = ?, UPDATE_DT = ? WHERE ID_USER = ?";
 	
 	public static String UPD_USER_ROLE = "UPDATE USER_ROLE_MAP SET ID_ROLE=?,UPDATED_BY=?, UPDATE_DT=? WHERE ID_USER = ?";
 	
-	public static String GET_ACTIVE_MAKER_LIST = "SELECT a.ID_USER FROM USER a, USER_ROLE_MAP b WHERE a.ID_USER=b.ID_USER AND a.USER_STATUS= 'Active' AND b.ID_ROLE=1";
+	public static String GET_ACTIVE_MAKER_LIST = "SELECT a.ID_USER FROM LEGAL_USER a, USER_ROLE_MAP b WHERE a.ID_USER=b.ID_USER AND a.USER_STATUS= 'Active' AND b.ID_ROLE=1";
 	
 }
