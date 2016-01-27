@@ -8,7 +8,7 @@
   </appender>
     
   <appender name="LOGFILE" class="org.apache.log4j.DailyRollingFileAppender">
-		<param name="File" value="D:/temp/logs/document-workflow-services.log" />
+		<param name="File" value="${LOG_ROOT_HOME}/document-workflow-services.log" />
 		<param name="DatePattern" value="'.'yyyy-MM-dd" />
 		<param name="Threshold" value="DEBUG" />
 		<layout class="org.apache.log4j.PatternLayout">
