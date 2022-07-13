@@ -5,6 +5,7 @@ Development teams have been simulating dependencies required for executing diffe
 * Stubs are objects that replace a dependency by providing predefined responses to input delivered during tests. Stub behavior therefore is predetermined and fixed, making stubs suitable for state verification during test execution.
 * Mocks are similar to stubs, with the difference being that the behavior of mocks is defined during test initialization. This means that two instances of the same mock can behave differently, depending on their initialization, which makes them suitable for behavior verification during test execution
 
+https://www.soapui.org/learn/mocking/what-is-api-virtualization/
 
 | Stubbing and mocking  | Service virtualization |
 | ------------- | ------------- |
