@@ -1,0 +1,10 @@
+.DS_Store
+.gradle
+.idea
+*.iml
+*.hprof
+*.log
+*.orig
+*.jar
+build/
+out/

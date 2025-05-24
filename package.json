@@ -1,0 +1,10 @@
+{
+  "name": "programming-knowledge-monorepo",
+  "private": true,
+  "workspaces": [
+    "js/react-tdd"
+  ],
+  "scripts": {
+    "test": "echo \"Run tests from submodules\""
+  }
+}
