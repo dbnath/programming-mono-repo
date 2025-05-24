@@ -1,0 +1,3 @@
+rootProject.name = 'amc-rules'
+include 'amc-rules-core', 'amc-rules-api'
+

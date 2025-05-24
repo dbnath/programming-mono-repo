@@ -1,0 +1,28 @@
+import org.springframework.boot.gradle.plugin.SpringBootPlugin
+
+plugins {
+    id 'org.springframework.boot' version '2.5.2' apply false
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencyManagement {
+    imports {
+        mavenBom SpringBootPlugin.BOM_COORDINATES
+    }
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter',
+            'org.drools:drools-core:7.64.0.Final',
+            'org.drools:drools-decisiontables:7.64.0.Final',
+            'org.drools:drools-compiler:7.64.0.Final'
+    implementation 'org.projectlombok:lombok:1.18.20'
+    annotationProcessor 'org.projectlombok:lombok:1.18.20'
+    implementation 'junit:junit:4.13.1'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}

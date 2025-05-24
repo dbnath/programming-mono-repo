@@ -1,0 +1,23 @@
+package com.git.amc.rules.def.account
+
+import com.git.amc.rules.model.Account;
+import com.git.amc.rules.model.Cashflow;
+import com.git.amc.rules.model.Cashflow.FlowType;
+
+rule "Rule - Credit"
+    when
+        $cashflow : Cashflow( $account: account, $date: date, $amount: amount, flowType == FlowType.CREDIT )
+        not Cashflow( account == $account, date < $date)
+    then
+        $account.setBalance($account.getBalance() + $amount);
+        retract($cashflow);
+end
+
+rule "Rule - Debit"
+    when
+        $cashflow : Cashflow( $account: account, $date: date, $amount: amount, flowType == FlowType.DEBIT )
+        not Cashflow( account == $account, date < $date)
+    then
+        $account.setBalance($account.getBalance() - $amount);
+        retract($cashflow);
+end
