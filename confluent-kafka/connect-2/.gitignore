@@ -1,0 +1,7 @@
+.idea
+target
+*.iml
+/.idea/
+offsets
+offsets/*.*
+out.txt
