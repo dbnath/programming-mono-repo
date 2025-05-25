@@ -8,3 +8,11 @@
 *.jar
 build/
 out/
+.DS_Store
+.idea/.gitignore
+.idea/kafka.iml
+.idea/modules.xml
+.idea/vcs.xml
+.idea/workspace.xml
+target
+**/WebContent/WEB-INF/classes/**

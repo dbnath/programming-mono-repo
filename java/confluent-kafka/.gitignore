@@ -1,7 +1,0 @@
-.DS_Store
-.idea/.gitignore
-.idea/kafka.iml
-.idea/modules.xml
-.idea/vcs.xml
-.idea/workspace.xml
-tweet-elastic/pom.xml
