@@ -93,6 +93,14 @@ war {
     webAppDirName = 'WebContent'
     archiveFileName = "${project.name}.war"
     // You can add manifest entries if needed
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    manifest {
+        attributes(
+            'Implementation-Title': project.name,
+            'Implementation-Version': project.version,
+            'Main-Class': 'com.myorg.tools.documentworkflow.MainClass' // Replace with your main class
+        )
+    }
 }
 
 sourceSets {
