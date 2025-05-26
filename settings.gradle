@@ -1,5 +1,5 @@
 rootProject.name = 'programming-knowledge-monorepo'
+include 'java:confluent-kafka:streams'
 include 'java:docflowtool'
-include 'java:drools-rule'
 include 'java:spring'
 include 'java:confluent-kafka'

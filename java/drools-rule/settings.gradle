@@ -1,3 +1,4 @@
-rootProject.name = 'amc-rules'
-include 'amc-rules-core', 'amc-rules-api'
+rootProject.name = 'drools-rule'
 
+include 'amc-rules-core'
+include 'amc-rules-api'
