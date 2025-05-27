@@ -6,24 +6,15 @@ This repository contains basic Python scripts and exercises for learning and pra
 
 To ensure that the dependencies for this project are isolated from your global Python installation, it is recommended to use a virtual environment. Follow the steps below to create and activate a Python virtual environment:
 
-### Step 1: Install `virtualenv`
+### Step 1: Create a Virtual Environment
 
 If you don't have `virtualenv` installed, you can install it using `pip`:
 
 ```sh
-pip install virtualenv
+python3 -m venv .venv
 ```
 
-### Step 2: Create a Virtual Environment
-
-Navigate to the project directory and create a virtual environment:
-
-```sh
-cd /Users/nath.debasish/Documents/Training/aiml/python/basics
-virtualenv venv
-```
-
-### Step 3: Activate the Virtual Environment
+### Step 2: Activate the Virtual Environment
 
 Activate the virtual environment using the following command:
 
@@ -39,15 +30,15 @@ Activate the virtual environment using the following command:
     .\venv\Scripts\activate
     ```
 
-### Step 4: Install Dependencies
+### Step 3: Install Dependencies
 
 Once the virtual environment is activated, you can install the required dependencies using `pip`:
 
 ```sh
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 ```
 
-### Step 5: Deactivate the Virtual Environment
+### Step 4: Deactivate the Virtual Environment
 
 When you are done working in the virtual environment, you can deactivate it using the following command:
 
@@ -60,7 +51,7 @@ deactivate
 To run any of the Python scripts in this repository, ensure that the virtual environment is activated and use the `python` command followed by the script name. For example:
 
 ```sh
-python script_name.py
+python3 script_name.py
 ```
 
 ## License
