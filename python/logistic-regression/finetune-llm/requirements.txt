@@ -1,0 +1,13 @@
+pandas
+scikit-learn
+matplotlib
+seaborn
+numpy
+scipy
+transformers
+datasets
+evaluate
+huggingface_hub
+ipywidgets
+torch
+accelerate>=0.26.0

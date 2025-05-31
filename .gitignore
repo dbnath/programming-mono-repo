@@ -16,3 +16,5 @@ out/
 .idea/workspace.xml
 target
 **/WebContent/WEB-INF/classes/**
+distilbert-base-uncased-fraud-classifer
+fraud_output
