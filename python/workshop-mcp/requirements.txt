@@ -1,0 +1,14 @@
+DateTime==5.5
+python-dotenv==1.1.0
+ipykernel==6.29.5
+mcp[cli]
+google-generativeai==0.8.5
+langchain-core==0.3.61
+langchain-google-genai==2.0.10
+langchain-mcp-adapters==0.1.1
+langgraph==0.4.7
+langgraph-checkpoint==2.0.26
+langgraph-prebuilt==0.2.1
+langgraph-sdk==0.1.70
+langsmith==0.3.42
+pyppeteer==2.0.0
