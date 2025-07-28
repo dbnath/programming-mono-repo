@@ -20,3 +20,5 @@ distilbert-base-uncased-fraud-classifer
 fraud_output
 .env
 chroma_db
+.venv
+__pycache__/

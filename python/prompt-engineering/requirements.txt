@@ -1,0 +1,11 @@
+ipykernel==6.30.0
+python-dotenv==1.1.1
+google-genai
+langchain_openai
+openai
+tiktoken
+langchain
+langchain_openai
+langchain_core
+langchain_community
+langchain_text_splitters
