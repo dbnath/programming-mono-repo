@@ -1,0 +1,1 @@
+https://kb.epam.com/display/EPMGPT/AI+Factory+Delivery+Handbook
