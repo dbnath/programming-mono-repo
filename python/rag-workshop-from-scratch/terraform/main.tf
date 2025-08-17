@@ -69,3 +69,18 @@ resource "azurerm_container_app" "ca" {
     }
   }
 }
+
+# Create the rag_demo database after the container app is running
+resource "null_resource" "create_rag_demo_db" {
+  depends_on = [azurerm_container_app.ca]
+
+  provisioner "local-exec" {
+    command = "sleep 30 && PGPASSWORD=postgres psql -h ${azurerm_container_app.ca.latest_revision_fqdn} -U postgres -p 6432 -c \"DROP DATABASE IF EXISTS rag_demo; CREATE DATABASE rag_demo;\""
+    interpreter = ["/bin/bash", "-c"]
+  }
+
+  provisioner "local-exec" {
+    command = "sleep 30 && PGPASSWORD=postgres psql -h ${azurerm_container_app.ca.latest_revision_fqdn} -U postgres -p 6432 -d rag_demo -f schema.sql"
+    interpreter = ["/bin/bash", "-c"]
+  }
+}
