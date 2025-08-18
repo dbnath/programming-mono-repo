@@ -59,7 +59,7 @@ def get_answer(payload):
 
 ### PostgreSQL database url and connection
 database_url = os.environ.get(
-    "DATABASE_URL", "postgresql://postgres:postgres@pgvector.wonderfulplant-06d5f15e.eastus.azurecontainerapps.io:6432/rag_demo"
+    "DATABASE_URL", "postgresql://postgres:postgres@pgvector--dv3ol1c.victoriousdesert-fe08e285.eastus.azurecontainerapps.io:6432/rag_demo"
 )
 db = psycopg.Connection.connect(database_url)
 
