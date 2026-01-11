@@ -106,3 +106,38 @@ You can skip the embedding step if you already have a database and want to exper
 ```
 psql -h localhost -p 6432 -U postgres rag_demo -c "SELECT * FROM chunks LIMIT 5;"
 ```
+
+
+## Try out this example
+https://learn.microsoft.com/en-us/samples/azure-samples/container-apps-openai/container-apps-openai/
+
+
+
+
+https://python.langchain.com/api_reference/community/document_loaders/langchain_community.document_loaders.parsers.language.cobol.CobolSegmenter.html#
+
+
+
+
+It might happen or not, but working hard and believing that we can get out of the
+environment we were born in is my choice.
+And I will never let that belief die.
+Because I know I can create wealth and I know that my past doesn't define my future.
+
+
+
+
+#1 - AST From Cobol Program
+#2 - RAG with Knowledge Graph
+#3 - Agents workflow in LangGraph
+#4 - 
+
+
+
+## Project Report on - "Scope of the AI Agent Industry"
+
+
+
+
+
+Include relevant graphs and trends for better insights

@@ -50,14 +50,14 @@ module "pgvector" {
 
 
 // Instantiate chromadb container app using mo2dule
-module "chromadb" {
-  source = "./modules/chromadb"
+# module "chromadb" {
+#   source = "./modules/chromadb"
 
-  resource_group_name          = azurerm_resource_group.rg.name
-  container_app_environment_id = azurerm_container_app_environment.cae.id
-  container_cpu                = 0.5
-  container_memory             = "1Gi"
-  target_port                  = 8000
-  exposed_port                 = 8000
-}
+#   resource_group_name          = azurerm_resource_group.rg.name
+#   container_app_environment_id = azurerm_container_app_environment.cae.id
+#   container_cpu                = 0.5
+#   container_memory             = "1Gi"
+#   target_port                  = 8000
+#   exposed_port                 = 8000
+# }
 
